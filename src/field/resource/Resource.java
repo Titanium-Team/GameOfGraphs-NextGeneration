@@ -9,6 +9,4 @@ public interface Resource {
 
     String getName();
 
-
-
 }
