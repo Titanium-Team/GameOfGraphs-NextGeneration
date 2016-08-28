@@ -8,11 +8,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class MapEditorController {
-    private Graph graph;
-    private int chooser;
-    private BufferedImage previewBackground, previewVertex, previewEdge;
 
-    public MapEditorController() {
+
+  /*  public MapEditorController() {
         graph = new Graph();
         chooser = 2;
     }
@@ -230,4 +228,12 @@ public class MapEditorController {
     public void setGraph(Graph graph) {
         this.graph = graph;
     }
+
+    public boolean getTempEdge() {
+        return true;
+    }
+
+    public Vertex[] getTempEdgeVertex() {
+        return null;
+    }*/
 }

@@ -1,5 +1,6 @@
 package game.views;
 
+import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
@@ -27,6 +28,11 @@ public class MenuView extends GameScene {
     public void render(Layers layers) {
 
         Graphics2D g = layers.first().getGraphics2D();
+
+        this.options.forEach((key, value) -> {
+
+
+        });
 
         //draw menu
         int x = 0;
