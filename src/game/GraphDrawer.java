@@ -27,8 +27,8 @@ public class GraphDrawer {
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (whoAreYou.equals("MapEditor") && GameOfGraphs.getGame().getMapEditorController().getPreviewBackground() != null){
-            g.drawImage(GameOfGraphs.getGame().getMapEditorController().getPreviewBackground(), 0, 0, graph.getWidth(), graph.getHeight(), null);
+        if (whoAreYou.equals("MapEditor") && MapEditorView.getPreviewBackground() != null){
+            g.drawImage(MapEditorView.getPreviewBackground(), 0, 0, graph.getWidth(), graph.getHeight(), null);
         }else if (graph.getBackground() != null){
             BufferedImage image = graph.getBackground();
 
@@ -46,14 +46,14 @@ public class GraphDrawer {
         g.setClip(oldClip);
 
         ArrayList<Edge> edgeList = graph.getEdges();
-        if (whoAreYou.equals("MapEditor") && GameOfGraphs.getGame().getMapEditorController().getTempEdge()) {
+        if (whoAreYou.equals("MapEditor") && MapEditorView.isDragEdge() ) {
             edgeList.add(new Edge(new String[]{"equals", "equals"}, 0));
         }
         for (Edge edge:edgeList) {
             Vertex vertex1 = null, vertex2 = null;
             if (whoAreYou.equals("MapEditor") && edge.getVerticesId()[0].equals("equals") && edge.getVerticesId()[1].equals("equals")){
-                vertex1 = GameOfGraphs.getGame().getMapEditorController().getTempEdgeVertex()[0];
-                vertex2 = GameOfGraphs.getGame().getMapEditorController().getTempEdgeVertex()[1];
+                vertex1 = MapEditorView.getDragEdgePos()[0];
+                vertex2 = MapEditorView.getDragEdgePos()[1];
             }else {
                 vertex1 = edge.getVerticesId(graph)[0];
                 vertex2 = edge.getVerticesId(graph)[1];
@@ -86,8 +86,8 @@ public class GraphDrawer {
 
             g.setClip(new Polygon(x, y, 4));
 
-            if (whoAreYou.equals("MapEditor") && GameOfGraphs.getGame().getMapEditorController().getPreviewEdge() != null) {
-                g.drawImage(GameOfGraphs.getGame().getMapEditorController().getPreviewEdge(), 0, 0, graph.getWidth(), graph.getHeight(), null);
+            if (whoAreYou.equals("MapEditor") && MapEditorView.getPreviewEdge() != null) {
+                g.drawImage(MapEditorView.getPreviewEdge(), 0, 0, graph.getWidth(), graph.getHeight(), null);
 
             } else if (graph.getEdgeImage() != null) {
                 BufferedImage image = graph.getEdgeImage();
@@ -118,8 +118,8 @@ public class GraphDrawer {
             g.setClip(ellipse2D);
 
 
-            if (whoAreYou.equals("MapEditor") && GameOfGraphs.getGame().getMapEditorController().getPreviewVertex() != null) {
-                g.drawImage(GameOfGraphs.getGame().getMapEditorController().getPreviewVertex(), 0, 0, graph.getWidth(), graph.getHeight(), null);
+            if (whoAreYou.equals("MapEditor") && MapEditorView.getPreviewVertex() != null) {
+                g.drawImage(MapEditorView.getPreviewVertex(), 0, 0, graph.getWidth(), graph.getHeight(), null);
             } else if (graph.getVertexImage() != null) {
                 BufferedImage image = graph.getVertexImage();
                 if (image.getWidth() == 1 && image.getHeight() == 1 || !graph.isVertexImageTextured()) {
