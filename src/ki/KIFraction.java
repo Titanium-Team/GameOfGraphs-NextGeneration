@@ -1,7 +1,6 @@
 package ki;
 
 import game.GameOfGraphs;
-import game.Membership;
 import game.Player;
 
 import java.util.*;
@@ -18,7 +17,7 @@ public class KIFraction extends Player{
 
 
     public KIFraction(String name) {
-        super(name, Membership.UNKNOWN);
+        super(name);
         properties = new ArrayList<Property>();
         r=new Random();
         trust=new HashMap<Player,Integer>();
