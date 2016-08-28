@@ -1,6 +1,7 @@
 import de.SweetCode.e.E;
 import de.SweetCode.e.Settings;
 import de.SweetCode.e.utils.Version;
+import field.FieldView;
 import game.GameOfGraphs;
 import game.views.MenuView;
 
@@ -84,7 +85,7 @@ public class Main {
             }
         });
 
-        e.addScene(new MenuView());
+        e.addScene(new FieldView());
         e.show(MenuView.class);
         e.run();
 
