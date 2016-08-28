@@ -31,6 +31,7 @@ public class MenuView extends GameScene {
         int x = 0;
         for(Map.Entry<String, Class<? extends GameScene>> entry : this.options.entrySet()) {
 
+            layer.setColor(x == selectedOption ? Color.MAGENTA : Color.BLACK);
             layer.drawString(entry.getKey(), 640, 150 + x * 35);
             x++;
 
@@ -46,7 +47,9 @@ public class MenuView extends GameScene {
             if(e.getKeyCode() == KeyEvent.VK_W) {
                 this.selectedOption--;
 
-                if()
+                if(this.selectedOption < 0) {
+                    this.selectedOption = 0;
+                }
             }
 
             if(e.getKeyCode() == KeyEvent.VK_S) {
