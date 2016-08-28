@@ -1,15 +1,8 @@
 package graph;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.smile.SmileFactory;
-import game.GameOfGraphs;
-import game.view.MenuView;
-import game.view.View;
 
-import javax.swing.*;
-import java.awt.*;
-
-public class GraphView extends View{
+public class GraphView {
+    /*
     private Graph graph;
 
     private JScrollPane jScrollPane;
@@ -40,5 +33,5 @@ public class GraphView extends View{
             jScrollPane.revalidate();
             repaint();
         }
-    }
+    }*/
 }

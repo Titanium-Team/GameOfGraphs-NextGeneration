@@ -1,7 +1,6 @@
 package field.recipe;
 
 import field.resource.Resource;
-import game.inventory.resource.ResourceType;
 
 /**
  * Created by Yonas on 04.09.2015.
