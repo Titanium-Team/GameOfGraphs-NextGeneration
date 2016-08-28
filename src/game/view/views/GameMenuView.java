@@ -58,7 +58,7 @@ public class GameMenuView extends View {
         this.mapEditorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameOfGraphs.getGame().getViewManager().switchView(GraphView.class);
+                game.GameOfGraphs.getGame().getViewManager().switchView(GraphView.class);
             }
         });
 

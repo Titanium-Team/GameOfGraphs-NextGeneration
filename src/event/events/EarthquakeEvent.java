@@ -36,7 +36,7 @@ public class EarthquakeEvent extends Event {
 
     private void earthquake(Vertex vertex, final int effected) {
 
-        /*List<Vertex> vertices = GameOfGraphs.getGame().getGraphController().getGraph().getNeighbours(vertex);
+        /*List<Vertex> vertices = game.GameOfGraphs.getGame().getGraphController().getGraph().getNeighbours(vertex);
         vertices.toFirst();
 
         while (vertices.hasAccess() && this.visited.size() <= effected) {

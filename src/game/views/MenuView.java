@@ -1,4 +1,4 @@
-package views;
+package game.views;
 
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
