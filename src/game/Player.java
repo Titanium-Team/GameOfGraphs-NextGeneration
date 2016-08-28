@@ -79,7 +79,7 @@ public class Player {
                     }
                 }
             }else {
-                p.addRequest(new AllianceRequest(this));
+                p.addRequest(new AllianceRequest(this,p));
             }
         }
         return false;

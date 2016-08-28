@@ -7,6 +7,7 @@ import game.Membership;
 import game.Player;
 import game.Queue;
 import graph.Graph;
+import graph.List;
 import graph.Vertex;
 
 import simulation.Unit;
@@ -40,12 +41,12 @@ public class KIController {
 			if(v1.getField().getResources().get(Resources.FOOD)<v1.getField().getResources().get(Resources.POPULATION) && r.nextInt(100)<50){
 				Player p = v1.getField().getPlayer();
 				ArrayList<Unit> rebels = new ArrayList<Unit>();
+				KIFraction rebelPlayer=new KIFraction("independent");
 				for(int i=0;i<v1.getField().getResources().get(Resources.POPULATION)/2;i++){
-					//TODO:change to player
-					//rebels.add(new simulation.Unit(Membership.UNKNOWN));
+					rebels.add(new simulation.Unit(rebelPlayer));
 				}
-				//getGame().getSimulationController().fight(v1,rebels);
-				p.getNotifications().add(new Rebellion(!p.equals(v1),v1));
+				getGame().getSimulationController().fight(v1,rebels);
+				p.getNotifications().add(new Rebellion(!p.equals(v1.getField().getPlayer()),v1));
 			}
 			if(v1.getField().getPlayer() instanceof KIFraction ){
 				current = ((KIFraction) v1.getField().getPlayer());
@@ -85,14 +86,16 @@ public class KIController {
 									}
 								}
 								tempGoal=this.getClosestVertex(v1,archEnemy);
-								//ArrayList<Vertex> list = getGame().getSimulationController().giveListOfVerticesToFollow(v1,tempGoal);
-								//for (Vertex vertex : list){
-								//	if(pathFree &&archEnemy!=null){
-								//		if(!current.equals(vertex.getField().getPlayer()) && !archEnemy.equals(vertex.getField().getPlayer())){
-								//			pathFree=false;
-								//		}
-								//	}
-								//}
+								List<Vertex> list = getGame().getSimulationController().giveListOfVerticesToFollow(v1,tempGoal);
+								list.toFirst();
+								while(list.hasAccess()){
+									if(pathFree &&archEnemy!=null){
+										if(!current.equals(list.getContent().getField().getPlayer()) && !archEnemy.equals(list.getContent().getField().getPlayer())){
+											pathFree=false;
+										}
+									}
+									list.next();
+								}
 								if(pathFree)goal=tempGoal;
 							}
 							if(goal!=null) {
@@ -195,9 +198,7 @@ public class KIController {
 									}
 								}
 								if(r.nextInt(100)<trust){
-									current.addAlly(req.getParent());
-									req.getParent().getAlliances().add(current);
-									current.getTrust().put(req.getParent(),75);
+									req.accept();
 								}
 							}
 						}else if(req instanceof TradeRequest){
@@ -205,30 +206,12 @@ public class KIController {
 						}else if(req instanceof HelpRequest){
 							if(current.getAlliances().contains(req.getParent())){
 								if(current.getTrust().get(req.getParent())>50+((HelpRequest) req).getAmountOfUnits()){
-									ArrayList<Vertex> origin = new ArrayList<>();
-									ArrayList<Vertex> neighbors = getGame().getGraphController().getGraph().getNeighbours(((HelpRequest) req).getPlace());
-									int amount = ((HelpRequest) req).getAmountOfUnits();
-									for (Vertex v : neighbors) {
-										if (current.equals(v.getField().getPlayer())) {
-											if(amount>0) {
-												origin.add(v);
-												amount-=v.getField().getUnmovedUnits().size()-3;
-											}
-										}
-									}
-									amount = ((HelpRequest) req).getAmountOfUnits();
-									for (Vertex v : origin) {
-										if(amount>0) {
-											if (v.getField().getUnmovedUnits().size() + 3 >= amount) {
-												getGame().getSimulationController().moveUnits(v, ((HelpRequest) req).getPlace(), amount);
-												amount = 0;
-											} else {
-												getGame().getSimulationController().moveUnits(v, ((HelpRequest) req).getPlace(), v.getField().getUnmovedUnits().size() - 3);
-												amount -= ((HelpRequest) req).getPlace().getField().getUnmovedUnits().size() - 3;
-											}
-										}
-									}
+									req.accept();
+								}else{
+									req.decline();
 								}
+							}else{
+								req.decline();
 							}
 						}
 						current.getRequests().dequeue();
@@ -247,7 +230,7 @@ public class KIController {
 											for (Vertex v : getGame().getGraphController().getGraph().getNeighbours(root)) {
 												for(Player p:current.getAlliances()) {
 													if (v.getField().getPlayer().equals(p)){
-														p.addRequest(new HelpRequest(current,5,root));
+														p.addRequest(new HelpRequest(current,5,root,p));
 													}
 												}
 											}
