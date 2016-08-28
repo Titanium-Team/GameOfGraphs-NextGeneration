@@ -5,6 +5,7 @@ import field.recipe.Recipe;
 import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
+import simulation.Unit;
 
 import java.util.Random;
 
@@ -190,6 +191,12 @@ public enum Buildings implements Building {
             for (RecipeResource resource : recipe.getItemIngredients()){
 
                 field.getResources().put(resource.getResource(),field.getResources().get(resource.getResource())-resource.getAmount());
+            }
+
+            if(building != UNIT){
+                field.getBuildings().put(building, field.getBuildings().get(building)+1);
+            }else{
+                field.getUnits().add(new Unit(field.getPlayer()));
             }
         }
     }
