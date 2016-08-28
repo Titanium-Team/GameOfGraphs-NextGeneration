@@ -5,16 +5,9 @@ import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import game.GameOfGraphs;
 import game.view.MenuView;
 import game.view.View;
-import mapEditor.MapEditorView;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class GraphView extends View{
     private Graph graph;

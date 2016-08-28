@@ -1,9 +1,7 @@
-package de.titaniumteam.game;
-
 import de.SweetCode.e.E;
 import de.SweetCode.e.Settings;
 import de.SweetCode.e.utils.Version;
-import de.titaniumteam.game.views.MenuView;
+import views.MenuView;
 
 import java.awt.*;
 import java.util.Map;

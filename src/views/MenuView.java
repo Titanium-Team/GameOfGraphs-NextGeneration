@@ -1,4 +1,4 @@
-package de.titaniumteam.game.views;
+package views;
 
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;

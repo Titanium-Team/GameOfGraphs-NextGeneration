@@ -1,6 +1,5 @@
 package mapEditor;
 
-import field.ForestType;
 import game.GameOfGraphs;
 import game.view.MenuView;
 import game.view.View;
@@ -9,8 +8,6 @@ import graph.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
-import static field.ForestType.WILLOW;
 
 public class MapEditorView extends View{
 

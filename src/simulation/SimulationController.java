@@ -1,4 +1,4 @@
-package de.titaniumteam.game.simulation;
+package simulation;
 
 import field.Field;
 import game.GameOfGraphs;

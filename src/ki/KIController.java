@@ -42,7 +42,7 @@ public class KIController {
 				ArrayList<Unit> rebels = new ArrayList<Unit>();
 				for(int i=0;i<v1.getField().getResources().get(Resources.POPULATION)/2;i++){
 					//TODO:change to player
-					//rebels.add(new Unit(Membership.UNKNOWN));
+					//rebels.add(new simulation.Unit(Membership.UNKNOWN));
 				}
 				//getGame().getSimulationController().fight(v1,rebels);
 				p.getNotifications().add(new Rebellion(!p.equals(v1),v1));
