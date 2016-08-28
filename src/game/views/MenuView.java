@@ -81,7 +81,6 @@ public class MenuView extends GameScene {
 
             }
 
-
         });
 
     }

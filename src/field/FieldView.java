@@ -60,7 +60,7 @@ public class FieldView extends GameScene{
     @Override
     public void update(InputEntry inputEntry, long l) {
 
-        inputEntry.getMouseEntries().forEachOrdered(entry -> {
+        inputEntry.getMouseEntries().forEach(entry -> {
 
             for(Vertex vertex : GameOfGraphs.getGame().getGraphController().getGraph().getVertices()){
 
