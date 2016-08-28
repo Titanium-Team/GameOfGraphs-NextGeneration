@@ -47,14 +47,14 @@ public class GraphDrawer {
         g.setClip(oldClip);
 
         ArrayList<Edge> edgeList = graph.getEdges();
-        if (whoAreYou.equals("MapEditor") && MapEditorView.isDragEdge() ) {
+        if (whoAreYou.equals("MapEditor") && MapEditorView.getDragEdge() != null ) {
             edgeList.add(new Edge(new String[]{"equals", "equals"}, 0));
         }
         for (Edge edge:edgeList) {
             Vertex vertex1 = null, vertex2 = null;
             if (whoAreYou.equals("MapEditor") && edge.getVerticesId()[0].equals("equals") && edge.getVerticesId()[1].equals("equals")){
-                vertex1 = MapEditorView.getDragEdgePos()[0];
-                vertex2 = MapEditorView.getDragEdgePos()[1];
+                vertex1 = MapEditorView.getDragEdge()[0];
+                vertex2 = MapEditorView.getDragEdge()[1];
             }else {
                 vertex1 = edge.getVerticesId(graph)[0];
                 vertex2 = edge.getVerticesId(graph)[1];
@@ -142,6 +142,9 @@ public class GraphDrawer {
                 g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
             }
         }
+
+        g.setTransform(oldTransform);
+        g.setClip(oldClip);
 
         //jScrollPane.getVerticalScrollBar().repaint();
         //jScrollPane.getHorizontalScrollBar().repaint();
