@@ -1,11 +1,15 @@
 package field;
 
+import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
+import de.SweetCode.e.math.BoundingBox;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
+import game.GraphDrawer;
+import graph.Graph;
 import graph.GraphController;
 import graph.Vertex;
 
@@ -23,6 +27,11 @@ public class FieldView extends GameScene{
     public void render(Layers layers) {
 
         Graphics2D g = layers.first().getGraphics2D();
+
+        Graph graph = new Graph();
+        graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null)));
+
+        GraphDrawer.drawer(g,graph,"Field");
 
         g.setColor(Color.BLACK);
         g.drawLine(0,500,1280,500);
@@ -47,6 +56,7 @@ public class FieldView extends GameScene{
                     y[0]++;
                 }
             });
+
         }
     }
 
@@ -56,6 +66,7 @@ public class FieldView extends GameScene{
         inputEntry.getMouseEntries().forEachOrdered(entry -> {
 
             for(Vertex vertex : GameOfGraphs.getGame().getGraphController().getGraph().getVertices()){
+
 
                 if(entry.getPoint().getX() == vertex.getX() && entry.getPoint().getY() == vertex.getY()){
 
@@ -72,6 +83,6 @@ public class FieldView extends GameScene{
 
     @Override
     public boolean isActive() {
-        return false;
+        return (E.getE().getScreen().getCurrent() == this);
     }
 }
