@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bf0f18fc-4e7e-44eb-a1ca-22fb3c656b10" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/de/titaniumteam/game/views/MenuView.java" afterPath="$PROJECT_DIR$/src/de/titaniumteam/game/views/MenuView.java" />
     </list>
     <ignored path="Game.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,12 +30,10 @@
       <file leaf-file-name="MenuView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/views/MenuView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
+            <state relative-caret-position="816">
+              <caret line="48" column="19" selection-start-line="48" selection-start-column="19" selection-end-line="48" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1049#1050#0" expanded="true" />
-                <element signature="e#1076#1077#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -44,8 +42,8 @@
       <file leaf-file-name="GameOfGraphs.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/GameOfGraphs.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="850">
-              <caret line="72" column="21" selection-start-line="72" selection-start-column="21" selection-end-line="72" selection-end-column="21" />
+            <state relative-caret-position="612">
+              <caret line="48" column="30" selection-start-line="48" selection-start-column="30" selection-end-line="48" selection-end-column="30" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -57,7 +55,7 @@
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="272">
-              <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
+              <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="17" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -92,8 +90,8 @@
       <list>
         <option value="$PROJECT_DIR$/src/de/titaniumteam/game/Main.java" />
         <option value="$PROJECT_DIR$/src/de/titaniumteam/game/TestScene.java" />
-        <option value="$PROJECT_DIR$/src/de/titaniumteam/game/views/MenuView.java" />
         <option value="$PROJECT_DIR$/src/de/titaniumteam/game/GameOfGraphs.java" />
+        <option value="$PROJECT_DIR$/src/de/titaniumteam/game/views/MenuView.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
@@ -197,6 +195,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Game" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Game" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -706,12 +718,12 @@
       <option name="presentableId" value="Default" />
       <updated>1472386344864</updated>
       <workItem from="1472386347780" duration="2216000" />
-      <workItem from="1472388884944" duration="58000" />
+      <workItem from="1472388884944" duration="298000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2274000" />
+    <option name="totallyTimeSpent" value="2514000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="3456" height="1426" extended-state="6" />
@@ -766,8 +778,6 @@
           <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1049#1050#0" expanded="true" />
-            <element signature="e#1076#1077#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -784,23 +794,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/Main.java" />
     <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/views.java" />
-    <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/views/MenuView.java">
+    <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/TestScene.java" />
+    <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/GameOfGraphs.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="24" column="39" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="39" />
+        <state relative-caret-position="612">
+          <caret line="48" column="30" selection-start-line="48" selection-start-column="30" selection-end-line="48" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1049#1050#0" expanded="true" />
-            <element signature="e#1076#1077#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/TestScene.java" />
-    <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/GameOfGraphs.java">
+    <entry file="file://$PROJECT_DIR$/src/de/titaniumteam/game/views/MenuView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="850">
-          <caret line="72" column="21" selection-start-line="72" selection-start-column="21" selection-end-line="72" selection-end-column="21" />
+        <state relative-caret-position="816">
+          <caret line="48" column="19" selection-start-line="48" selection-start-column="19" selection-end-line="48" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -810,7 +818,7 @@
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
-          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
+          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="17" selection-end-column="6" />
           <folding />
         </state>
       </provider>

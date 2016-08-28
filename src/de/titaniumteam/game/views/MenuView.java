@@ -5,6 +5,7 @@ import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,7 +39,25 @@ public class MenuView extends GameScene {
     }
 
     @Override
-    public void update(InputEntry inputEntry, long l) {
+    public void update(InputEntry inputEntry, long delta) {
+
+        inputEntry.getKeyEntries().forEachOrdered(e -> {
+
+            if(e.getKeyCode() == KeyEvent.VK_W) {
+                this.selectedOption--;
+
+                if()
+            }
+
+            if(e.getKeyCode() == KeyEvent.VK_S) {
+                this.selectedOption++;
+
+                if(this.selectedOption >= this.options.size()) {
+                    this.selectedOption = this.options.size() - 1;
+                }
+            }
+
+        });
 
     }
 
