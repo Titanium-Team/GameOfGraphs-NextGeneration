@@ -1,5 +1,6 @@
 package field;
 
+import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
@@ -15,7 +16,7 @@ import java.util.Map;
  */
 public class FieldView extends GameScene{
 
-    Field currentField = null;
+    private Field currentField = null;
 
     @Override
     public void render(Layers layers) {
@@ -70,6 +71,6 @@ public class FieldView extends GameScene{
 
     @Override
     public boolean isActive() {
-        return false;
+        return (E.getE().getScreen().getCurrent() == this);
     }
 }

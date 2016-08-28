@@ -85,6 +85,7 @@ public class Main {
             }
         });
 
+        e.addScene(new MenuView());
         e.addScene(new FieldView());
         e.show(MenuView.class);
         e.run();
