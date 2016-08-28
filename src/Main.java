@@ -52,7 +52,7 @@ public class Main {
 
             @Override
             public int getTargetFPS() {
-                return 2;
+                return 50;
             }
 
             @Override

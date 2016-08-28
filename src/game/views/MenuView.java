@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class MenuView extends GameScene {
 
@@ -52,7 +51,7 @@ public class MenuView extends GameScene {
     @Override
     public void update(InputEntry inputEntry, long delta) {
 
-        inputEntry.getKeyEntries().forEachOrdered(e -> {
+        inputEntry.getKeyEntries().forEach(e -> {
 
             if(e.getKeyCode() == KeyEvent.VK_W) {
                 this.selectedOption--;
