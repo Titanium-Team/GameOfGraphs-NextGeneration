@@ -47,14 +47,14 @@ public class GraphDrawer {
         g.setClip(oldClip);
 
         ArrayList<Edge> edgeList = graph.getEdges();
-        /*if (whoAreYou.equals("MapEditor") && GameOfGraphs.getGame().getMapEditorController().getTempEdge() != null) {
+        if (whoAreYou.equals("MapEditor") && GameOfGraphs.getGame().getMapEditorController().getTempEdge()) {
             edgeList.add(new Edge(new String[]{"equals", "equals"}, 0));
-        }*/
+        }
         for (Edge edge:edgeList) {
             Vertex vertex1 = null, vertex2 = null;
             if (whoAreYou.equals("MapEditor") && edge.getVerticesId()[0].equals("equals") && edge.getVerticesId()[1].equals("equals")){
-                //vertex1 = GameOfGraphs.getGame().getMapEditorController().getTempEdgeVertex()[0];
-                //vertex2 = GameOfGraphs.getGame().getMapEditorController().getTempEdgeVertex()[1];
+                vertex1 = GameOfGraphs.getGame().getMapEditorController().getTempEdgeVertex()[0];
+                vertex2 = GameOfGraphs.getGame().getMapEditorController().getTempEdgeVertex()[1];
             }else {
                 vertex1 = edge.getVerticesId(graph)[0];
                 vertex2 = edge.getVerticesId(graph)[1];
@@ -152,5 +152,9 @@ public class GraphDrawer {
         //if (view instanceof MapEditorView && ((MapEditorView) view).getPropertiesPanel() != null) {
        //     ((MapEditorView) view).getPropertiesPanel().repaint();
         //}
+    }
+
+    public static double getZoom() {
+        return zoom;
     }
 }
