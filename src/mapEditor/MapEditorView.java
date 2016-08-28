@@ -66,7 +66,7 @@ public class MapEditorView extends GameScene{
                                 }
                             }
 
-                            graph.addVertex(new Vertex(String.valueOf(id + 1), (int) (mouseEntry.getPoint().getX()/GraphDrawer.getZoom()), (int) (mouseEntry.getPoint().getY()/GraphDrawer.getZoom()), new Field(0, 0, null, null, null)));
+                            graph.addVertex(new Vertex(String.valueOf(id + 1), (int) (mouseEntry.getPoint().getX()/GraphDrawer.getZoom()), (int) (mouseEntry.getPoint().getY()/GraphDrawer.getZoom()), new Field(0, 0, null, 1, null)));
                         }
                         break;
                     case 1:
