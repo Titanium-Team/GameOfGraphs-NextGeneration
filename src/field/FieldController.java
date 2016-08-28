@@ -1,11 +1,13 @@
 package field;
 
+import field.buildings.Building;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.Player;
 import graph.Vertex;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -40,7 +42,13 @@ public class FieldController {
         List<Vertex> vertices = player.getFields();
         for(Vertex vertex : vertices) {
 
+            Map<Building, Integer> buildings = vertex.getField().getBuildings();
 
+            for(Building building : buildings.keySet()){
+
+                building.production(vertex.getField());
+
+            }
 
         }
 

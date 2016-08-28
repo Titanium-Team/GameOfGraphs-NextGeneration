@@ -10,11 +10,21 @@ public enum Resources implements Resource {
         public boolean isMineral() {
             return false;
         }
+
+        @Override
+        public String getName() {
+            return "People";
+        }
     },
     FOOD {
         @Override
         public boolean isMineral() {
             return false;
+        }
+
+        @Override
+        public String getName() {
+            return "People";
         }
     },
     STONE {
@@ -22,11 +32,21 @@ public enum Resources implements Resource {
         public boolean isMineral() {
             return false;
         }
+
+        @Override
+        public String getName() {
+            return "Stone";
+        }
     },
     WOOD {
         @Override
         public boolean isMineral() {
             return false;
+        }
+
+        @Override
+        public String getName() {
+            return "Wood";
         }
     },
     WHEAT {
@@ -34,11 +54,21 @@ public enum Resources implements Resource {
         public boolean isMineral() {
             return false;
         }
+
+        @Override
+        public String getName() {
+            return "Wheat";
+        }
     },
     HORSES {
         @Override
         public boolean isMineral() {
             return false;
+        }
+
+        @Override
+        public String getName() {
+            return "Horse";
         }
     },
     CATTLE {
@@ -46,17 +76,32 @@ public enum Resources implements Resource {
         public boolean isMineral() {
             return false;
         }
+
+        @Override
+        public String getName() {
+            return "Cattle";
+        }
     },
     IRON {
         @Override
         public boolean isMineral() {
             return true;
         }
+
+        @Override
+        public String getName() {
+            return "Iron";
+        }
     },
     GOLD {
         @Override
         public boolean isMineral() {
             return true;
+        }
+
+        @Override
+        public String getName() {
+            return "Gold";
         }
     };
 

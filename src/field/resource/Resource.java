@@ -7,6 +7,8 @@ public interface Resource {
 
     boolean isMineral();
 
+    String getName();
+
 
 
 }
