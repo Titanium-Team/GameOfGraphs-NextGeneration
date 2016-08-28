@@ -3,7 +3,6 @@ package game;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
-import mapEditor.MapEditorView;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

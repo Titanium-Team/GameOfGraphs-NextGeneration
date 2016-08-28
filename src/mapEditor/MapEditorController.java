@@ -1,16 +1,11 @@
 package mapEditor;
 
-import field.Field;
-import game.Queue;
-import graph.*;
-
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 public class MapEditorController {
 
+    /*private Graph graph;
+    private int chooser;
 
-  /*  public MapEditorController() {
+    public MapEditorController() {
         graph = new Graph();
         chooser = 2;
     }
@@ -27,7 +22,7 @@ public class MapEditorController {
             }
         }
 
-        graph.addVertex(new Vertex(String.valueOf(id + 1), x, y, new Field(0, 0, null, null, null)));
+        graph.addVertex(new Vertex(String.valueOf(id + 1), x, y, new Field(0, 0, null, 0, null)));
         return true;
     }
 
