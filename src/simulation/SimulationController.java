@@ -176,7 +176,7 @@ public class SimulationController {
 
     //HIER IST DIJKSTRA!!!
 
-    private List<Vertex> giveListOfVerticesToFollow(Vertex start, Vertex destination) {
+    public List<Vertex> giveListOfVerticesToFollow(Vertex start, Vertex destination) {
         List<Vertex> path = new List<>();
 
         ArrayList<Vertex> unvisitedArrayList = graph.getVertices();
