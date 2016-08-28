@@ -1,25 +1,8 @@
 package graph;
 
-import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.rendering.GameScene;
-import de.SweetCode.e.rendering.layers.Layers;
-import game.GameOfGraphs;
-import game.view.View;
-import mapEditor.MapEditorView;
+public class GraphPanel {
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
-public class GraphPanel extends GameScene {
-    private JScrollPane jScrollPane;
+    /*private JScrollPane jScrollPane;
     private Graph graph;
     private View view;
 
@@ -190,7 +173,7 @@ public class GraphPanel extends GameScene {
             }
 
             graphics2D.setClip(new Polygon(x, y, 4));
-
+            */
             /*Vector vector = new Vector(vertex2.getX() - vertex1.getX(), vertex2.getY() - vertex1.getY());
 
             Rectangle2D r = new Rectangle2D.Float(vertex1.getX()-graph.getThickness()/2, vertex1.getY(), graph.getThickness(), (float) vector.length());
@@ -202,6 +185,7 @@ public class GraphPanel extends GameScene {
 
             graphics2D.setClip(r);*/
 
+            /*
             if (view instanceof MapEditorView && GameOfGraphs.getGame().getMapEditorController().getPreviewEdge() != null) {
                 graphics2D.drawImage(GameOfGraphs.getGame().getMapEditorController().getPreviewEdge(), 0, 0, graph.getWidth(), graph.getHeight(), null);
 
@@ -281,4 +265,5 @@ public class GraphPanel extends GameScene {
     public boolean isActive() {
         return false;
     }
+    */
 }

@@ -1,16 +1,7 @@
 package mapEditor;
 
-import game.GameOfGraphs;
-import game.view.MenuView;
-import game.view.View;
-import graph.*;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-public class MapEditorView extends View{
-
+public class MapEditorView {
+    /*
     private static Graph graph;
 
 	private Vertex temp;
@@ -475,5 +466,5 @@ public class MapEditorView extends View{
         public JButton getRemove() {
             return remove;
         }
-    }
+    }*/
 }

@@ -1,28 +1,9 @@
 package mapEditor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.smile.SmileFactory;
-import game.GameOfGraphs;
-import game.view.MenuView;
-import graph.*;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-public class MapEditorViewMenu extends MenuView{
+public class MapEditorViewMenu {
     //1280 * 180
 
+    /*
     private JButton vertexAdd, edgeAdd, check, load, save, back, moving;
     private TextureChooser backgroundChooser, vertexChooser, edgeChooser;
     private MapEditorController mapEditorController;
@@ -31,7 +12,7 @@ public class MapEditorViewMenu extends MenuView{
     public MapEditorViewMenu() {
         this.setLayout(new GridLayout(2, 4, 5, 5));
         mapEditorController = GameOfGraphs.getGame().getMapEditorController();
-        graph = mapEditorController.getGraph();
+        graph = mapEditorController.getGraph();*/
 
         /*try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -44,7 +25,7 @@ public class MapEditorViewMenu extends MenuView{
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }*/
-
+        /*
         backgroundChooser = new TextureChooser("Background");
         edgeChooser = new TextureChooser("Edge");
         vertexChooser = new TextureChooser("Vertex");
@@ -716,5 +697,5 @@ public class MapEditorViewMenu extends MenuView{
             g.setColor(Color.WHITE);
             g.drawRect(0, 0, this.getWidth()-1, this.getHeight()-1);
         }
-    }
+    }*/
 }

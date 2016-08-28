@@ -176,7 +176,7 @@ public class SimulationController {
 
     //HIER IST DIJKSTRA!!!
 
-    private List<Vertex> giveListOfVerticesToFollow(Vertex start, Vertex destination) {
+    public List<Vertex> giveListOfVerticesToFollow(Vertex start, Vertex destination) {
         List<Vertex> path = new List<>();
 
         ArrayList<Vertex> unvisitedArrayList = graph.getVertices();
@@ -285,7 +285,7 @@ public class SimulationController {
      */
 
     //TODO: Verbesserung des Kampf-Systems
-    private void fight(Vertex vertex, ArrayList<Unit> attackingUnits){
+    public void fight(Vertex vertex, ArrayList<Unit> attackingUnits){
         ArrayList<Unit> defendingUnits = vertex.getField().getUnits();
 
         int aU, dU;
