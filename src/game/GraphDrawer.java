@@ -24,9 +24,7 @@ public class GraphDrawer {
         g.scale(zoom, zoom);
         g.setStroke(new BasicStroke(2));
         Shape oldClip = g.getClip();
-        AffineTransform oldTransform =  g.getTransform();
-
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        AffineTransform oldTransform = g.getTransform();
 
         if (whoAreYou.equals("MapEditor") && MapEditorView.getPreviewBackground() != null){
             g.drawImage(MapEditorView.getPreviewBackground(), 0, 0, graph.getWidth(), graph.getHeight(), null);
@@ -142,8 +140,6 @@ public class GraphDrawer {
                 g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
             }
         }
-
-        g.dispose();
 
         //jScrollPane.getVerticalScrollBar().repaint();
         //jScrollPane.getHorizontalScrollBar().repaint();

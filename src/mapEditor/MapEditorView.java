@@ -1,5 +1,6 @@
 package mapEditor;
 
+import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
@@ -106,7 +107,7 @@ public class MapEditorView extends GameScene{
 
     @Override
     public boolean isActive() {
-        return false;
+        return (E.getE().getScreen().getCurrent().getClass().equals(this.getClass()));
     }
 
     public int getChooser() {

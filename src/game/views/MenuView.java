@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class MenuView extends GameScene {
 
@@ -30,11 +31,6 @@ public class MenuView extends GameScene {
     public void render(Layers layers) {
 
         Graphics2D g = layers.first().getGraphics2D();
-
-        this.options.forEach((key, value) -> {
-
-
-        });
 
         //draw menu
         int x = 0;
@@ -75,7 +71,7 @@ public class MenuView extends GameScene {
             }
 
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                Class<?> clazz = this.options.get(this.options.keySet().toArray()[this.selectedOption]);
+                Class<?> clazz = this.options.get(this.options.keySet().toArray(new String[this.options.size()])[this.selectedOption]);
 
                 if(clazz == null) {
                     System.exit(1);
@@ -93,7 +89,7 @@ public class MenuView extends GameScene {
 
     @Override
     public boolean isActive() {
-        return (E.getE().getScreen().getCurrent() == this);
+        return E.getE().getScreen().getCurrent().getClass().equals(this.getClass());
     }
 
 }

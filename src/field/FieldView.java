@@ -6,6 +6,8 @@ import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.resource.Resource;
 import game.GameOfGraphs;
+import game.GraphDrawer;
+import graph.Graph;
 import graph.Vertex;
 
 import java.awt.*;
@@ -22,6 +24,11 @@ public class FieldView extends GameScene{
     public void render(Layers layers) {
 
         Graphics2D g = layers.first().getGraphics2D();
+
+        Graph graph = new Graph();
+        graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null)));
+
+        GraphDrawer.drawer(g,graph,"Field");
 
         g.setColor(Color.BLACK);
         g.drawLine(0,500,1280,500);
@@ -46,6 +53,7 @@ public class FieldView extends GameScene{
                     y[0]++;
                 }
             });
+
         }
     }
 
@@ -57,7 +65,6 @@ public class FieldView extends GameScene{
             for(Vertex vertex : GameOfGraphs.getGame().getGraphController().getGraph().getVertices()){
 
                 if(entry.getPoint().getX() == vertex.getX() && entry.getPoint().getY() == vertex.getY()){
-
                     this.currentField = vertex.getField();
                     break;
                 }
@@ -73,4 +80,5 @@ public class FieldView extends GameScene{
     public boolean isActive() {
         return (E.getE().getScreen().getCurrent() == this);
     }
+
 }

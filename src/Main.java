@@ -52,7 +52,7 @@ public class Main {
 
             @Override
             public int getTargetFPS() {
-                return 50;
+                return 2;
             }
 
             @Override
@@ -77,12 +77,16 @@ public class Main {
 
             @Override
             public boolean fixAspectRatio() {
-                return true;
+                return false;
             }
 
             @Override
             public Map<RenderingHints.Key, Object> getRenderingHints() {
-                return new HashMap<>();
+                return new HashMap<RenderingHints.Key, Object>() {{
+
+                    this.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                }};
             }
         });
 
@@ -91,6 +95,7 @@ public class Main {
         e.addScene(new MapEditorView());
 
         e.show(MenuView.class);
+
         e.run();
 
     }

@@ -1,7 +1,6 @@
 package ki;
 
 import field.resource.Resource;
-import field.resource.Resources;
 import game.Player;
 import graph.Vertex;
 
@@ -14,6 +13,7 @@ import static game.GameOfGraphs.getGame;
  * Created by Tim Bolz on 24.06.2016.
  */
 public class TradeRequest extends Request {
+
 	private HashMap<Resource,Integer> offeredResources, requestedResources;
 	private Vertex place;
 	private Player recipient;

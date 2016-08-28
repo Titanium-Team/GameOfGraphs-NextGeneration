@@ -11,16 +11,14 @@ import java.util.Random;
 public class Player {
 
     protected String name;
-    private Membership membership;
     private List<Vertex> fields = new ArrayList<>();
     protected ArrayList<Player> alliances;
     private Random r;
     protected Queue<Request> requests;
     protected ArrayList<Notifications> notifications;
 
-    public Player(String name, Membership membership) {
+    public Player(String name) {
         this.name = name;
-        this.membership = membership;
         alliances=new ArrayList<Player>();
         r=new Random();
 
