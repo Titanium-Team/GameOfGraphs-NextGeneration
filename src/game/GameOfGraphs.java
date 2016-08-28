@@ -156,6 +156,6 @@ public class GameOfGraphs {
     }
 
     public List<Player> getPlayers() {
-        return new ArrayList<Player>();
+        return new ArrayList<>();
     }
 }
