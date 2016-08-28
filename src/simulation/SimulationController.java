@@ -24,7 +24,6 @@ public class SimulationController {
             graph = GameOfGraphs.getGame().getGraphController().getGraph();
         }
 
-        //Wenn neuste Version mit ArrayList statt List im graph package, auskommentieren.
         ArrayList<Vertex> allVertices = graph.getVertices();
         ArrayList<Vertex> vertices = new ArrayList<>();
         for (Vertex vertex: allVertices) {
