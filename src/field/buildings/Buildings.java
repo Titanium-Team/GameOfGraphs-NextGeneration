@@ -173,7 +173,7 @@ public enum Buildings implements Building {
         return true;
     }
 
-    public static void productionResource(Field field, Resource resource, Building building, int condition, int amount){
+    public static void productionResource(Field field, Resources resource, Building building, int condition, int amount){
 
         if(field.getLocalResource() == resource && field.getBuildings().get(building) >= condition){
             field.getResources().put(resource,field.getResources().get(resource) + amount);

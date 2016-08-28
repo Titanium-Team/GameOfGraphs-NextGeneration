@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import field.buildings.Building;
 import field.resource.Resource;
+import field.resource.Resources;
 import game.Player;
 import simulation.Unit;
 
@@ -24,7 +25,7 @@ public class Field {
     private ForestType forestType;
 
     @JsonIgnore
-    private Map<Resource, Integer> resources;
+    private Map<Resources, Integer> resources;
 
     @JsonIgnore
     private Map<Building, Integer> buildings;
@@ -111,7 +112,7 @@ public class Field {
         this.localResource = localResource;
     }
 
-    public Map<Resource, Integer> getResources() {
+    public Map<Resources, Integer> getResources() {
         return resources;
     }
 

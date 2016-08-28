@@ -1,10 +1,12 @@
 package ki;
 
+import field.resource.Resource;
 import field.resource.Resources;
 import game.Player;
 import graph.Vertex;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static game.GameOfGraphs.getGame;
 
@@ -17,11 +19,10 @@ public class TradeRequest extends Request {
 	private Player recipient;
 
 	public TradeRequest(Player parent, HashMap<Resources, Integer> offeredResources, HashMap<Resources, Integer> requestedResources,Vertex place,Player recipient) {
-		super(parent);
+		super(parent,recipient);
 		this.offeredResources = offeredResources;
 		this.requestedResources = requestedResources;
 		this.place=place;
-		this.recipient=recipient;
 	}
 
 	public HashMap<Resources, Integer> getOfferedResources() {
@@ -50,19 +51,35 @@ public class TradeRequest extends Request {
 			HashMap<Resources,Integer> temp1= new HashMap<>();
 			HashMap<Resources,Integer> temp2=new HashMap<>();
 			boolean possible=true;
-			/*for (Map.Entry<Resource,Integer> e : root.getField().getResources().entrySet()) {
-				if(possible){
-					if(root.getField().getResources().containsKey(res) && root.getField().getResources().get(res)>=requestedResources.get(res)){
-						temp1.put(res,root.getField().getResources().get(res)-requestedResources.get(res));
-					}else{
-						possible=false;
-					}
-					if(place.getField().getResources().containsKey(res) && place.getField().getResources().get(res)>=offeredResources.get(res))
-				}
+			possible=checkResources(root,temp1,requestedResources);
+			if(possible) {
+				possible=checkResources(place,temp2,offeredResources);
 			}
 			if(possible){
+				root.getField().getResources().putAll(temp1);
 
-			}*/
+				place.getField().getResources().putAll(temp2);
+			}
 		}
+	}
+
+	private boolean checkResources(Vertex place,HashMap<Resources,Integer> temp,HashMap<Resources,Integer> resources){
+		boolean result=true;
+		HashMap<Resources,Integer> res;
+		if(resources.equals(requestedResources)){
+			res=offeredResources;
+		}else{
+			res=requestedResources;
+		}
+		for (Map.Entry<Resources,Integer> e : place.getField().getResources().entrySet()) {
+			if(result){
+				if(place.getField().getResources().get(e.getKey())>=resources.get(e.getKey())){
+					temp.put(e.getKey(),place.getField().getResources().get(e.getKey())-resources.get(e.getKey())+res.get(e.getKey()));
+				}else{
+					result=false;
+				}
+			}
+		}
+		return result;
 	}
 }
