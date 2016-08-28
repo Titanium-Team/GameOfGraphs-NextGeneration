@@ -84,7 +84,6 @@ public class Main {
                 return new HashMap<>();
             }
         });
-
         e.addScene(new FieldView());
         e.show(MenuView.class);
         e.run();
