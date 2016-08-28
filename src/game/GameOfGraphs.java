@@ -78,6 +78,7 @@ public class GameOfGraphs {
     public static void main(String[] args) {
         new GameOfGraphs();
         E e = new E(new Settings() {
+
             @Override
             public String getName() {
                 return "Test";
@@ -125,12 +126,12 @@ public class GameOfGraphs {
 
             @Override
             public boolean isDecorated() {
-                return true;
+                return false;
             }
 
             @Override
             public boolean isResizable() {
-                return true;
+                return false;
             }
 
             @Override
