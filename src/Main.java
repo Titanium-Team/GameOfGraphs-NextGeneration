@@ -4,6 +4,7 @@ import de.SweetCode.e.utils.Version;
 import field.FieldView;
 import game.GameOfGraphs;
 import game.views.MenuView;
+import mapEditor.MapEditorView;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -85,7 +86,8 @@ public class Main {
             }
         });
 
-        e.addScene(new FieldView());
+        e.addScene(new MenuView());
+        e.addScene(new MapEditorView());
         e.show(MenuView.class);
         e.run();
 
