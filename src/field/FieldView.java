@@ -30,8 +30,8 @@ public class FieldView extends GameScene{
         if(currentField == null) {
             g.drawString("Kein Field ausgewählt", 620, 600);
         }else{
-            g.drawString(String.valueOf("FER: " + currentField.getFertility()), 20, 520);
-            g.drawString(String.valueOf("MOU: " + currentField.getMountains()), 70, 520);
+            g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
+            g.drawString(String.valueOf("MOUNTAIN: " + currentField.getMountains()), 70, 520);
 
             Map<Resource, Integer> resources = currentField.getResources();
 

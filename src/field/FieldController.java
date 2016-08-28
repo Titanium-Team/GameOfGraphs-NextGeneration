@@ -21,7 +21,7 @@ public class FieldController {
 
         int fertility = random.nextInt(6);
         int mountains = random.nextInt(6-fertility);
-        ForestType forestType = ForestType.values()[random.nextInt(ForestType.values().length)];
+        int forestType = random.nextInt(5)+1;
 
         Resource[] resources = Resources.getSpecialResources();
 
@@ -32,7 +32,7 @@ public class FieldController {
         }
 
         Field field = new Field(fertility, mountains, player, forestType, resource);
-        field.getResources().put(Resources.POPULATION,random.nextInt(4)+3);
+        field.getResources().put(Resources.POPULATION,random.nextInt(2)+2);
 
         return field;
     }
@@ -49,6 +49,14 @@ public class FieldController {
                 building.production(vertex.getField());
 
             }
+
+            vertex.getField().getResources().put(Resources.FOOD,vertex.getField().getResources().get(Resources.FOOD)- random.nextInt(vertex.getField().getResources().get(Resources.POPULATION)));
+            if(vertex.getField().getResources().get(Resources.FOOD) > 0){
+                vertex.getField().getResources().put(Resources.POPULATION, vertex.getField().getResources().get(Resources.POPULATION) + 1);
+            }
+
+
+            vertex.getField().getResources().put(Resources.WOOD, vertex.getField().getResources().get(Resources.WOOD) + random.nextInt(vertex.getField().getForestType()));
 
         }
 

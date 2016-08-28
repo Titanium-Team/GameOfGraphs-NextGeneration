@@ -21,7 +21,7 @@ public class Field {
     private int mountains;
     private Resource localResource;
 
-    private ForestType forestType;
+    private  int forestType;
 
     @JsonIgnore
     private Map<Resource, Integer> resources;
@@ -32,7 +32,7 @@ public class Field {
     private Player player;
 
     @JsonCreator
-    public Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  ForestType forestType,@JsonProperty("localResource")  Resource localResource) {
+    public Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  int forestType,@JsonProperty("localResource")  Resource localResource) {
         units = new ArrayList<>();
         buildings = new HashMap<>();
         resources = new HashMap<>();
@@ -94,11 +94,11 @@ public class Field {
         this.mountains = mountains;
     }
 
-    public ForestType getForestType() {
+    public int getForestType() {
         return forestType;
     }
 
-    public void setForestType(ForestType forestType) {
+    public void setForestType(int forestType) {
         this.forestType = forestType;
     }
 
