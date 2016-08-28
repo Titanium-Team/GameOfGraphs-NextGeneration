@@ -18,14 +18,14 @@ import java.util.stream.Stream;
 
 public class MapEditorView extends GameScene{
     private Graph graph;
-    private boolean dragEdge;
-    private Vertex[] dragEdgePos;
+    private static boolean dragEdge;
+    private static Vertex[] dragEdgePos;
 
     private MapEditorController mapEditorController;
     private Vertex temp;
 
     private int chooser = 2;
-    private BufferedImage previewBackground, previewVertex, previewEdge;
+    private static BufferedImage previewBackground, previewVertex, previewEdge;
 
     private PropertiesVertex propertiesVertex;
 
@@ -111,7 +111,35 @@ public class MapEditorView extends GameScene{
     public boolean isActive() {
         return false;
     }
-    
+
+    public int getChooser() {
+        return chooser;
+    }
+
+    public static BufferedImage getPreviewBackground() {
+        return previewBackground;
+    }
+
+    public static BufferedImage getPreviewVertex() {
+        return previewVertex;
+    }
+
+    public static BufferedImage getPreviewEdge() {
+        return previewEdge;
+    }
+
+    public PropertiesVertex getPropertiesVertex() {
+        return propertiesVertex;
+    }
+
+    public static Vertex[] getDragEdgePos() {
+        return dragEdgePos;
+    }
+
+    public static boolean isDragEdge() {
+        return dragEdge;
+    }
+
     private class PropertiesVertex{
         private Vertex v;
         private int[] p;
