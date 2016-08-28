@@ -135,4 +135,7 @@ public class GameOfGraphs {
 
     }
 
+    public Player getCurrentPlayer() {
+        return null;
+    }
 }

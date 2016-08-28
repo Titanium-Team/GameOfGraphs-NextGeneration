@@ -1,8 +1,5 @@
 package field.resource;
 
-import static game.inventory.resource.ResourceTypes.GOLD;
-import static game.inventory.resource.ResourceTypes.IRON;
-
 /**
  * Created by 204g03 on 20.06.2016.
  */

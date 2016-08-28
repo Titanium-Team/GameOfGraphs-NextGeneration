@@ -1,7 +1,6 @@
 package field.recipe;
 
 import field.buildings.Building;
-import game.inventory.resource.ResourceStack;
 
 import java.util.ArrayList;
 import java.util.List;

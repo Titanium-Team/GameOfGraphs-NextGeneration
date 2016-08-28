@@ -1,5 +1,8 @@
 package graph;
 
+import de.SweetCode.e.input.InputEntry;
+import de.SweetCode.e.rendering.GameScene;
+import de.SweetCode.e.rendering.layers.Layers;
 import game.GameOfGraphs;
 import game.view.View;
 import mapEditor.MapEditorView;
@@ -15,7 +18,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class GraphPanel extends JPanel{
+public class GraphPanel extends GameScene {
     private JScrollPane jScrollPane;
     private Graph graph;
     private View view;
@@ -105,11 +108,22 @@ public class GraphPanel extends JPanel{
         });
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
 
-        Graphics2D graphics2D = (Graphics2D) g;
+    public void setJScrollPane(JScrollPane jScrollPane) {
+        this.jScrollPane = jScrollPane;
+    }
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    @Override
+    public void render(Layers layers) {
+
+        Graphics2D graphics2D = layers.first().getGraphics2D();
 
         graphics2D.scale(zoom, zoom);
         graphics2D.setStroke(new BasicStroke(2));
@@ -255,17 +269,16 @@ public class GraphPanel extends JPanel{
         if (view instanceof MapEditorView && ((MapEditorView) view).getPropertiesPanel() != null) {
             ((MapEditorView) view).getPropertiesPanel().repaint();
         }
+
     }
 
-    public void setGraph(Graph graph) {
-        this.graph = graph;
+    @Override
+    public void update(InputEntry inputEntry, long l) {
+
     }
 
-    public void setJScrollPane(JScrollPane jScrollPane) {
-        this.jScrollPane = jScrollPane;
-    }
-
-    public double getZoom() {
-        return zoom;
+    @Override
+    public boolean isActive() {
+        return false;
     }
 }
