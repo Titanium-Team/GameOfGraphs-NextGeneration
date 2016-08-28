@@ -89,7 +89,7 @@ public class MenuView extends GameScene {
 
     @Override
     public boolean isActive() {
-        return true;
+        return (E.getE().getScreen().getCurrent() == this);
     }
 
 }

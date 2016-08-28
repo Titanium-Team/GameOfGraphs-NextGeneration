@@ -4,17 +4,14 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.Field;
-import field.resource.Resource;
 import field.resource.Resources;
 import game.GraphDrawer;
 import graph.Graph;
-import graph.GraphPanel;
 import graph.Vertex;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 public class MapEditorView extends GameScene{
     private Graph graph;

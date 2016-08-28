@@ -6,11 +6,13 @@ import de.SweetCode.e.math.BoundingBox;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.resource.Resource;
-import field.resource.Resources;
 import game.GameOfGraphs;
+
 import game.GraphDrawer;
 import graph.Graph;
 import graph.GraphController;
+
+
 import graph.Vertex;
 
 import java.awt.*;
@@ -21,7 +23,7 @@ import java.util.Map;
  */
 public class FieldView extends GameScene{
 
-    Field currentField = null;
+    private Field currentField = null;
 
     @Override
     public void render(Layers layers) {

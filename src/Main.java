@@ -5,6 +5,7 @@ import field.Field;
 import field.FieldView;
 import game.GameOfGraphs;
 import game.views.MenuView;
+import mapEditor.MapEditorView;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -86,8 +87,10 @@ public class Main {
             }
         });
 
+        e.addScene(new MenuView());
         e.addScene(new FieldView());
         e.show(FieldView.class);
+
         e.run();
 
     }
