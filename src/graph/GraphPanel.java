@@ -8,7 +8,7 @@ public class GraphPanel{
 
     private Graph graph;
 
-    public GraphPanel() {
+   /* public GraphPanel() {
         if (view instanceof MapEditorView){
             graph = GameOfGraphs.getGame().getMapEditorController().getGraph();
         }
@@ -92,5 +92,5 @@ public class GraphPanel{
 
     public double getZoom() {
         return zoom;
-    }
+    }*/
 }

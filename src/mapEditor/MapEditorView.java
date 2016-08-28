@@ -1,7 +1,6 @@
 package mapEditor;
 
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.input.MouseEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.Field;
