@@ -4,7 +4,6 @@ import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
-import field.Field;
 import field.resource.Resources;
 import game.GameOfGraphs;
 import game.GraphDrawer;
@@ -16,7 +15,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.stream.Stream;
 
 public class MapEditorView extends GameScene{
     private Graph graph;
@@ -42,6 +40,7 @@ public class MapEditorView extends GameScene{
 
     @Override
     public void render(Layers layers) {
+
         GraphDrawer.drawer(layers.first().getGraphics2D(), graph, "MapEditor");
 
         if (propertiesVertex != null){
