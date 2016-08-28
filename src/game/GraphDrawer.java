@@ -20,6 +20,8 @@ public class GraphDrawer {
     private double scrollX = 0d;
     private double scrollY = 0d;
 
+
+
     public static void drawer(Graphics2D g, Graph graph, String whoAreYou){
         g.scale(zoom, zoom);
         g.setStroke(new BasicStroke(2));
