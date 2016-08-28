@@ -3,7 +3,6 @@ package ki;
 import field.buildings.Buildings;
 import field.resource.Resources;
 import game.GameOfGraphs;
-import game.Membership;
 import game.Player;
 import game.Queue;
 import graph.Graph;
@@ -102,7 +101,7 @@ public class KIController {
 								getGame().getSimulationController().moveUnits(v1, goal, amount);
 							}
 						}else{
-							getGame().getSimulationController().createUnit(v1);
+							Buildings.build(Buildings.UNIT,v1.getField());
 						}
 					}
 				}else if(((KIFraction)(v1.getField().getPlayer())).isFraction()){
@@ -112,6 +111,14 @@ public class KIController {
 							int chance = r.nextInt(options.size());
 							current.addProperty(Property.values()[chance]);
 							current.setDevelopingChance(r.nextInt(5));
+						}
+					}
+					if(v1.getField().getResources().get(Resources.FOOD)<v1.getField().getResources().get(Resources.POPULATION)){
+						if(v1.getField().getBuildings().get(Buildings.FARM)>0){
+							Buildings.build(Buildings.BUTCHER,v1.getField());
+							Buildings.build(Buildings.WINDMILL,v1.getField());
+						}else {
+							Buildings.build(Buildings.FARM, v1.getField());
 						}
 					}
 					if (current.getProperties().contains(Property.AGGRESSIVE)) {
@@ -129,9 +136,9 @@ public class KIController {
 									if(attackedVertex!=null) {
 										getGame().getSimulationController().moveUnits(v1, attackedVertex, v1.getField().getUnits().size() );
 									}
-									
+
 								} else {
-									getGame().getSimulationController().createUnit(v1);
+									Buildings.build(Buildings.UNIT,v1.getField());
 									Buildings.build(Buildings.MINE,v.getField());
 								}
 							}
@@ -148,32 +155,7 @@ public class KIController {
 						}
 
 						if (partner != null) {
-							if (current.getProperties().contains(Property.PEACEFUL)) {
-								if (partner instanceof KIFraction) {
-									if (r.nextInt(100) < ((KIFraction) partner).getTrust().get(current)) {
-										int resources = 0;
-                                        /*Vertex goal=current.getFields().get(0);
-                                        for(Vertex vertex:current.getFields()){
-                                            resources+=vertex.getField().getResources();
-                                            if(vertex.getField().getResources()>goal.getField().getResources()){
-                                                goal=vertex;
-                                            }
-
-                                        }
-                                        if(((KIFraction) partner).getProperties().contains(Property.GREEDY)){
-                                            resources=resources/10;
-                                            if(goal.getField().getResources()>=resources){
-                                                goal.getField().setResources(goal.getField().getResources());
-                                            }
-                                        }
-                                        current.addAlly(partner);
-                                        */
-									}
-								}
-
-							} else {
-								current.requestAlliance(partner);
-							}
+							current.requestAlliance(partner);
 						}
 					}
 					if (current.getProperties().contains(Property.ECONOMIC)) {
@@ -183,7 +165,6 @@ public class KIController {
 						if (current.getProperties().contains(Property.PEACEFUL)) {
 							//TODO: produce just as much units as needed to defend
 						}
-						//TODO: scout enemies, level up mines, if strong enemies → level up defense
 					}
 					while(!current.getRequests().isEmpty()){
 						Request req = current.getRequests().front();
@@ -199,7 +180,11 @@ public class KIController {
 								}
 								if(r.nextInt(100)<trust){
 									req.accept();
+								}else{
+									req.decline();
 								}
+							}else{
+								req.decline();
 							}
 						}else if(req instanceof TradeRequest){
 							//TODO: specify offers, trade
@@ -245,7 +230,7 @@ public class KIController {
 								}
 							}
 							if(current.equals(place.getField().getPlayer())){
-								getGame().getSimulationController().createUnit(place);
+								Buildings.build(Buildings.UNIT,place.getField());
 							}
 
 						}else if(i instanceof Rebellion){
@@ -257,7 +242,7 @@ public class KIController {
 									this.reclaim(current,place);
 								}
 							}else{
-								getGame().getSimulationController().createUnit(place);
+								Buildings.build(Buildings.UNIT,place.getField());
 							}
 						}
 					}

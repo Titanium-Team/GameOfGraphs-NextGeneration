@@ -3,7 +3,6 @@ package field;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import field.buildings.Building;
 import field.buildings.Buildings;
 import field.resource.Resource;
@@ -45,8 +44,6 @@ public class Field {
         this.localResource = localResource;
 
         this.forestType = forestType;
-
-
 
     }
 
