@@ -332,7 +332,7 @@ public class KIController {
             Recipe recipe=b.getRecipe();
             for(RecipeResource rRes:recipe.getItemIngredients()){
                 if(v.getField().getResources().get(rRes.getResource())<rRes.getAmount()){
-                    ((KIFraction) v.getField().getPlayer()).getGoals().put(rRes.getResource(),rRes.getAmount()-v.getField().getResources().get(rRes.getResource()));
+                    //((KIFraction) v.getField().getPlayer()).getGoals().put(rRes.getResource(),rRes.getAmount()-v.getField().getResources().get(rRes.getResource()));
                 }
             }
         }
