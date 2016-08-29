@@ -52,7 +52,7 @@ public class Main {
 
             @Override
             public int getTargetFPS() {
-                return 50;
+                return 60;
             }
 
             @Override
@@ -95,7 +95,7 @@ public class Main {
         e.addScene(new FieldView());
         e.addScene(new MapEditorView());
 
-        e.show(MenuView.class);
+        e.show(MapEditorView.class);
 
         e.run();
 

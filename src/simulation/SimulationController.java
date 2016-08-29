@@ -19,15 +19,27 @@ public class SimulationController {
 
     public SimulationController(){}
 
+    //TODO: If-Verzweigung überprüfen ob nötig. (If not player vertex)
+
+
     public void run(Player currentPlayer){
+
+        this.currentPlayer = currentPlayer;
+
         if (graph == null){
             graph = GameOfGraphs.getGame().getGraphController().getGraph();
         }
 
+
+        /*
+        Units des currentPlayer werden auf "nicht bewegt" gesetzt, damit
+        sie in der Runde vom Spieler überhaupt bewegt werden können.
+         */
+
         ArrayList<Vertex> allVertices = graph.getVertices();
         ArrayList<Vertex> vertices = new ArrayList<>();
         for (Vertex vertex: allVertices) {
-            if (vertex.getField().getPlayer() == GameOfGraphs.getGame().getCurrentPlayer()){
+            if (vertex.getField().getPlayer() == currentPlayer){
                 vertices.add(vertex);
             }
         }
@@ -37,12 +49,12 @@ public class SimulationController {
                 unit.setMoved(false);
             }
         }
-
-        this.currentPlayer = currentPlayer;
     }
 
 
+    //TODO: Klären ob die Methode benötigt wird.
 
+    /*
     public void createUnit(Vertex vertex) {
         if (currentPlayer == vertex.getField().getPlayer()){
             vertex.getField().getUnits().add(new Unit(vertex.getField().getPlayer()));
@@ -51,6 +63,7 @@ public class SimulationController {
             System.out.println("Not your field!");
         }
     }
+    */
 
     /**
      * Eine Methode um festzustellen, welche Units von welchem Feld abgezogen werden.
@@ -100,43 +113,35 @@ public class SimulationController {
      */
 
 
-    public void moveUnits(Vertex start, Vertex end, int amountUnits){
-        List<Vertex> path = giveListOfVerticesToFollow(start, end);
-        double movePoints = 50;
-        boolean canMove = true;
-        if (currentPlayer == start.getField().getPlayer() && currentPlayer == end.getField().getPlayer()) {
-            if (path != null) {
-                path.toFirst();
-                while (path.hasAccess() && path.getNext() != null && canMove) {
-                    ArrayList<Unit> units = getListOfUnitsToMove(path.getContent(), amountUnits);
-                    if (movePoints > 0) {
+    public void moveUnits(Vertex start, Vertex end, int amountUnits) {
+        if (currentPlayer == start.getField().getPlayer()) {
+            List<Vertex> path = giveListOfVerticesToFollow(start, end);
+            boolean possiblePath = isMovementPossible(path);
+            if (!possiblePath) {
+                JOptionPane.showMessageDialog(null, "Das Zielfeld ist zuweit weg! Bitte wähle einen nähres Feld (unter 50 km)");
+            } else {
+                if (path != null) {
+                    path.toFirst();
+                    while (path.hasAccess() && path.getNext() != null) {
+                        ArrayList<Unit> units = getListOfUnitsToMove(path.getContent(), amountUnits);
                         assert units != null;
                         if (path.getNext().getField().getPlayer() != currentPlayer && path.getNext().getField().getUnits().get(0) != null) {
                             fight(path.getNext(), units);
-                            if (units.get(0) != null){
-                                JOptionPane.showMessageDialog(null,"Deine Truppen haben gewonnen!");
-                            }else if (path.getNext().getField().getUnits().get(0) != null){
-                                JOptionPane.showMessageDialog(null,"Die Truppen des Gegners haben gewonnen!");
-                            }else{
-                                JOptionPane.showMessageDialog(null,"Keine der beiden Truppen hat gewonnen!");
+                            if (units.get(0) != null) {
+                                JOptionPane.showMessageDialog(null, "Deine Truppen haben gewonnen!");
+                            } else if (path.getNext().getField().getUnits().get(0) != null) {
+                                JOptionPane.showMessageDialog(null, "Die Truppen des Gegners haben gewonnen!");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Keine der beiden Truppen hat gewonnen!");
                             }
                         } else {
                             path.getNext().getField().setPlayer(currentPlayer);
                         }
                         addUnitsToField(path.getContent().getField(), units);
-                        movePoints -= graph.getEdge(path.getContent(), path.getNext()).getWeight();
-                    } else {
-                        canMove = false;
-                        assert units != null;
-                        for (Unit unit : units) {
-                            unit.setMoved(true);
-                        }
+                        path.next();
                     }
-                    path.next();
                 }
             }
-        }else{
-            System.out.println("Not your field!");
         }
     }
 
@@ -155,6 +160,37 @@ public class SimulationController {
         }
     }
 
+    public ArrayList<Vertex> showMovementPossibilities(Vertex vertex){
+        ArrayList<Vertex> newList = new ArrayList<>();
+        return showMovementPossibilities(vertex, 0, newList);
+    }
+
+    private ArrayList<Vertex> showMovementPossibilities(Vertex vertex, double weight, ArrayList<Vertex> markedVertices){
+        if (weight <= 50) {
+            ArrayList<Vertex> neighbours = graph.getNeighbours(vertex);
+            if (neighbours != null) {
+                for (int i = 0; i < neighbours.size(); i++) {
+                    showMovementPossibilities(neighbours.get(i), graph.getEdge(vertex, neighbours.get(i)).getWeight(), markedVertices);
+                }
+            }
+            vertex.setMarkTarget(true);
+            markedVertices.add(vertex);
+        }
+        return markedVertices;
+    }
+
+
+    private boolean isMovementPossible(List<Vertex> vertexList){
+        double weight = 0.0;
+        vertexList.toFirst();
+        while (vertexList.hasAccess() && vertexList.getNext() != null){
+            weight += graph.getEdge(vertexList.getContent(), vertexList.getNext()).getWeight();
+            if (weight > 50){
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Die Methode gibt eine Liste wieder, die später bei moveUnits()
@@ -173,7 +209,7 @@ public class SimulationController {
      */
 
 
-    //HIER IST DIJKSTRA!!!
+    //TODO: Dijkstra in der Präsi zeigen!
 
     public List<Vertex> giveListOfVerticesToFollow(Vertex start, Vertex destination) {
         List<Vertex> path = new List<>();
@@ -294,8 +330,8 @@ public class SimulationController {
         while(aU != 0 && dU != 0){
             Random rn = new Random();
 
-            int aURoll = rollD20() + rn.nextInt(aU) + 1;
-            int dUROLL = rollD20() + rn.nextInt(dU) + 1;
+            int aURoll = rn.nextInt(aU) + 1;
+            int dUROLL = rn.nextInt(dU) + 1;
             if (aURoll > dUROLL){
                 dU--;
             }else{
@@ -309,28 +345,6 @@ public class SimulationController {
             vertex.getField().setPlayer(defendingUnits.get(0).getPlayer());
         }
 
-    }
-
-    /**
-     * Würfelwürfe für spätere Kampfsimulationen.
-     * 4-seitiger, 6-seitiger und 20-seitiger Würfel.
-     * @return
-     * Gibt einen zufälligen int wieder, je nach Würfel.
-     */
-
-
-    //TODO: Siehe oben. Nutze Würfel.
-    private int rollD6(){
-        Random rn = new Random();
-        return rn.nextInt(6) + 1;
-    }
-    private int rollD4(){
-        Random rn = new Random();
-        return rn.nextInt(4) + 1;
-    }
-    private int rollD20(){
-        Random rn = new Random();
-        return rn.nextInt(20) + 1;
     }
 
 }
