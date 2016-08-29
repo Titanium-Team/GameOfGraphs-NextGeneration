@@ -1,6 +1,5 @@
 package game.ui;
 
-import de.SweetCode.e.GameComponent;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.BoundingBox;
 import de.SweetCode.e.math.ILocation;
@@ -17,9 +16,10 @@ import java.util.Map;
 /**
  * Created by 204g02 on 29.08.2016.
  */
-public class DropDownMenu<T> implements GameComponent {
+public class DropDownMenu<T> implements UIComponent {
 
     private final GameScene gameScene;
+    private final ILocation location;
     private final Trigger<T> callable;
     private BoundingBox openBoxBoundings;
 
@@ -29,10 +29,15 @@ public class DropDownMenu<T> implements GameComponent {
     private int selectedIndex = 0;
     private boolean open = false;
 
-    public DropDownMenu(GameScene gameScene, LinkedList<T> options, Trigger<T> callable) {
+    public DropDownMenu(GameScene gameScene, ILocation location, LinkedList<T> options, Trigger<T> callable) {
         this.gameScene = gameScene;
+        this.location = location;
         this.options = options;
         this.callable = callable;
+    }
+
+    public T getOption() {
+        return this.options.get(this.selectedIndex);
     }
 
     /**
@@ -87,13 +92,8 @@ public class DropDownMenu<T> implements GameComponent {
 
     }
 
-    /**
-     * Diese Methode wird in der GameComponent#render Methode aufgerufen.
-     *
-     * @param layer
-     * @param location
-     */
-    public void handleDraw(Layer layer, ILocation location) {
+    @Override
+    public void handleDraw(Layer layer) {
 
         Graphics2D g = layer.g();
         FontMetrics fontMetrics = g.getFontMetrics();
@@ -141,7 +141,6 @@ public class DropDownMenu<T> implements GameComponent {
         }
 
     }
-
 
     @Override
     public boolean isActive() {

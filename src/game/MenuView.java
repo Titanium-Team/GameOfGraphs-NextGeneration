@@ -6,7 +6,9 @@ import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.FieldView;
+import game.ui.CheckBox;
 import game.ui.DropDownMenu;
+import game.ui.UIComponent;
 import mapEditor.MapEditorView;
 
 import java.awt.*;
@@ -18,15 +20,12 @@ import java.util.Map;
 public class MenuView extends GameScene {
 
     private int selectedOption = 0;
-    private DropDownMenu dropDownMenu = new DropDownMenu<>(this, new LinkedList<String>() {{
-
-        this.add("Test");
-        this.add("Test1");
-        this.add("Test2");
-
-    }}, (v) -> {
-        System.out.println("called: " + v);
-    });
+    private UIComponent checkBox = new CheckBox(this, new ILocation(300, 300), 20, 20, (value) -> { System.out.println(value); });
+    private UIComponent dropDownMenu = new DropDownMenu<String>(this, new ILocation(300, 350), new LinkedList<String>() {{
+        this.add("ABCEFGH");
+        this.add("IJKLMNO");
+        this.add("PQRSTUV");
+    }}, (value) -> {});
 
     private final Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
 
@@ -37,6 +36,7 @@ public class MenuView extends GameScene {
     }
 
     public MenuView() {
+        E.getE().addComponent(checkBox);
         E.getE().addComponent(dropDownMenu);
     }
 
@@ -44,8 +44,10 @@ public class MenuView extends GameScene {
     public void render(Layers layers) {
 
         Graphics2D g = layers.first().getGraphics2D();
+        g.setBackground(Color.WHITE);
 
-        this.dropDownMenu.handleDraw(layers.first(), new ILocation(300, 300));
+        this.checkBox.handleDraw(layers.first());
+        this.dropDownMenu.handleDraw(layers.first());
 
         //draw menu
         int x = 0;
