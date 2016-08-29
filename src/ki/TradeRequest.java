@@ -16,7 +16,6 @@ public class TradeRequest extends Request {
 
 	private HashMap<Resource,Integer> offeredResources, requestedResources;
 	private Vertex place;
-	private Player recipient;
 
 	public TradeRequest(Player parent, HashMap<Resource, Integer> offeredResources, HashMap<Resource, Integer> requestedResources,Vertex place,Player recipient) {
 		super(parent,recipient);
@@ -40,13 +39,13 @@ public class TradeRequest extends Request {
 	@Override
 	void decline() {
 		if(this.getParent() instanceof KIFraction){
-			((KIFraction) this.getParent()).getTrust().put(recipient,((KIFraction) this.getParent()).getTrust().get(recipient)-5);
+			((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())-5);
 		}
 	}
 
 	@Override
 	void accept() {
-		Vertex root = getGame().getKiController().getClosestVertex(place,recipient);
+		Vertex root = getGame().getKiController().getClosestVertex(place,this.getRecipient());
 		if(root!=null && getGame().getGraphController().getGraph().getNeighbours(place).contains(root)) {
 			HashMap<Resource,Integer> temp1= new HashMap<>();
 			HashMap<Resource,Integer> temp2=new HashMap<>();
@@ -63,6 +62,9 @@ public class TradeRequest extends Request {
 			if(possible){
 				root.getField().getResources().putAll(temp1);
 				place.getField().getResources().putAll(temp2);
+				if(this.getParent() instanceof KIFraction){
+					((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())+10);
+				}
 			}
 		}
 	}

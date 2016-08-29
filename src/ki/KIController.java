@@ -3,6 +3,7 @@ package ki;
 import field.buildings.Buildings;
 import field.recipe.Recipe;
 import field.recipe.RecipeResource;
+import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
 import game.Player;
@@ -13,9 +14,7 @@ import graph.Vertex;
 
 import simulation.Unit;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 import static game.GameOfGraphs.*;
 
@@ -187,7 +186,36 @@ public class KIController {
                                 req.decline();
                             }
                         }else if(req instanceof TradeRequest){
-                            //TODO: specify offers, trade
+	                        HashMap<Resource,Integer> offRes = ((TradeRequest) req).getOfferedResources();
+	                        HashMap<Resource,Integer> reqRes = ((TradeRequest) req).getRequestedResources();
+	                        Vertex place = ((TradeRequest) req).getPlace();
+	                        HashMap<Resource,Integer> res=current.getGoals().get(place);
+	                        boolean isGoal = false;
+	                        int minTrust = 60;
+	                        for (Map.Entry<Resource,Integer> e :reqRes.entrySet()){
+		                        if(!isGoal) {
+			                        if (res.containsKey(e.getKey())) {
+				                        isGoal = true;
+			                        }
+		                        }
+	                        }
+	                        if(!isGoal){
+		                        for(Map.Entry<Resource,Integer> e:offRes.entrySet()){
+			                        if (res.containsKey(e.getKey())){
+				                        minTrust-=10;
+				                        if(e.getValue()>=res.get(e.getKey())){
+					                        minTrust-=5;
+				                        }
+			                        }
+		                        }
+		                        if(current.getTrust().get(req.getParent())>=minTrust){
+			                        req.accept();
+		                        }else{
+			                        req.decline();
+		                        }
+	                        }else{
+		                        req.decline();
+	                        }
                         }else if(req instanceof HelpRequest){
                             if(current.getAlliances().contains(req.getParent())){
                                 if(current.getTrust().get(req.getParent())>50+((HelpRequest) req).getAmountOfUnits()){
@@ -226,24 +254,8 @@ public class KIController {
                                         getGame().getPlayers().remove(current);
                                         current.setName("independent");
                                     }else if(current.getFields().isEmpty()){
-                                        for(Player p:getGame().getPlayers()){
-                                            if(p instanceof KIFraction){
-                                                ((KIFraction) p).getTrust().remove(current);
-                                                for(Notifications n:p.getNotifications()){
-
-                                                }
-                                            }
-                                            p.getAlliances().remove(current);
-                                            Queue<Request> r=new Queue<>();
-                                            while(!p.getRequests().isEmpty()){
-                                                if(!p.getRequests().front().getParent().equals(current)){
-                                                    r.enqueue(p.getRequests().front());
-                                                }
-                                                p.getRequests().dequeue();
-                                            }
-                                            p.setRequests(r);
-                                        }
-                                        current = null;
+                                        deletePlayer(current);
+	                                    current = null;
                                     } else{
                                         reclaim(current,place);
                                     }
@@ -271,6 +283,9 @@ public class KIController {
                                 if(current.getFields().size()==1){
                                     getGame().getPlayers().remove(current);
                                     current.setName("independent");
+                                }else if(current.getFields().isEmpty()) {
+	                                deletePlayer(current);
+	                                current=null;
                                 }else{
                                     this.reclaim(current,place);
                                 }
@@ -283,6 +298,32 @@ public class KIController {
             }
         }
     }
+
+	private void deletePlayer(Player current){
+		if(current.getFields().isEmpty()){
+			for(Player p:getGame().getPlayers()){
+				if(p instanceof KIFraction){
+					((KIFraction) p).getTrust().remove(current);
+					for(Notifications n:p.getNotifications()){
+						if(n instanceof Attack){
+							if(((Attack) n).getOpponent().equals(current)){
+								((Attack) n).setOpponent(null);
+							}
+						}
+					}
+				}
+				p.getAlliances().remove(current);
+				Queue<Request> r=new Queue<>();
+				while(!p.getRequests().isEmpty()){
+					if(!p.getRequests().front().getParent().equals(current)){
+						r.enqueue(p.getRequests().front());
+					}
+					p.getRequests().dequeue();
+				}
+				p.setRequests(r);
+			}
+		}
+	}
 
     private void buildIfBuildable(Buildings b,Vertex v){
         if(Buildings.isBuildable(b,v.getField())){

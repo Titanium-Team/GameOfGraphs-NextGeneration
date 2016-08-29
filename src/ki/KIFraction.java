@@ -3,6 +3,7 @@ package ki;
 import field.resource.Resource;
 import game.GameOfGraphs;
 import game.Player;
+import graph.Vertex;
 
 import java.util.*;
 
@@ -15,7 +16,7 @@ public class KIFraction extends Player{
     private Random r;
     private int developingChance;
     private HashMap<Player,Integer> trust;
-    private HashMap<Resource,Integer> goals;
+    private HashMap<Vertex,HashMap<Resource,Integer>> goals;
 
 
     public KIFraction(String name) {
@@ -33,7 +34,7 @@ public class KIFraction extends Player{
                 trust.put(p,40);
             }
         }
-        goals=new HashMap<>();
+        goals= new HashMap<>();
     }
 
     public int getDevelopingChance() {
@@ -70,7 +71,7 @@ public class KIFraction extends Player{
         this.name = name;
     }
 
-    public HashMap<Resource, Integer> getGoals() {
+    public HashMap<Vertex,HashMap<Resource,Integer>> getGoals() {
         return goals;
     }
 }
