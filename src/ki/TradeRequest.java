@@ -50,20 +50,33 @@ public class TradeRequest extends Request {
 		if(root!=null && getGame().getGraphController().getGraph().getNeighbours(place).contains(root)) {
 			HashMap<Resource,Integer> temp1= new HashMap<>();
 			HashMap<Resource,Integer> temp2=new HashMap<>();
-			boolean possible=true;
-			possible=checkResources(root,temp1,requestedResources);
+			boolean possible;
+			Depot depot;
+			depot=checkResources(root,temp1,requestedResources);
+			temp1=depot.getMap();
+			possible=depot.isPossible();
 			if(possible) {
-				possible=checkResources(place,temp2,offeredResources);
+				depot=checkResources(place,temp2,offeredResources);
+				temp2=depot.getMap();
+				possible=depot.isPossible();
 			}
 			if(possible){
 				root.getField().getResources().putAll(temp1);
-
 				place.getField().getResources().putAll(temp2);
 			}
 		}
 	}
 
-	private boolean checkResources(Vertex place,HashMap<Resource,Integer> temp,HashMap<Resource,Integer> resources){
+	/**
+	 * überprüft, ob alle Ressourcen für den Handel verfügbar sind und gibt sowohl den neuen Resorcenstand zurück,
+	 * als auch ob der Handel zud iesem Zeitpunkt möglich ist.
+	 * @param place Der zu überprüfende vertex
+	 * @param temp Speicherort der aktualisierten Ressourcen
+	 * @param resources Die geforderten Ressourcen
+	 * @return aktualisierte Ressourcen und ob der Handel möglich ist
+	 */
+	private Depot checkResources(Vertex place, HashMap<Resource,Integer> temp, HashMap<Resource,Integer> resources){
+		Depot dep;
 		boolean result=true;
 		HashMap<Resource,Integer> res;
 		if(resources.equals(requestedResources)){
@@ -80,6 +93,7 @@ public class TradeRequest extends Request {
 				}
 			}
 		}
-		return result;
+		dep=new Depot(result,temp);
+		return dep;
 	}
 }

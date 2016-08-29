@@ -1,5 +1,6 @@
 package ki;
 
+import field.resource.Resource;
 import game.GameOfGraphs;
 import game.Player;
 
@@ -14,6 +15,7 @@ public class KIFraction extends Player{
     private Random r;
     private int developingChance;
     private HashMap<Player,Integer> trust;
+    private HashMap<Resource,Integer> goals;
 
 
     public KIFraction(String name) {
@@ -31,6 +33,7 @@ public class KIFraction extends Player{
                 trust.put(p,40);
             }
         }
+        goals=new HashMap<>();
     }
 
     public int getDevelopingChance() {
@@ -65,5 +68,9 @@ public class KIFraction extends Player{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public HashMap<Resource, Integer> getGoals() {
+        return goals;
     }
 }
