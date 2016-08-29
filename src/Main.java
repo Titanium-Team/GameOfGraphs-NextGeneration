@@ -3,7 +3,7 @@ import de.SweetCode.e.Settings;
 import de.SweetCode.e.utils.Version;
 import field.FieldView;
 import game.GameOfGraphs;
-import game.views.MenuView;
+import game.MenuView;
 import mapEditor.MapEditorView;
 
 import java.awt.*;
@@ -22,7 +22,7 @@ public class Main {
 
             @Override
             public String getName() {
-                return "Test";
+                return "Game Of Graphs - Best Game Ever";
             }
 
             @Override

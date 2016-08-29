@@ -1,24 +1,33 @@
-package game.views;
+package game;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.math.CircleBox;
-import de.SweetCode.e.math.Location;
+import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
-import de.SweetCode.e.rendering.particle.areas.ExplosionArea;
 import field.FieldView;
-import game.GameOfGraphs;
+import game.ui.DropDownMenu;
 import mapEditor.MapEditorView;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class MenuView extends GameScene {
 
     private int selectedOption = 0;
+    private DropDownMenu dropDownMenu = new DropDownMenu<>(this, new LinkedList<String>() {{
+
+        this.add("Test");
+        this.add("Test1");
+        this.add("Test2");
+
+    }}, (v) -> {
+        System.out.println("called: " + v);
+    });
+
     private final Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
 
     {
@@ -28,12 +37,15 @@ public class MenuView extends GameScene {
     }
 
     public MenuView() {
+        E.getE().addComponent(dropDownMenu);
     }
 
     @Override
     public void render(Layers layers) {
 
         Graphics2D g = layers.first().getGraphics2D();
+
+        this.dropDownMenu.handleDraw(layers.first(), new ILocation(300, 300));
 
         //draw menu
         int x = 0;
@@ -91,7 +103,7 @@ public class MenuView extends GameScene {
 
     @Override
     public boolean isActive() {
-        return E.getE().getScreen().getCurrent().getClass().equals(this.getClass());
+        return E.getE().getScreen().getCurrent() == this;
     }
 
 }

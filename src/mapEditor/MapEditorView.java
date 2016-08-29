@@ -166,7 +166,7 @@ public class MapEditorView extends GameScene{
 
     @Override
     public boolean isActive() {
-        return (E.getE().getScreen().getCurrent().getClass().equals(this.getClass()));
+        return E.getE().getScreen().getCurrent() == this;
     }
 
     public static BufferedImage getPreviewBackground() {
