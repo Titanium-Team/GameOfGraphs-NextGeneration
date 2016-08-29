@@ -3,6 +3,7 @@ package field;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.BoundingBox;
+import de.SweetCode.e.math.Location;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.resource.Resource;
@@ -24,13 +25,14 @@ import java.util.Map;
 public class FieldView extends GameScene{
 
     private Field currentField = null;
+    private Graph graph;
 
     @Override
     public void render(Layers layers) {
 
         Graphics2D g = layers.first().getGraphics2D();
 
-        Graph graph = new Graph();
+        this.graph = new Graph();
         graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null)));
 
         GraphDrawer.drawer(g,graph,"Field");
@@ -67,18 +69,13 @@ public class FieldView extends GameScene{
 
         inputEntry.getMouseEntries().forEachOrdered(entry -> {
 
-            for(Vertex vertex : GameOfGraphs.getGame().getGraphController().getGraph().getVertices()){
+            Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX(),(int) entry.getPoint().getY());
 
-
-                if(entry.getPoint().getX() == vertex.getX() && entry.getPoint().getY() == vertex.getY()){
-
-                    this.currentField = vertex.getField();
-                    break;
-                }
+            if(vertex != null){
+                this.currentField = vertex.getField();
+            }else {
+                this.currentField = null;
             }
-
-            this.currentField = null;
-
         });
 
     }
