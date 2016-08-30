@@ -24,17 +24,18 @@ import static game.GameOfGraphs.*;
 public class KIController {
     private Random r;
     private String[] names = {""};
+	private ArrayList<Vertex> allFields;
 
     public KIController() {
         this.r = new Random();
     }
 
     /**
-     * steuert den gesamten Ablauf der KI
-     * @param allFields
-     * Alle Felder
+     * steuert den gesamten Ablauf der KI,indem zunächst durch alle Felder und dann durch die der KI-Fraktionen iteriert wird.
+     * Dabei werden die Abläufe auf diesen Feldern anhand diverser Eigenschaften gesteuert.
      */
-    public void run(ArrayList<Vertex> allFields){
+    public void run(){
+	    allFields=getGame().getGraphController().getGraph().getVertices();
         KIFraction current;
         ArrayList<Vertex> fields;
         for(Vertex v1:allFields){
@@ -161,7 +162,33 @@ public class KIController {
                         }
                         if (current.getProperties().contains(Property.ECONOMIC)) {
                             //TODO:trade
-
+	                        Player partner=null;
+	                        int maxTrust=-1;
+	                        for(Vertex vertex:getGame().getGraphController().getGraph().getNeighbours(v)){
+		                        if(!vertex.getField().getPlayer().equals(current) && current.getTrust().get(vertex.getField().getPlayer())>maxTrust){
+			                        partner=vertex.getField().getPlayer();
+			                        maxTrust=current.getTrust().get(vertex.getField().getPlayer());
+		                        }
+	                        }
+	                        if(partner!=null) {
+		                        HashMap<Resource, Integer> goals, wanted = new HashMap<>(), offered = new HashMap<>(), res;
+		                        goals = current.getGoals().get(v);
+		                        int greed = r.nextInt(goals.entrySet().size() + 1);
+		                        for (Map.Entry<Resource, Integer> e : goals.entrySet()) {
+			                        if (greed > 0) {
+				                        wanted.put(e.getKey(), e.getValue());
+				                        greed--;
+			                        }
+		                        }
+		                        res = ((HashMap<Resource, Integer>) v.getField().getResources());
+		                        int generosity = r.nextInt(res.entrySet().size() - goals.entrySet().size()) + 1;
+		                        for (Map.Entry<Resource, Integer> e : res.entrySet()) {
+			                        if (generosity > 0 && (!goals.containsKey(e.getKey()) || goals.get(e.getKey()) > 0)) {
+				                        offered.put(e.getKey(), r.nextInt(e.getValue() / 2));
+			                        }
+		                        }
+		                        partner.getRequests().enqueue(new TradeRequest(current,offered,wanted,v,partner));
+	                        }
                         }
                     }
                     allFields.removeAll(fields);
@@ -332,7 +359,7 @@ public class KIController {
             Recipe recipe=b.getRecipe();
             for(RecipeResource rRes:recipe.getItemIngredients()){
                 if(v.getField().getResources().get(rRes.getResource())<rRes.getAmount()){
-                    //((KIFraction) v.getField().getPlayer()).getGoals().put(rRes.getResource(),rRes.getAmount()-v.getField().getResources().get(rRes.getResource()));
+                    ((KIFraction) v.getField().getPlayer()).getGoals().put(rRes.getResource(),rRes.getAmount()-v.getField().getResources().get(rRes.getResource()));
                 }
             }
         }
