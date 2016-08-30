@@ -7,6 +7,8 @@ import graph.Vertex;
 
 import java.util.*;
 
+import static game.GameOfGraphs.getGame;
+
 /**
  * Created by Tim on 10.06.2016.
  */
@@ -27,12 +29,17 @@ public class KIFraction extends Player{
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
         developingChance=r.nextInt(10);
-        for(Player p: GameOfGraphs.getGame().getPlayers()){
+        Player p;
+        ArrayList<Vertex> fields=getGame().getGraphController().getGraph().getVertices();
+        fields.removeAll(this.getFields());
+        for(Vertex v: fields){
+            p=v.getField().getPlayer();
             if(properties.contains(Property.DISTRUSTFUL)) {
                 trust.put(p,10);
             }else{
                 trust.put(p,40);
             }
+            fields.removeAll(p.getFields());
         }
         goals= new HashMap<>();
     }

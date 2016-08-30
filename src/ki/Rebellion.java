@@ -6,7 +6,7 @@ import graph.Vertex;
 /**
  * Created by Tim Bolz on 20.06.2016.
  */
-public class Rebellion extends Notifications {
+public class Rebellion extends Notification {
 	private Vertex place;
 
 	public Rebellion(boolean successful,Vertex place) {
