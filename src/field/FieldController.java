@@ -35,7 +35,7 @@ public class FieldController {
             resource = resources[random.nextInt(resources.length)];
         }
 
-        Field field = new Field(fertility, mountains, player, forestType, resource, start);
+        Field field = new Field(fertility, mountains, player, forestType, (Resources) resource, start);
         field.getResources().put(Resources.POPULATION,random.nextInt(2)+2);
 
         return field;

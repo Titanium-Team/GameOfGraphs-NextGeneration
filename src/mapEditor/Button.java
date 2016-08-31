@@ -31,7 +31,7 @@ public class Button {
     }
 
     public boolean isPushed(Point p) {
-        if (p.getX() >= x && p.getX() <= x + width || p.getY() >= y && p.getY() <= y + height) {
+        if (p.getX() >= x && p.getX() <= x + width && p.getY() >= y && p.getY() <= y + height) {
             return true;
         }
         return false;

@@ -6,6 +6,7 @@ import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import game.GameOfGraphs;
 import game.GraphDrawer;
+import game.ui.CheckBox;
 import graph.Edge;
 import graph.Graph;
 import graph.Vector;
@@ -20,7 +21,6 @@ public class MapEditorView extends GameScene{
     private Graph graph;
     private static Vertex[] dragEdge;
 
-    private MapEditorController mapEditorController;
     private Vertex temp;
 
     private int chooser = 0;
@@ -32,18 +32,19 @@ public class MapEditorView extends GameScene{
     private boolean leftMouse = false;
 
     private Button addVertex, addEdge, save, load, move, check;
+    private TextureChooser vertexChooser;
 
     public MapEditorView() {
-        Random r = new Random();
+        graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
-        graph = new Graph();
-        for (int i = 0; i < 50; i++){
-            graph.addVertex(new Vertex(r.nextInt(10000) + "", r.nextInt(3000), r.nextInt(1000), GameOfGraphs.getGame().getFieldController().createField(null, false)));
-        }
-        graph.setWidth(3000);
-        graph.setHeight(1000);
+        addVertex = new Button(5, 505, 310, 100, Color.WHITE, Color.BLACK, "Add Vertex");
+        addEdge = new Button(320, 505, 310, 100, Color.WHITE, Color.BLACK, "Add Edge");
+        save = new Button(950, 505, 310, 48, Color.WHITE, Color.BLACK, "Save");
+        load = new Button(950, 557, 310, 48, Color.WHITE, Color.BLACK, "Load");
+        move = new Button(950, 615, 310, 48, Color.WHITE, Color.BLACK, "Move");
+        check = new Button(950, 667, 310, 48, Color.WHITE, Color.BLACK, "Check");
 
-        addVertex = new Button(5, 505, 310, 100, Color.BLACK, Color.WHITE, "Add Vertex");
+        vertexChooser = new TextureChooser("Vertex", 5, 610);
     }
 
     @Override
@@ -60,7 +61,17 @@ public class MapEditorView extends GameScene{
             propertiesEdge.drawer(layers.first().getGraphics2D());
         }
 
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 500, 1280, 220);
+
         addVertex.draw(g);
+        addEdge.draw(g);
+        save.draw(g);
+        load.draw(g);
+        move.draw(g);
+        check.draw(g);
+
+        vertexChooser.draw(g);
     }
 
     @Override
@@ -100,47 +111,66 @@ public class MapEditorView extends GameScene{
                 }
 
                 if (!(mouseEntry.getPoint().getX() >= 1280-25 && mouseEntry.getPoint().getX() <= 1280 || mouseEntry.getPoint().getY() >= 500-25 && mouseEntry.getPoint().getY() <= 500)) {
-                    final Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
-
-                    if (mouseEntry.getButton() == 1) {
-                        leftMouse = true;
-
-                        switch (chooser) {
-                            case 0:
-                                if (vertex != null) {
-                                    temp = vertex;
-                                } else {
-                                    ArrayList<Vertex> vertexList = graph.getVertices();
-
-                                    graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(null, false)));
-                                }
-                                break;
-                            case 1:
-                                if (vertex != null) {
-                                    temp = vertex;
-                                    dragEdge = new Vertex[]{new Vertex("equals", vertex.getX(), vertex.getY(), null), new Vertex("equals", vertex.getX(), vertex.getY(), null)};
-                                }
-                                break;
+                    if (mouseEntry.getPoint().getX() >= 0 && mouseEntry.getPoint().getX() <= 1280 && mouseEntry.getPoint().getY() >= 500 && mouseEntry.getPoint().getY() <= 720){
+                        if (addVertex.isPushed(mouseEntry.getPoint())){
+                            chooser = 0;
+                        }else if (addEdge.isPushed(mouseEntry.getPoint())){
+                            chooser = 1;
+                        }else if (save.isPushed(mouseEntry.getPoint())){
+                            GameOfGraphs.getGame().getGraphController().save(graph);
+                        }else if (load.isPushed(mouseEntry.getPoint())){
+                            graph = GameOfGraphs.getGame().getGraphController().load();
+                        }else if (check.isPushed(mouseEntry.getPoint())){
+                            GameOfGraphs.getGame().getGraphController().checkGraph();
+                        }else if (move.isPushed(mouseEntry.getPoint())){
+                            chooser = 2;
+                        }else {
+                            vertexChooser.update(inputEntry, l);
                         }
-                    } else if (mouseEntry.getButton() == 3) {
-                        if (vertex != null) {
-                            vertex.setMarkTarget(true);
+                    } else {
 
-                            int x = (int) ((vertex.getX() * GraphDrawer.getZoom() + graph.getRadius() + 175) > 1280-25 ? (vertex.getX() * GraphDrawer.getZoom() - GraphDrawer.getHorizontal().getValue() - 175) : (vertex.getX() * GraphDrawer.getZoom()));
-                            int y = (int) ((vertex.getY() * GraphDrawer.getZoom() + graph.getRadius() + 200) > 500-25 ? (vertex.getY() * GraphDrawer.getZoom() - GraphDrawer.getVertical().getValue() - 200) : (vertex.getY() * GraphDrawer.getZoom()));
+                        final Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
+
+                        if (mouseEntry.getButton() == 1) {
+                            leftMouse = true;
+
+                            switch (chooser) {
+                                case 0:
+                                    if (vertex != null) {
+                                        temp = vertex;
+                                    } else {
+                                        ArrayList<Vertex> vertexList = graph.getVertices();
+
+                                        graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(null, false)));
+                                    }
+                                    break;
+                                case 1:
+                                    if (vertex != null) {
+                                        temp = vertex;
+                                        dragEdge = new Vertex[]{new Vertex("equals", vertex.getX(), vertex.getY(), null), new Vertex("equals", vertex.getX(), vertex.getY(), null)};
+                                    }
+                                    break;
+                            }
+                        } else if (mouseEntry.getButton() == 3) {
+                            if (vertex != null) {
+                                vertex.setMarkTarget(true);
+
+                                int x = (int) ((vertex.getX() * GraphDrawer.getZoom() + graph.getRadius() + 175) > 1280 - 25 ? (vertex.getX() * GraphDrawer.getZoom() - GraphDrawer.getHorizontal().getValue() - 175) : (vertex.getX() * GraphDrawer.getZoom()));
+                                int y = (int) ((vertex.getY() * GraphDrawer.getZoom() + graph.getRadius() + 200) > 500 - 25 ? (vertex.getY() * GraphDrawer.getZoom() - GraphDrawer.getVertical().getValue() - 200) : (vertex.getY() * GraphDrawer.getZoom()));
 
 
-                            propertiesVertex = new PropertiesVertex(vertex, new int[]{x, y});
-                        } else {
-                            final Edge edge = graph.getEdge((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), 10);
+                                propertiesVertex = new PropertiesVertex(vertex, new int[]{x, y});
+                            } else {
+                                final Edge edge = graph.getEdge((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), 10);
 
-                            if (edge != null) {
-                                edge.setMark(true);
+                                if (edge != null) {
+                                    edge.setMark(true);
 
-                                int x = (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue() + graph.getRadius() + 175) > 1280-25 ? (mouseEntry.getPoint().getX() - 175) : (mouseEntry.getPoint().getX()));
-                                int y = (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue() + graph.getRadius() + 50) > 500-25 ? (mouseEntry.getPoint().getY() - 50) : (mouseEntry.getPoint().getY()));
+                                    int x = (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue() + graph.getRadius() + 175) > 1280 - 25 ? (mouseEntry.getPoint().getX() - 175) : (mouseEntry.getPoint().getX()));
+                                    int y = (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue() + graph.getRadius() + 50) > 500 - 25 ? (mouseEntry.getPoint().getY() - 50) : (mouseEntry.getPoint().getY()));
 
-                                propertiesEdge = new PropertiesEdge(edge, new int[]{x, y});
+                                    propertiesEdge = new PropertiesEdge(edge, new int[]{x, y});
+                                }
                             }
                         }
                     }
@@ -234,14 +264,6 @@ public class MapEditorView extends GameScene{
             });
 
         }
-
-        inputEntry.getKeyEntries().forEach(keyEntry -> {
-            if (keyEntry.getCharacter() == '1'){
-                chooser = 0;
-            }else if (keyEntry.getCharacter() == '2'){
-                chooser = 1;
-            }
-        });
     }
 
     @Override
@@ -263,6 +285,12 @@ public class MapEditorView extends GameScene{
 
     public static Vertex[] getDragEdge() {
         return dragEdge;
+    }
+
+    private BufferedImage getImage(Color color){
+        BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        bufferedImage.setRGB(0, 0, color.getRGB());
+        return bufferedImage;
     }
 
     private class PropertiesVertex{
@@ -397,6 +425,120 @@ public class MapEditorView extends GameScene{
         public int getHeight() {
 
             return height;
+        }
+    }
+
+    private class TextureChooser{
+        private CheckBox textured;
+        private String whatTexture;
+
+        private int x;
+        private int y;
+
+        private Button white, black, red, green, blue, yellow, colorChooser, wood, sand, paper, leather, bricks, imageChooser;
+
+        public TextureChooser(String whatTexture, int x, int y) {
+            this.whatTexture = whatTexture;
+            this.x = x;
+            this.y = y;
+
+            white = new Button(x+5, y+5, 40, 40, Color.WHITE, Color.WHITE, "");
+            black = new Button(x+49, y+5, 40, 40, Color.BLACK, Color.BLACK, "");
+            red = new Button(x+93, y+5, 40, 40, Color.RED, Color.RED, "");
+            green = new Button(x+137, y+5, 40, 40, Color.GREEN, Color.GREEN, "");
+            blue = new Button(x+181, y+5, 40, 40, Color.BLUE, Color.BLUE, "");
+            yellow = new Button(x+225, y+5, 40, 40, Color.YELLOW, Color.YELLOW, "");
+
+        }
+
+        public void draw(Graphics2D g){
+            g.setColor(Color.GRAY);
+            g.fillRect(x, y, 310, 100);
+
+            white.draw(g);
+            black.draw(g);
+            red.draw(g);
+            green.draw(g);
+            blue.draw(g);
+            yellow.draw(g);
+        }
+
+        public void update(InputEntry inputEntry, long l){
+            inputEntry.getMouseEntries().forEach(mouseEntry -> {
+                if (white.isPushed(mouseEntry.getPoint())){
+                    switch (whatTexture) {
+                        case "Background":
+                            graph.setBackground(getImage(Color.WHITE));
+                            break;
+                        case "Vertex":
+                            graph.setVertexImage(getImage(Color.WHITE));
+                            break;
+                        case "Edge":
+                            graph.setEdgeImage(getImage(Color.WHITE));
+                            break;
+                    }
+                }else if (black.isPushed(mouseEntry.getPoint())){
+                    switch (whatTexture) {
+                        case "Background":
+                            graph.setBackground(getImage(Color.BLACK));
+                            break;
+                        case "Vertex":
+                            graph.setVertexImage(getImage(Color.BLACK));
+                            break;
+                        case "Edge":
+                            graph.setEdgeImage(getImage(Color.BLACK));
+                            break;
+                    }
+                }else if (red.isPushed(mouseEntry.getPoint())){
+                    switch (whatTexture) {
+                        case "Background":
+                            graph.setBackground(getImage(Color.RED));
+                            break;
+                        case "Vertex":
+                            graph.setVertexImage(getImage(Color.RED));
+                            break;
+                        case "Edge":
+                            graph.setEdgeImage(getImage(Color.RED));
+                            break;
+                    }
+                }else if (green.isPushed(mouseEntry.getPoint())){
+                    switch (whatTexture) {
+                        case "Background":
+                            graph.setBackground(getImage(Color.GREEN));
+                            break;
+                        case "Vertex":
+                            graph.setVertexImage(getImage(Color.GREEN));
+                            break;
+                        case "Edge":
+                            graph.setEdgeImage(getImage(Color.GREEN));
+                            break;
+                    }
+                }else if (blue.isPushed(mouseEntry.getPoint())){
+                    switch (whatTexture) {
+                        case "Background":
+                            graph.setBackground(getImage(Color.BLUE));
+                            break;
+                        case "Vertex":
+                            graph.setVertexImage(getImage(Color.BLUE));
+                            break;
+                        case "Edge":
+                            graph.setEdgeImage(getImage(Color.BLUE));
+                            break;
+                    }
+                }else if (yellow.isPushed(mouseEntry.getPoint())){
+                    switch (whatTexture) {
+                        case "Background":
+                            graph.setBackground(getImage(Color.YELLOW));
+                            break;
+                        case "Vertex":
+                            graph.setVertexImage(getImage(Color.YELLOW));
+                            break;
+                        case "Edge":
+                            graph.setEdgeImage(getImage(Color.YELLOW));
+                            break;
+                    }
+                }
+            });
         }
     }
 }
