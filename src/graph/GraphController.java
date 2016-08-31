@@ -24,15 +24,15 @@ public class GraphController {
 
         graph = new Graph();
 
-        for (int i = 0; i < 50; i++){
-            graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(2920)+40, r.nextInt(920)+40, GameOfGraphs.getGame().getFieldController().createField(null,true)));
+        for (int i = 0; i < 15; i++){
+            graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1220)+40, r.nextInt(520)+40, GameOfGraphs.getGame().getFieldController().createField(null,true)));
         }
-        for (int j = 0; j < 25; j++){
+        for (int j = 0; j < 7; j++){
             graph.addEdge(new Edge(new String[] {graph.getVertices().get(r.nextInt(graph.getVertices().size())).getID(), graph.getVertices().get(r.nextInt(graph.getVertices().size())).getID()}, r.nextInt(50)+1));
         }
 
-        graph.setWidth(3000);
-        graph.setHeight(1000);
+        graph.setWidth(1280);
+        graph.setHeight(500);
     }
 
     public Graph getGraph() {

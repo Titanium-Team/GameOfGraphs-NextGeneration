@@ -167,11 +167,11 @@ public class SimulationController {
     }
 
     private ArrayList<Vertex> showMovementPossibilities(Vertex vertex, double weight, ArrayList<Vertex> markedVertices){
-        if (weight <= 50) {
+        if (weight < 50) {
             ArrayList<Vertex> neighbours = graph.getNeighbours(vertex);
             if (neighbours != null) {
                 for (int i = 0; i < neighbours.size(); i++) {
-                    showMovementPossibilities(neighbours.get(i), graph.getEdge(vertex, neighbours.get(i)).getWeight(), markedVertices);
+                    showMovementPossibilities(neighbours.get(i), graph.getEdge(vertex, neighbours.get(i)).getWeight() + weight, markedVertices);
                 }
             }
             vertex.setMarkTarget(true);

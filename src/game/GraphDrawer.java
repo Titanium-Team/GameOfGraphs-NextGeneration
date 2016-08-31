@@ -145,13 +145,15 @@ public class GraphDrawer {
                 }
             }
 
+            g.setStroke(new BasicStroke(5));
             if (vertex.isMarkStart()){
                 g.setColor(Color.BLACK);
                 g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
             }else if (vertex.isMarkTarget()){
-                g.setColor(Color.RED);
+                g.setColor(Color.GREEN);
                 g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
             }
+            g.setStroke(new BasicStroke(1));
         }
 
         g.setTransform(veryoldTransform);

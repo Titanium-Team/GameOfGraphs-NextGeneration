@@ -20,6 +20,7 @@ import graph.Vertex;
 import org.omg.CORBA.INTERNAL;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
@@ -32,6 +33,8 @@ public class FieldView extends GameScene{
     private Vertex currentVertex = null;
     private Field currentField = null;
     private Graph graph;
+    private boolean move = false;
+    private List<Vertex> marked = new ArrayList<>();
     private DropDownMenu<Building> buildingDropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
         for( Building building : Buildings.values()){
             this.add(building);
@@ -147,7 +150,8 @@ public class FieldView extends GameScene{
 
         inputEntry.getMouseEntries().forEach(entry -> {
 
-            if (entry.getPoint().getY() <= 500 && entry.getButton() == 1) {
+
+            if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
                 Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if (vertex != null) {
                     this.currentVertex = vertex;
@@ -163,13 +167,31 @@ public class FieldView extends GameScene{
                     this.currentVertex = null;
                     this.currentField = null;
                 }
+            } else if(move == true){
+
+                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
+                if(vertex != null) {
+                    if (vertex.isMarkTarget()) {
+                        GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption());
+                    }
+                }
+                this.unitDropDownMenu.setSelectedIndex(0);
+
             }
         });
 
         if (this.currentField != null && this.currentVertex != null){
             if (this.unitDropDownMenu.getOption() > 0) {
 
-                GameOfGraphs.getGame().getSimulationController().showMovementPossibilities(this.currentVertex);
+                marked = GameOfGraphs.getGame().getSimulationController().showMovementPossibilities(this.currentVertex);
+                move = true;
+            } else {
+                if(move == true){
+                    for (Vertex vertex : marked){
+                        vertex.setMarkTarget(false);
+                    }
+                }
+                move = false;
             }
         }
 
