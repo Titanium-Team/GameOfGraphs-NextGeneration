@@ -48,6 +48,11 @@ public class GameOfGraphs {
         return game;
     }
 
+    public void nextTurn() {
+
+        
+    }
+
     public TextBuilder getTextBuilder() {
         return textBuilder;
     }
@@ -85,4 +90,6 @@ public class GameOfGraphs {
     public List<Player> getPlayers() {
         return new ArrayList<>();
     }
+
+
 }

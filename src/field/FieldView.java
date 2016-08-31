@@ -45,12 +45,19 @@ public class FieldView extends GameScene{
     }}, (value) -> {});
 
 
+
     private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(value -> {
 
         if( Buildings.isBuildable(buildingDropDownMenu.getOption(), currentField)){
 
             Buildings.build(buildingDropDownMenu.getOption(), currentField);
         }
+
+    }));
+
+    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(value -> {
+
+        GameOfGraphs.getGame().nextTurn();
 
     }));
 
@@ -169,7 +176,7 @@ public class FieldView extends GameScene{
                 Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if(vertex != null) {
                     if (vertex.isMarkTarget()) {
-                        GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption() - 1);
+                        GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption());
                     }
                 }
                 this.unitDropDownMenu.setSelectedIndex(0);

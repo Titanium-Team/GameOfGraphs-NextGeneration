@@ -77,18 +77,25 @@ public class SimulationController {
      * Erstell eine ArrayList die in anderen Methoden zu simulierung von der Bewegung benutzt wird.
      */
 
-    private ArrayList<Unit> getListOfUnitsToMove(Vertex fromVertex , int amountUnits){
+    private ArrayList<Unit> getListOfUnitsToMove(Vertex fromVertex, Vertex current, Vertex target , int amountUnits){
         /**
          * Return eine Liste mit Units, die einem Feld
          * abgezogen werden um einem anderen Field zu adden.
          **/
         if (currentPlayer == fromVertex.getField().getPlayer()) {
             if (fromVertex.getField().getUnmovedUnits().size() >= amountUnits) {
-                ArrayList<Unit> fromFieldUnits = fromVertex.getField().getUnmovedUnits();
+                ArrayList<Unit> fromFieldUnits = fromVertex.getField().getUnits();
                 ArrayList<Unit> toFieldUnits = new ArrayList<>();
                 for (int i = 0; i < amountUnits; i++) {
+                    if(current == target) {
+                        fromFieldUnits.get(i).setMoved(true);
+                    }
                     toFieldUnits.add(fromFieldUnits.get(i));
+                }
+
+                for(int i = amountUnits - 1; i >= 0; i--){
                     fromFieldUnits.remove(i);
+
                 }
 
                 return toFieldUnits;
@@ -117,14 +124,13 @@ public class SimulationController {
     public void moveUnits(Vertex start, Vertex end, int amountUnits) {
         if (currentPlayer == start.getField().getPlayer()) {
             List<Vertex> path = giveListOfVerticesToFollow(start, end);
-            boolean possiblePath = isMovementPossible(path);
-            if (!possiblePath) {
+            if (!isMovementPossible(path)) {
                 JOptionPane.showMessageDialog(null, "Das Zielfeld ist zuweit weg! Bitte wähle einen nähres Feld (unter 50 km)");
             } else {
                 if (path != null) {
                     path.toFirst();
                     while (path.hasAccess() && path.getNext() != null) {
-                        ArrayList<Unit> units = getListOfUnitsToMove(path.getContent(), amountUnits);
+                        ArrayList<Unit> units = getListOfUnitsToMove(path.getContent(), path.getNext(), end ,amountUnits);
                         assert units != null;
                         if (path.getNext().getField().getPlayer() != currentPlayer && path.getNext().getField().getUnits().get(0) != null) {
                             fight(path.getNext(), units);
@@ -138,7 +144,7 @@ public class SimulationController {
                         } else {
                             path.getNext().getField().setPlayer(currentPlayer);
                         }
-                        addUnitsToField(path.getContent().getField(), units);
+                        addUnitsToField(path.getNext(), units);
                         path.next();
                     }
                 }
@@ -155,9 +161,9 @@ public class SimulationController {
      * Die ArrayList der Units die hinzugefügt werden soll.
      */
 
-    private void addUnitsToField(Field field, ArrayList<Unit> units){
-        if (currentPlayer == field.getPlayer()) {
-            field.getUnits().addAll(units);
+    private void addUnitsToField(Vertex vertex, ArrayList<Unit> units){
+        if (currentPlayer == vertex.getField().getPlayer()) {
+            vertex.getField().getUnits().addAll(units);
         }
     }
 

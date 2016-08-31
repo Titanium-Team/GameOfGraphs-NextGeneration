@@ -44,7 +44,6 @@ public class DropDownMenu<T> implements UIComponent {
 
     public void setSelectedIndex(int selectedIndex){
         this.selectedIndex = selectedIndex;
-
     }
 
     public T getOption() {

@@ -6,10 +6,7 @@ import ki.AllianceRequest;
 import ki.Notification;
 import ki.Request;
 
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class Player {
 
@@ -17,15 +14,14 @@ public class Player {
 
     protected ArrayList<Player> alliances = new ArrayList<>();
     private ArrayList<Vertex> fields = new ArrayList<>();
+    private ArrayList<Notification> notifications = new ArrayList<>();
+    private boolean isKI = false;
     protected Queue<Request> requests = new Queue<>();
-    private boolean isKI;
 
-    protected ArrayList<Notification> notifications;
 
     public Player(String name, boolean isKI) {
         this.name = name;
         this.isKI = isKI;
-
     }
 
     public String getName() {
