@@ -1,5 +1,6 @@
 package ki;
 
+import de.SweetCode.e.input.InputEntry;
 import field.resource.Resources;
 import game.Player;
 import graph.Vertex;
