@@ -4,9 +4,9 @@ import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
-import field.resource.Resources;
 import game.GameOfGraphs;
 import game.GraphDrawer;
+import graph.Edge;
 import graph.Graph;
 import graph.Vector;
 import graph.Vertex;
@@ -27,35 +27,61 @@ public class MapEditorView extends GameScene{
     private static BufferedImage previewBackground, previewVertex, previewEdge;
 
     private PropertiesVertex propertiesVertex;
+    private PropertiesEdge propertiesEdge;
+
+    private boolean leftMouse = false;
+
+    private Button addVertex, addEdge, save, load, move, check;
 
     public MapEditorView() {
         Random r = new Random();
 
         graph = new Graph();
-        for (int i = 0; i < 20; i++){
-            graph.addVertex(new Vertex(r.nextInt(10000) + "", r.nextInt(500), r.nextInt(500), GameOfGraphs.getGame().getFieldController().createField(null)));
+        for (int i = 0; i < 50; i++){
+            graph.addVertex(new Vertex(r.nextInt(10000) + "", r.nextInt(3000), r.nextInt(1000), GameOfGraphs.getGame().getFieldController().createField(null)));
         }
+        graph.setWidth(3000);
+        graph.setHeight(1000);
+
+        addVertex = new Button(5, 505, 310, 100, Color.BLACK, Color.WHITE, "Add Vertex");
     }
 
     @Override
     public void render(Layers layers) {
+        Graphics2D g = layers.first().getGraphics2D();
 
-        GraphDrawer.drawer(layers.first().getGraphics2D(), graph, "MapEditor");
+        GraphDrawer.drawer(g, graph, "MapEditor");
 
         if (propertiesVertex != null){
             propertiesVertex.drawer(layers.first().getGraphics2D());
         }
+
+        if (propertiesEdge != null){
+            propertiesEdge.drawer(layers.first().getGraphics2D());
+        }
+
+        addVertex.draw(g);
     }
 
     @Override
     public void update(InputEntry inputEntry, long l) {
+        GraphDrawer.update(inputEntry, l);
+
         final boolean[] mouseEnabled = {true};
 
         if (propertiesVertex != null){
             propertiesVertex.update(inputEntry, l);
 
             inputEntry.getMouseEntries().forEach(mouseEntry -> {
-                if (mouseEntry.getPoint().getX() >= propertiesVertex.getP()[0] && mouseEntry.getPoint().getX() <= propertiesVertex.getP()[0] + 175 && mouseEntry.getPoint().getY() >= propertiesVertex.getP()[1] && mouseEntry.getPoint().getY() <= propertiesVertex.getP()[1] + 200){
+                if ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) >= propertiesVertex.getP()[0] && (mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) <= propertiesVertex.getP()[0] + propertiesVertex.getWidth() && (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) >= propertiesVertex.getP()[1] && (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) <= propertiesVertex.getP()[1] + propertiesVertex.getHeight()){
+                    mouseEnabled[0] = false;
+                }
+            });
+        }else if(propertiesEdge != null){
+            propertiesEdge.update(inputEntry, l);
+
+            inputEntry.getMouseEntries().forEach(mouseEntry -> {
+                if ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) >= propertiesEdge.getP()[0] && (mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) <= propertiesEdge.getP()[0] + propertiesEdge.getWidth() && (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) >= propertiesEdge.getP()[1] && (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) <= propertiesEdge.getP()[1] + propertiesEdge.getHeight()){
                     mouseEnabled[0] = false;
                 }
             });
@@ -63,99 +89,104 @@ public class MapEditorView extends GameScene{
 
         if (mouseEnabled[0]) {
             inputEntry.getMouseEntries().forEach(mouseEntry -> {
-                propertiesVertex = null;
-                //propertiesEdge.edge.setMark(false);
+                if (propertiesVertex != null) {
+                    propertiesVertex.getV().setMarkTarget(false);
+                    propertiesVertex = null;
+                }
 
-                final Vertex vertex = graph.getVertex((int) (mouseEntry.getPoint().getX() / GraphDrawer.getZoom()), (int) (mouseEntry.getPoint().getY() / GraphDrawer.getZoom()));
+                if (propertiesEdge != null) {
+                    propertiesEdge.getE().setMark(false);
+                    propertiesEdge = null;
+                }
 
-                if (mouseEntry.getButton() == 1) {
-                    switch (chooser) {
-                        case 0:
-                            if (vertex != null) {
-                                temp = vertex;
-                            } else {
-                                ArrayList<Vertex> vertexList = graph.getVertices();
+                if (!(mouseEntry.getPoint().getX() >= 1280-25 && mouseEntry.getPoint().getX() <= 1280 || mouseEntry.getPoint().getY() >= 500-25 && mouseEntry.getPoint().getY() <= 500)) {
+                    final Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
 
-                                //graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) (mouseEntry.getPoint().getX()/GraphDrawer.getZoom()), (int) (mouseEntry.getPoint().getY()/GraphDrawer.getZoom()), new Field(0, 0, null, 1, null)));
+                    if (mouseEntry.getButton() == 1) {
+                        leftMouse = true;
 
-                                graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) mouseEntry.getPoint().getX(), (int) mouseEntry.getPoint().getY(), GameOfGraphs.getGame().getFieldController().createField(null)));
-                            }
-                            break;
-                        case 1:
-                            if (vertex != null) {
-                                temp = vertex;
-                                dragEdge = new Vertex[]{new Vertex("equals", vertex.getX(), vertex.getY(), null), new Vertex("equals", vertex.getX(), vertex.getY(), null)};
-                            }
-                            break;
-                    }
-                } else if (mouseEntry.getButton() == 3) {
-                    if (vertex != null) {
-                        vertex.setMarkTarget(true);
+                        switch (chooser) {
+                            case 0:
+                                if (vertex != null) {
+                                    temp = vertex;
+                                } else {
+                                    ArrayList<Vertex> vertexList = graph.getVertices();
 
-                        //int x = (vertex.getX() * GraphDrawer.getZoom() + graph.getRadius() + propertiesVertex.getWidth()) > 500 ? (vertex.getX() * GraphDrawer.getZoom() - jScrollPane.getHorizontalScrollBar().getValue() - propertiesVertex.getWidth()) : (vertex.getX() * GraphDrawer.getZoom());
-                        //int y = (vertex.getY() * GraphDrawer.getZoom() + graph.getRadius() + propertiesVertex.getHeight()) > 500 ? (vertex.getY() * GraphDrawer.getZoom() - jScrollPane.getVerticalScrollBar().getValue() - propertiesVertex.getHeight()) : (vertex.getY() * GraphDrawer.getZoom());
-
-                        int x = 100;
-                        int y = 100;
-
-
-                        propertiesVertex = new PropertiesVertex(vertex, new int[]{x, y});
-
-                   /* propertiesVertex.getRemove().addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            graph.removeVertex(vertex);
-
-                            graphPanel.remove(propertiesVertex);
-                            propertiesVertex = null;
-
-                            graphPanel.revalidate();
-                            graphPanel.repaint();
+                                    graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(null)));
+                                }
+                                break;
+                            case 1:
+                                if (vertex != null) {
+                                    temp = vertex;
+                                    dragEdge = new Vertex[]{new Vertex("equals", vertex.getX(), vertex.getY(), null), new Vertex("equals", vertex.getX(), vertex.getY(), null)};
+                                }
+                                break;
                         }
-                    });*/
+                    } else if (mouseEntry.getButton() == 3) {
+                        if (vertex != null) {
+                            vertex.setMarkTarget(true);
+
+                            int x = (int) ((vertex.getX() * GraphDrawer.getZoom() + graph.getRadius() + 175) > 1280-25 ? (vertex.getX() * GraphDrawer.getZoom() - GraphDrawer.getHorizontal().getValue() - 175) : (vertex.getX() * GraphDrawer.getZoom()));
+                            int y = (int) ((vertex.getY() * GraphDrawer.getZoom() + graph.getRadius() + 200) > 500-25 ? (vertex.getY() * GraphDrawer.getZoom() - GraphDrawer.getVertical().getValue() - 200) : (vertex.getY() * GraphDrawer.getZoom()));
+
+
+                            propertiesVertex = new PropertiesVertex(vertex, new int[]{x, y});
+                        } else {
+                            final Edge edge = graph.getEdge((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), 10);
+
+                            if (edge != null) {
+                                edge.setMark(true);
+
+                                int x = (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue() + graph.getRadius() + 175) > 1280-25 ? (mouseEntry.getPoint().getX() - 175) : (mouseEntry.getPoint().getX()));
+                                int y = (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue() + graph.getRadius() + 50) > 500-25 ? (mouseEntry.getPoint().getY() - 50) : (mouseEntry.getPoint().getY()));
+
+                                propertiesEdge = new PropertiesEdge(edge, new int[]{x, y});
+                            }
+                        }
                     }
                 }
             });
 
-            //TODO: Mouse Released
-        /*if (e.getButton()==1) {
-                    switch (mapEditorController.getChooser()) {
+            inputEntry.getMouseReleasedQueue().forEach(mouseEntry -> {
+                leftMouse = false;
+                if (mouseEntry.getButton()==1) {
+                    switch (chooser) {
                         case 0:
                             if (temp != null) {
                                 temp = null;
                             }
                             break;
                         case 1:
-                            Vertex vertex = graph.getVertex((int)(e.getX()/graphPanel.getZoom()), (int)(e.getY()/graphPanel.getZoom()));
+                            Vertex vertex = graph.getVertex((int)((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue())/GraphDrawer.getZoom()), (int)((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue())/GraphDrawer.getZoom()));
                             if (vertex != null && temp != null) {
-                                mapEditorController.edgeAdd(temp.getID(), vertex.getID());
+                                graph.addEdge(new Edge(new String[]{temp.getID(), vertex.getID()}, 0));
                             }
-                            line = false;
+                            dragEdge = null;
                             temp = null;
                             break;
                     }
-                }*/
+                }
+            });
 
             inputEntry.getMouseDraggedEntries().forEach(mouseEntry -> {
-                if (mouseEntry.getButton() == 0) {
-                    //TODO: Maus Buttons Falsch
+                if (leftMouse) {
                     switch (chooser) {
                         case 0:
                             if (temp != null) {
-                                double x = mouseEntry.getPoint().getX() / GraphDrawer.getZoom();
-                                double y = mouseEntry.getPoint().getY() / GraphDrawer.getZoom();
+                                double x = (mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom();
+                                double y = (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom();
 
-                        /*if (mouseEntry.getPoint().getX() - graph.getRadius() - jScrollPane.getHorizontalScrollBar().getValue() < 0) {
-                            x = jScrollPane.getHorizontalScrollBar().getValue()/graphPanel.getZoom()+graph.getRadius();
-                        }else if (mouseEntry.getPoint().getX() + graph.getRadius() - jScrollPane.getHorizontalScrollBar().getValue() > 1263){
-                            x = (1263+jScrollPane.getHorizontalScrollBar().getValue())/graphPanel.getZoom()-graph.getRadius();
-                        }
+                                if (mouseEntry.getPoint().getX() - graph.getRadius() < 0) {
+                                    x = GraphDrawer.getHorizontal().getValue()/GraphDrawer.getZoom()+graph.getRadius();
+                                }else if (mouseEntry.getPoint().getX() + graph.getRadius() > 1280 - 25){
+                                    x = (1280-25+GraphDrawer.getHorizontal().getValue())/GraphDrawer.getZoom()-graph.getRadius();
+                                }
 
-                        if (mouseEntry.getPoint().getY() - graph.getRadius() - jScrollPane.getVerticalScrollBar().getValue() < 0){
-                            y = jScrollPane.getVerticalScrollBar().getValue()/graphPanel.getZoom()+graph.getRadius();
-                        }else if (e.getY() + graph.getRadius() - jScrollPane.getVerticalScrollBar().getValue() > 523){
-                            y = (523+jScrollPane.getVerticalScrollBar().getValue())/graphPanel.getZoom()-graph.getRadius();
-                        }*/
+                                if (mouseEntry.getPoint().getY() - graph.getRadius() < 0){
+                                    y = GraphDrawer.getVertical().getValue()/GraphDrawer.getZoom()+graph.getRadius();
+                                }else if (mouseEntry.getPoint().getY() + graph.getRadius() > 500 - 25){
+                                    y = (500-25+GraphDrawer.getVertical().getValue())/GraphDrawer.getZoom()-graph.getRadius();
+                                }
 
                                 ArrayList<Vertex> vertexNear = graph.getVertexList(temp, (int) x, (int) y, graph.getRadius() * 3);
                                 if (vertexNear.isEmpty()) {
@@ -169,25 +200,35 @@ public class MapEditorView extends GameScene{
                                     }
                                     xTemp = xTemp / iTemp;
                                     yTemp = yTemp / iTemp;
-
                                     Vector vector = new Vector(x - xTemp, y - yTemp);
                                     vector.normalize();
                                     vector.setX(vector.getX() * graph.getRadius() * 3);
                                     vector.setY(vector.getY() * graph.getRadius() * 3);
-
-
                                     Vertex vertex1 = graph.getVertex(temp, (int) x, (int) y, graph.getRadius() * 3);
                                     Vector vector1 = new Vector(vertex1.getX() - vector.getX(), vertex1.getY() - vector.getY());
-
                                     vector1.setX(vertex1.getX() - vector1.getX() + vertex1.getX());
                                     vector1.setY(vertex1.getY() - vector1.getY() + vertex1.getY());
+
+                                    if (vector1.getX() - graph.getRadius() < 0) {
+                                        vector1.setX(GraphDrawer.getHorizontal().getValue()/GraphDrawer.getZoom()+graph.getRadius());
+                                    }else if (vector1.getX() + graph.getRadius() > 1280 - 25){
+                                        vector1.setX((1280-25+GraphDrawer.getHorizontal().getValue())/GraphDrawer.getZoom()-graph.getRadius());
+                                    }
+
+                                    if (vector1.getY() - graph.getRadius() < 0){
+                                        vector1.setY(GraphDrawer.getVertical().getValue()/GraphDrawer.getZoom()+graph.getRadius());
+                                    }else if (vector1.getY() + graph.getRadius() > 500 - 25){
+                                        vector1.setY((500-25+GraphDrawer.getVertical().getValue())/GraphDrawer.getZoom()-graph.getRadius());
+                                    }
 
                                     temp.setPosition((int) vector1.getX(), (int) vector1.getY());
                                 }
                             }
                             break;
                         case 1:
-                            dragEdge[1].setPosition((int) (mouseEntry.getPoint().getX() / GraphDrawer.getZoom()), (int) (mouseEntry.getPoint().getY() / GraphDrawer.getZoom()));
+                            if (dragEdge != null) {
+                                dragEdge[1].setPosition((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
+                            }
                     }
                 }
             });
@@ -228,6 +269,9 @@ public class MapEditorView extends GameScene{
         private Vertex v;
         private int[] p;
 
+        private final int width = 175;
+        private final int height = 200;
+
         private EditText enabled;
 
         private EditText name, population, biom;
@@ -236,16 +280,16 @@ public class MapEditorView extends GameScene{
             this.v = v;
             this.p = p;
 
-            name = new EditText(83, 25, p[0] + 85, p[1] + 5, v.getID(), false);
-           // population = new EditText(83, 25, p[0] + 85, p[1] + 30, v.getField().getResources().get(Resources.POPULATION).toString(), true);
+            name = new EditText(83, 25, p[0] + 85, p[1] + 5, v.getID(), false, false);
+           // population = new EditText(83, 25, p[0] + 85, p[1] + 30, e.getField().getResources().get(Resources.POPULATION).toString(), true, false);
         }
 
         public void drawer(Graphics2D g){
             g.setColor(Color.WHITE);
-            g.fillRect(p[0], p[1], 175, 200);
+            g.fillRect(p[0], p[1], width, height);
 
             g.setColor(Color.BLACK);
-            g.drawRect(p[0], p[1], 175, 200);
+            g.drawRect(p[0], p[1], width, height);
 
             g.drawString("Name: ", p[0] + 5, p[1] + 20);
             name.drawer(g);
@@ -261,7 +305,7 @@ public class MapEditorView extends GameScene{
 
         public void update(InputEntry inputEntry, long l){
             inputEntry.getMouseEntries().forEach(mouseEntry -> {
-                if (mouseEntry.getPoint().getX() >= name.getX() && mouseEntry.getPoint().getX() <= name.getX() + name.getWidth() && mouseEntry.getPoint().getY() >= name.getY() && mouseEntry.getPoint().getY() <= name.getY() + name.getHeight()){
+                if ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) >= name.getX() && (mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) <= name.getX() + name.getWidth() && (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) >= name.getY() && (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) <= name.getY() + name.getHeight()){
                     enabled = name;
                 }
             });
@@ -274,100 +318,7 @@ public class MapEditorView extends GameScene{
                 v.setId(enabled.getText());
             }
 
-//            v.getField().getResources().put(Resources.POPULATION, Integer.parseInt(population.update(inputEntry, l)));
-        }
-
-        public int[] getP() {
-            return p;
-        }
-    }
-
-    private class EditText{
-        private int width, height;
-        private int x, y;
-
-        private String text;
-        private boolean onlyNumbers;
-
-        private double cursorBlink;
-        private int cursor = 0;
-
-        public EditText(int width, int height, int x, int y, String text, boolean onlyNumbers) {
-            this.width = width;
-            this.height = height;
-            this.x = x;
-            this.y = y;
-            this.text = text;
-            this.onlyNumbers = onlyNumbers;
-        }
-
-        public void drawer(Graphics2D g){
-            g.drawRect(x, y, width, height);
-
-            g.setClip(new Rectangle(x, y, width, height));
-
-            String s1 = text.substring(0, cursor);
-            String s2 = text.substring(cursor, text.length());
-
-            String textWCursor;
-            if (cursorBlink <= 1){
-                textWCursor = s1 + "|" + s2;
-            }else {
-                textWCursor = s1 + " " + s2;
-            }
-
-            g.drawString(textWCursor, x+5, y+15);
-        }
-
-        public void update(InputEntry inputEntry, long l){
-            if (cursorBlink <=2){
-                cursorBlink = cursorBlink + 0.005*l;
-            }else {
-                cursorBlink = 0;
-            }
-            inputEntry.getKeyEntries().forEach(keyEntry -> {
-                if (onlyNumbers){
-                    if (Character.isDigit(keyEntry.getCharacter())){
-                        String s1 = text.substring(0, cursor);
-                        String s2 = text.substring(cursor, text.length());
-                        text = s1 + keyEntry.getCharacter() + s2;
-
-                        cursor++;
-                    }
-                }else {
-                    if (Character.isLetterOrDigit(keyEntry.getCharacter())) {
-                        String s1 = text.substring(0, cursor);
-                        String s2 = text.substring(cursor, text.length());
-                        text = s1 + keyEntry.getCharacter() + s2;
-
-                        cursor++;
-                    }
-                }
-                if (keyEntry.getKeyCode() == 8){
-                    String s1 = text.substring(0, cursor);
-                    s1 = (String) s1.subSequence(0, s1.length()-1 != -1 ? s1.length()-1:0);
-                    String s2 = text.substring(cursor, text.length());
-
-                    text = s1 + s2;
-
-                    if (cursor != 0) {
-                        cursor--;
-                    }
-                }
-                if (keyEntry.getKeyCode() == 127){
-                    String s1 = text.substring(0, cursor);
-                    String s2 = text.substring(cursor, text.length());
-                    s2 = (String) s2.subSequence(s2.length() != 0 ? 1:0, s2.length());
-
-                    text = s1 + s2;
-                }
-                if (keyEntry.getKeyCode() == 37 && cursor != 0){
-                    cursor--;
-                }
-                if (keyEntry.getKeyCode() == 39 && cursor != text.length()){
-                    cursor++;
-                }
-            });
+//            e.getField().getResources().put(Resources.POPULATION, Integer.parseInt(population.update(inputEntry, l)));
         }
 
         public int getWidth() {
@@ -378,16 +329,74 @@ public class MapEditorView extends GameScene{
             return height;
         }
 
-        public int getX() {
-            return x;
+        public int[] getP() {
+            return p;
         }
 
-        public int getY() {
-            return y;
+        public Vertex getV() {
+            return v;
+        }
+    }
+
+    private class PropertiesEdge {
+        private Edge e;
+        private int[] p;
+        private final int width = 175;
+        private final int height = 50;
+
+        private EditText enabled;
+
+        private EditText weight;
+
+        public PropertiesEdge(Edge e, int[] p) {
+            this.e = e;
+            this.p = p;
+
+            weight = new EditText(83, 25, p[0] + 85, p[1] + 5, String.valueOf(e.getWeight()), true, true);
         }
 
-        public String getText() {
-            return text;
+        public void drawer(Graphics2D g){
+            g.setColor(Color.WHITE);
+            g.fillRect(p[0], p[1], width, height);
+
+            g.setColor(Color.BLACK);
+            g.drawRect(p[0], p[1], width, height);
+
+            g.drawString("Weight: ", p[0] + 5, p[1] + 20);
+            weight.drawer(g);
+        }
+
+        public void update(InputEntry inputEntry, long l){
+            inputEntry.getMouseEntries().forEach(mouseEntry -> {
+                if ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) >= weight.getX() && (mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) <= weight.getX() + weight.getWidth() && (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) >= weight.getY() && (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) <= weight.getY() + weight.getHeight()){
+                    enabled = weight;
+                }
+            });
+
+            if (enabled != null) {
+                enabled.update(inputEntry, l);
+            }
+
+            if (enabled.equals(weight)){
+                e.setWeight(Double.parseDouble(enabled.getText()));
+            }
+        }
+
+        public int[] getP() {
+            return p;
+        }
+
+        public Edge getE() {
+            return e;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+
+            return height;
         }
     }
 }

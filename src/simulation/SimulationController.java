@@ -7,6 +7,7 @@ import graph.Edge;
 import graph.Graph;
 import graph.List;
 import graph.Vertex;
+import ki.Attack;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -341,8 +342,12 @@ public class SimulationController {
 
         if (dU == 0){
             vertex.getField().setPlayer(attackingUnits.get(0).getPlayer());
+            vertex.getField().getPlayer().getNotifications().add(new Attack(defendingUnits.get(0).getPlayer(),vertex,false,true));
+	        defendingUnits.get(0).getPlayer().getNotifications().add(new Attack(vertex.getField().getPlayer(),vertex,true,false));
         }else{
             vertex.getField().setPlayer(defendingUnits.get(0).getPlayer());
+	        vertex.getField().getPlayer().getNotifications().add(new Attack(defendingUnits.get(0).getPlayer(),vertex,false,false));
+	        defendingUnits.get(0).getPlayer().getNotifications().add(new Attack(vertex.getField().getPlayer(),vertex,true,true));
         }
 
     }

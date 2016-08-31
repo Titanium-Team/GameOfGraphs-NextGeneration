@@ -85,17 +85,17 @@ public class Main {
                 return new HashMap<RenderingHints.Key, Object>() {{
 
                     this.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    this.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
                 }};
             }
         });
 
-        
         e.addScene(new MenuView());
         e.addScene(new FieldView());
         e.addScene(new MapEditorView());
 
-        e.show(MapEditorView.class);
+        e.show(MenuView.class);
 
         e.run();
 

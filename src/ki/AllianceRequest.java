@@ -22,6 +22,8 @@ public class AllianceRequest extends Request {
 		this.getRecipient().getAlliances().add(this.getParent());
 		this.getParent().getAlliances().add(this.getRecipient());
 		if(this.getRecipient() instanceof KIFraction)((KIFraction) this.getRecipient()).getTrust().put(this.getParent(),75);
+		if(this.getParent() instanceof KIFraction)((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),75);
+
 	}
 
 }

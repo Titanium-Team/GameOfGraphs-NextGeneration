@@ -3,11 +3,11 @@ package ki;
 /**
  * Created by Tim Bolz on 20.06.2016.
  */
-public abstract class Notifications {
+public abstract class Notification {
 	private String name;
 	private boolean fightWon;
 
-	public Notifications(boolean fightWon) {
+	public Notification(boolean fightWon) {
 		this.fightWon = fightWon;
 	}
 

@@ -15,7 +15,7 @@ public class Player {
     protected ArrayList<Player> alliances;
     private Random r;
     protected Queue<Request> requests;
-    protected ArrayList<Notifications> notifications;
+    protected ArrayList<Notification> notifications;
 
     public Player(String name) {
         this.name = name;
@@ -64,23 +64,10 @@ public class Player {
     }*/
 
 
-    public boolean requestAlliance(Player p){
+    public void requestAlliance(Player p){
         if(p!=null) {
-            if(p instanceof KIFraction){
-                if(((KIFraction) p).getProperties().contains(Property.DISTRUSTFUL)){
-                    return false;
-                }else{
-                    if(r.nextInt(100)<=((KIFraction) p).getTrust().get(this)){
-                        p.getAlliances().add(this);
-                        this.alliances.add(p);
-                        return true;
-                    }
-                }
-            }else {
-                p.addRequest(new AllianceRequest(this,p));
-            }
+            p.addRequest(new AllianceRequest(this,p));
         }
-        return false;
     }
 
     public ArrayList<Player> getAlliances() {
@@ -95,7 +82,7 @@ public class Player {
         return requests;
     }
 
-    public ArrayList<Notifications> getNotifications() {
+    public ArrayList<Notification> getNotifications() {
         return notifications;
     }
 

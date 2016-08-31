@@ -6,7 +6,7 @@ import graph.Vertex;
 /**
  * Created by Tim Bolz on 20.06.2016.
  */
-public class Attack extends Notifications {
+public class Attack extends Notification {
 	private Player opponent;
 	private Vertex place;
 	private boolean defense;
@@ -55,4 +55,6 @@ public class Attack extends Notifications {
 	public void setOpponent(Player opponent) {
 		this.opponent = opponent;
 	}
+
+
 }
