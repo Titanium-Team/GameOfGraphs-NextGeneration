@@ -169,7 +169,7 @@ public class FieldView extends GameScene{
                 Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if(vertex != null) {
                     if (vertex.isMarkTarget()) {
-                        GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption());
+                        GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption() - 1);
                     }
                 }
                 this.unitDropDownMenu.setSelectedIndex(0);
