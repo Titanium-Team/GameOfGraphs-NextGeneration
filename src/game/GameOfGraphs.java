@@ -20,6 +20,11 @@ public class GameOfGraphs {
     private int currentPlayer = 0;
     private List<Player> players = new ArrayList<>();
 
+    {
+        this.players.add(new Player("StarCitizenIstBeschte", false));
+        this.players.add(new Player("DanielDenktDraußenDankendDrüberDumm", false));
+    }
+
     private TextBuilder textBuilder = new TextBuilder();
     private LoadingManager loadingManager = new LoadingManager();
 
@@ -28,7 +33,7 @@ public class GameOfGraphs {
     private GraphController graphController;
     private KIController kiController;
     private MapEditorController mapEditorController;
-    private SimulationController SimulationController;
+    private SimulationController simulationController;
 
     public GameOfGraphs() {
         GameOfGraphs.game = this;
@@ -43,7 +48,7 @@ public class GameOfGraphs {
         graphController = new GraphController();
         kiController = new KIController();
         mapEditorController = new MapEditorController();
-        SimulationController = new SimulationController();
+        simulationController = new SimulationController();
 
 
     }
@@ -54,8 +59,15 @@ public class GameOfGraphs {
 
     public void nextTurn() {
 
+        this.currentPlayer++;
 
-        fieldController.run();
+        if(this.currentPlayer >= this.players.size()) {
+            this.currentPlayer = 0;
+        }
+
+        fieldController.run(this.getCurrentPlayer());
+        //kiController.run();
+        simulationController.run(this.getCurrentPlayer());
 
     }
 
@@ -84,7 +96,7 @@ public class GameOfGraphs {
     }
 
     public simulation.SimulationController getSimulationController() {
-        return SimulationController;
+        return simulationController;
     }
 
     public Player getCurrentPlayer() {

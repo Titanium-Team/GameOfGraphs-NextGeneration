@@ -68,6 +68,7 @@ public class FieldView extends GameScene{
         E.getE().addComponent(buildingDropDownMenu);
         E.getE().addComponent(buildButton);
         E.getE().addComponent(unitDropDownMenu);
+        E.getE().addComponent(nextTurnButton);
 
 
 
@@ -106,6 +107,7 @@ public class FieldView extends GameScene{
             this.buildingDropDownMenu.handleDraw(layers.first());
             this.buildButton.handleDraw(layers.first());
             this.unitDropDownMenu.handleDraw(layers.first());
+            this.nextTurnButton.handleDraw(layers.first());
             g.setColor(Color.BLACK);
 
             Map<Resource, Integer> resources = currentField.getResources();
