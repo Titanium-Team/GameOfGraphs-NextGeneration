@@ -55,13 +55,7 @@ public class EditText{
 			g.drawString(textWCursor, x + 5, y + 15);
 		}else{
 			g.setColor(Color.GRAY);
-			String hintWCursor;
-			if (cursorBlink <= 1) {
-				hintWCursor =  "|" + hint;
-			} else {
-				hintWCursor = hint;
-			}
-			g.drawString(hintWCursor,x+5,y+15);
+			g.drawString(hint,x+5,y+15);
 		}
     }
 

@@ -238,7 +238,7 @@ public class GraphDrawer {
           //  vertical.setEnd((int) (vertical.getEnd()/previousZoom*zoom));
 
             horizontal.setEnd((int) (d.getWidth()));
-            vertical.setEnd((int) (d.getHeight()));
+            vertical.setEnd(3000);
 
             previousZoom = zoom;
 
@@ -320,7 +320,7 @@ public class GraphDrawer {
         }
 
         public void update(InputEntry inputEntry, long l){
-           // System.out.println(value + "  " + end + "   " + zoom);
+            System.out.println(value + "  " + end + "   " + zoom);
 
             inputEntry.getMouseEntries().forEach(mouseEntry -> {
                 if (vertical){

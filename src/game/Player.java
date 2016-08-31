@@ -5,7 +5,6 @@ import graph.Vertex;
 import ki.AllianceRequest;
 import ki.Notification;
 import ki.Request;
-
 import java.util.ArrayList;
 
 public class Player {

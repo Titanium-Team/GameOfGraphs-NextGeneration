@@ -22,6 +22,7 @@ public class KIFraction extends Player{
 
 
     public KIFraction(String name) {
+        //super(name);
         super(name, true);
         properties = new ArrayList<Property>();
         r=new Random();
