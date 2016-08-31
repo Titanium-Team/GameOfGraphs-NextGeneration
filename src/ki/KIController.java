@@ -1,4 +1,4 @@
-﻿package ki;
+package ki;
 
 import field.buildings.Buildings;
 import field.recipe.Recipe;
@@ -153,7 +153,6 @@ public class KIController {
 									if (attackedVertex != null) {
 										getGame().getSimulationController().moveUnits(v1, attackedVertex, v1.getField().getUnits().size());
 									}
-
 								} else {
 									this.buildIfBuildable(Buildings.UNIT, v);
 									this.buildIfBuildable(Buildings.MINE, v);
@@ -381,63 +380,64 @@ public class KIController {
 		}
 	}
 
-	/**
-	 * Ein Gegenangriff wird vom nächsten Vertex gestartet
-	 * @param current der aktuelle Spieler
-	 * @param place der zu zurückerobernde Vertex
-	 */
-	private void reclaim(KIFraction current, Vertex place) {
-		Vertex v = this.getClosestVertex(place,current);
-		if(v.getField().getUnits().size()>3) {
-			getGame().getSimulationController().moveUnits(v, place, v.getField().getUnits().size() - 3);
-		}
-	}
 
-	/**
-	 * gibt den nächsten Vertex eines Spielers mithilfe der Breitensuche zurück
-	 * @param start der UrsprungsVertex
-	 * @param p der Spieler
-	 * @return den nächsten Vertex
-	 */
-	public  Vertex getClosestVertex(Vertex start, Player p) {
-		return getClosestVertex(null, start, getGame().getGraphController().getGraph(),p);
-	}
+    /**
+     * Ein Gegenangriff wird vom n?chsten Vertex gestartet
+     * @param current der aktuelle Spieler
+     * @param place der zu zur?ckerobernde Vertex
+     */
+    private void reclaim(KIFraction current, Vertex place) {
+        Vertex v = this.getClosestVertex(place,current);
+        if(v.getField().getUnits().size()>3) {
+            getGame().getSimulationController().moveUnits(v, place, v.getField().getUnits().size() - 3);
+        }
+    }
 
-	/**
-	 * s.o.
-	 * @param q wird für Breitensuche benötigt
-	 * @param start der StartVertex
-	 * @param graph der Graph
-	 * @param p der Spieler
-	 * @return den nächsten Vertex
-	 */
-	private Vertex getClosestVertex(Queue<Vertex> q,  Vertex start, Graph graph, Player p) {
-		if(!p.getFields().isEmpty()) {
-			if (start != null && graph.getVertex(start.getID()) != null) {
-				if (q == null) {
-					graph.setAllVertexMark(false);
-					q = new Queue<>();
-					q.enqueue(start);
-					start.setMark(true);
-				}
-				if (!q.isEmpty()) {
-					if (!p.equals(start.getField().getPlayer())) {
-						ArrayList<Vertex> neighbours = graph.getNeighbours(start);
-						for (Vertex v : neighbours) {
-							if (!v.isMark()) {
-								q.enqueue(v);
-								v.setMark(true);
-								if (p.equals(start.getField().getPlayer()))
-									return start;
-							}
-						}
-						q.dequeue();
-						getClosestVertex(q, q.front(), graph, p);
-					}
-				}
-			}
-			return start;
-		}
-		return null;
-	}
+    /**
+     * gibt den n?chsten Vertex eines Spielers mithilfe der Breitensuche zur?ck
+     * @param start der UrsprungsVertex
+     * @param p der Spieler
+     * @return den n?chsten Vertex
+     */
+    public  Vertex getClosestVertex(Vertex start, Player p) {
+        return getClosestVertex(null, start, getGame().getGraphController().getGraph(),p);
+    }
+
+    /**
+     * s.o.
+     * @param q wird f?r Breitensuche ben?tigt
+     * @param start der StartVertex
+     * @param graph der Graph
+     * @param p der Spieler
+     * @return den n?chsten Vertex
+     */
+    private Vertex getClosestVertex(Queue<Vertex> q,  Vertex start, Graph graph, Player p) {
+        if(!p.getFields().isEmpty()) {
+            if (start != null && graph.getVertex(start.getID()) != null) {
+                if (q == null) {
+                    graph.setAllVertexMark(false);
+                    q = new Queue<>();
+                    q.enqueue(start);
+                    start.setMark(true);
+                }
+                if (!q.isEmpty()) {
+                    if (!p.equals(start.getField().getPlayer())) {
+                        ArrayList<Vertex> neighbours = graph.getNeighbours(start);
+                        for (Vertex v : neighbours) {
+                            if (!v.isMark()) {
+                                q.enqueue(v);
+                                v.setMark(true);
+                                if (p.equals(start.getField().getPlayer()))
+                                    return start;
+                            }
+                        }
+                        q.dequeue();
+                        getClosestVertex(q, q.front(), graph, p);
+                    }
+                }
+            }
+            return start;
+        }
+        return null;
+    }
 }

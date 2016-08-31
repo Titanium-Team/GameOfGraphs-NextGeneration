@@ -34,7 +34,7 @@ public class Field {
     private Player player;
 
     @JsonCreator
-    protected Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  int forestType,@JsonProperty("localResource")  Resource localResource, boolean start) {
+    protected Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  int forestType,@JsonProperty("localResource")  Resources localResource, @JsonProperty("start") boolean start) {
         units = new ArrayList<>();
         this.player = player;
 

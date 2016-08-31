@@ -14,6 +14,7 @@ import mapEditor.MapEditorView;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Ellipse2D;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -50,7 +51,11 @@ public class MenuView extends GameScene {
         this.checkBox.handleDraw(layers.first());
         this.dropDownMenu.handleDraw(layers.first());
 
+
         TradeView.drawer(200,300,g,null,null);
+
+        g.setColor(Color.MAGENTA);
+        g.draw(new Ellipse2D.Double(500, 500, 100, 100));
 
         //draw menu
         int x = 0;
