@@ -52,7 +52,7 @@ public class MenuView extends GameScene {
         this.dropDownMenu.handleDraw(layers.first());
 
 
-        TradeView.drawer(200,300,g,null,null);
+
 
         g.setColor(Color.MAGENTA);
         g.draw(new Ellipse2D.Double(500, 500, 100, 100));
@@ -71,11 +71,12 @@ public class MenuView extends GameScene {
             x++;
 
         }
-
+	    TradeView.drawer(200,300,g,null,null);
     }
 
     @Override
     public void update(InputEntry inputEntry, long delta) {
+
 
         inputEntry.getKeyEntries().forEach(e -> {
 
@@ -108,6 +109,7 @@ public class MenuView extends GameScene {
             }
 
         });
+	    TradeView.update(inputEntry,delta);
 
     }
 
