@@ -59,7 +59,7 @@ public enum Resources implements Resource {
         public String getName() {
             return "Wheat";
         }
-    },
+    }/*,
     HORSES {
         @Override
         public boolean isMineral() {
@@ -70,7 +70,7 @@ public enum Resources implements Resource {
         public String getName() {
             return "Horse";
         }
-    },
+    }*/,
     CATTLE {
         @Override
         public boolean isMineral() {
@@ -92,7 +92,7 @@ public enum Resources implements Resource {
         public String getName() {
             return "Iron";
         }
-    },
+    }/*,
     GOLD {
         @Override
         public boolean isMineral() {
@@ -103,11 +103,11 @@ public enum Resources implements Resource {
         public String getName() {
             return "Gold";
         }
-    };
+    }*/;
 
     public static Resource[] getSpecialResources(){
 
-        return new Resource[]{WHEAT,HORSES,CATTLE,IRON,GOLD};
+        return new Resource[]{WHEAT, CATTLE, IRON};
 
     }
 }

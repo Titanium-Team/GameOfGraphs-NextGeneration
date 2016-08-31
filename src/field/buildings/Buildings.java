@@ -53,7 +53,7 @@ public enum Buildings implements Building {
             productionResource(field,Resources.IRON,this,2,iron);
 
             int gold = n - 2;
-            productionResource(field,Resources.GOLD,this,3,gold);
+            //productionResource(field,Resources.GOLD,this,3,gold);
         }
 
         @Override
@@ -65,7 +65,7 @@ public enum Buildings implements Building {
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
                     .addIngredient(new RecipeResource(Resources.WOOD,3))
-                    .addIngredient(new RecipeResource(Resources.STONE,1));
+                    .addIngredient(new RecipeResource(Resources.STONE,2));
         }
 
         @Override
@@ -87,7 +87,7 @@ public enum Buildings implements Building {
             productionResource(field,Resources.WHEAT,this,1,wheat);
 
             int horses = random.nextInt(2);
-            productionResource(field, Resources.HORSES,this,2,horses);
+            //productionResource(field, Resources.HORSES,this,2,horses);
 
             int cattle = random.nextInt(n <= m ? n : m);
             productionResource(field, Resources.CATTLE,this,2,cattle);
@@ -102,7 +102,7 @@ public enum Buildings implements Building {
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
                     .addIngredient(new RecipeResource(Resources.WOOD,3))
-                    .addIngredient(new RecipeResource(Resources.FOOD,1));
+                    .addIngredient(new RecipeResource(Resources.FOOD,2));
         }
 
         @Override

@@ -38,7 +38,7 @@ public class MapEditorView extends GameScene{
 
         graph = new Graph();
         for (int i = 0; i < 50; i++){
-            graph.addVertex(new Vertex(r.nextInt(10000) + "", r.nextInt(3000), r.nextInt(1000), GameOfGraphs.getGame().getFieldController().createField(null)));
+            graph.addVertex(new Vertex(r.nextInt(10000) + "", r.nextInt(3000), r.nextInt(1000), GameOfGraphs.getGame().getFieldController().createField(null, false)));
         }
         graph.setWidth(3000);
         graph.setHeight(1000);
@@ -112,7 +112,7 @@ public class MapEditorView extends GameScene{
                                 } else {
                                     ArrayList<Vertex> vertexList = graph.getVertices();
 
-                                    graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(null)));
+                                    graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(null, false)));
                                 }
                                 break;
                             case 1:

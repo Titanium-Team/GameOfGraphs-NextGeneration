@@ -30,15 +30,17 @@ public class FieldView extends GameScene{
     private Field currentField = null;
     private Graph graph;
     private UIComponent dropDownMenu = new DropDownMenu<Building>(this, new ILocation(700, 600), new LinkedList<Building>() {{
-        Buildings.values();
+        for( Building building : Buildings.values()){
+            this.add(building);
+        }
     }}, (value) -> {});
 
     public FieldView(){
 
         this.graph = new Graph();
-        graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null)));
-        graph.addVertex(new Vertex("Test2",500,200,GameOfGraphs.getGame().getFieldController().createField(null)));
-        //E.getE().addComponent(dropDownMenu);
+        graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null, false)));
+        graph.addVertex(new Vertex("Test2",500,200,GameOfGraphs.getGame().getFieldController().createField(null, true)));
+        E.getE().addComponent(dropDownMenu);
 
     }
 
@@ -57,7 +59,7 @@ public class FieldView extends GameScene{
         if(currentField == null) {
             g.drawString("Kein Field ausgewählt", 620, 600);
         }else{
-            g.setColor(Color.GREEN);
+            g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
             g.setColor(Color.DARK_GRAY);
             g.drawString(String.valueOf("MOUNTAIN: " + currentField.getMountains()), 120, 520);
@@ -65,9 +67,11 @@ public class FieldView extends GameScene{
             g.drawString("UNITS: " + currentField.getUnits().size() + " (" + currentField.getUnmovedUnits().size() + ")", 220, 520);
             g.setColor(Color.BLUE);
             g.drawString(String.valueOf("SPECIAL: ") + currentField.getLocalResource().getName(), 320, 520);
+            g.setColor(Color.GREEN);
+            g.drawString(String.valueOf("FOREST: ") + currentField.getForestType(), 320, 540);
             g.setColor(Color.BLACK);
 
-            //this.dropDownMenu.handleDraw(layers.first());
+            this.dropDownMenu.handleDraw(layers.first());
 
             Map<Resource, Integer> resources = currentField.getResources();
             Map<Building, Integer> buildings = currentField.getBuildings();

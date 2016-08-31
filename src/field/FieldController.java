@@ -17,10 +17,14 @@ public class FieldController {
 
     private final static Random random = new Random();
 
-    public Field createField(Player player){
+    public Field createField(Player player, boolean start){
 
         int fertility = random.nextInt(5)+1;
-        int mountains = random.nextInt(6-fertility)+1;
+        int mountains = random.nextInt(5)+1;
+        while(fertility + mountains > 5){
+            fertility = random.nextInt(5)+1;
+            mountains = random.nextInt(5)+1;
+        }
         int forestType = random.nextInt(5)+1;
 
         Resource[] resources = Resources.getSpecialResources();
@@ -31,7 +35,7 @@ public class FieldController {
             resource = resources[random.nextInt(resources.length)];
         }
 
-        Field field = new Field(fertility, mountains, player, forestType, resource);
+        Field field = new Field(fertility, mountains, player, forestType, resource, start);
         field.getResources().put(Resources.POPULATION,random.nextInt(2)+2);
 
         return field;

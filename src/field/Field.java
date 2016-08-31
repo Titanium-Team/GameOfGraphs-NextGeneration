@@ -34,8 +34,21 @@ public class Field {
     private Player player;
 
     @JsonCreator
-    protected Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  int forestType,@JsonProperty("localResource")  Resource localResource) {
+    protected Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  int forestType,@JsonProperty("localResource")  Resource localResource, boolean start) {
         units = new ArrayList<>();
+        this.player = player;
+
+        if(start == true){
+            for (int i = 0; i < 4; i++ ) {
+                units.add(new Unit(player));
+            }
+        }
+        this.fertility = fertility;
+        this.mountains = mountains;
+        this.localResource = localResource;
+
+        this.forestType = forestType;
+
         buildings = new LinkedHashMap<Building, Integer>(){{
 
             for(Building key : Buildings.values()) {
@@ -47,17 +60,19 @@ public class Field {
         resources = new LinkedHashMap<Resource, Integer>(){{
 
             for(Resource key : Resources.values()) {
-                this.put(key, 0);
+                if(key == Resources.FOOD){
+                    this.put(key, fertility);
+                } else if (key == Resources.STONE){
+                    this.put(key, mountains);
+                } else if (key == Resources.WOOD){
+                    this.put(key, forestType);
+                } else {
+                    this.put(key, 0);
+                }
             }
 
         }};
 
-        this.player = player;
-        this.fertility = fertility;
-        this.mountains = mountains;
-        this.localResource = localResource;
-
-        this.forestType = forestType;
 
     }
 
