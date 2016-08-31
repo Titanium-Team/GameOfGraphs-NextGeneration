@@ -1,6 +1,5 @@
 package field;
 
-import com.sun.org.apache.regexp.internal.RE;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 
@@ -9,20 +8,20 @@ import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.buildings.Building;
 import field.buildings.Buildings;
-import field.recipe.Recipe;
 import field.recipe.RecipeResource;
 import field.resource.Resource;
 import game.GameOfGraphs;
 import game.GraphDrawer;
-import game.ui.DropDownMenu;
-import game.ui.UIComponent;
+import game.ui.*;
+import game.ui.Button;
+import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
+import org.omg.CORBA.INTERNAL;
 
 import java.awt.*;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -31,20 +30,41 @@ import java.util.Map;
  */
 public class FieldView extends GameScene{
 
+    private Vertex currentVertex = null;
     private Field currentField = null;
     private Graph graph;
-    private DropDownMenu<Building> dropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
+    private boolean move = false;
+    private List<Vertex> marked = new ArrayList<>();
+    private DropDownMenu<Building> buildingDropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
         for( Building building : Buildings.values()){
             this.add(building);
         }
     }}, (value) -> {});
 
+    private DropDownMenu<Integer> unitDropDownMenu = new DropDownMenu<Integer>(this, new ILocation(220, 530), new LinkedList<Integer>() {{
+    }}, (value) -> {});
+
+
+    private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(value -> {
+
+        if( Buildings.isBuildable(buildingDropDownMenu.getOption(), currentField)){
+
+            Buildings.build(buildingDropDownMenu.getOption(), currentField);
+        }
+
+    }));
+
     public FieldView(){
 
-        this.graph = new Graph();
-        graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null, false)));
-        graph.addVertex(new Vertex("Test2",500,200,GameOfGraphs.getGame().getFieldController().createField(null, true)));
-        E.getE().addComponent(dropDownMenu);
+        this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
+        //graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null, false)));
+        //graph.addVertex(new Vertex("Test2",500,200,GameOfGraphs.getGame().getFieldController().createField(null, true)));
+        //graph.addEdge(new Edge(new String[] {"Test","Test2"}, 20));
+        E.getE().addComponent(buildingDropDownMenu);
+        E.getE().addComponent(buildButton);
+        E.getE().addComponent(unitDropDownMenu);
+
+
 
     }
 
@@ -55,6 +75,8 @@ public class FieldView extends GameScene{
 
         GraphDrawer.drawer(g,graph,"Field");
 
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0,500,1280,220);
         g.setColor(Color.BLACK);
         g.drawLine(0,500,1280,500);
         g.drawLine(420, 500, 420, 720);
@@ -65,7 +87,7 @@ public class FieldView extends GameScene{
         }else{
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
-            g.setColor(Color.DARK_GRAY);
+            g.setColor(Color.LIGHT_GRAY);
             g.drawString(String.valueOf("MOUNTAIN: " + currentField.getMountains()), 120, 520);
             g.setColor(Color.RED);
             g.drawString("UNITS: " + currentField.getUnits().size() + " (" + currentField.getUnmovedUnits().size() + ")", 220, 520);
@@ -75,11 +97,15 @@ public class FieldView extends GameScene{
             g.drawString(String.valueOf("FOREST: ") + currentField.getForestType(), 320, 540);
             g.setColor(Color.BLACK);
 
-            this.dropDownMenu.handleDraw(layers.first());
+            g.setColor(Color.LIGHT_GRAY);
+            this.buildingDropDownMenu.handleDraw(layers.first());
+            this.buildButton.handleDraw(layers.first());
+            this.unitDropDownMenu.handleDraw(layers.first());
+            g.setColor(Color.BLACK);
 
             Map<Resource, Integer> resources = currentField.getResources();
             Map<Building, Integer> buildings = currentField.getBuildings();
-            List<RecipeResource> recipeList = dropDownMenu.getOption().getRecipe().getItemIngredients();
+            List<RecipeResource> recipeList = buildingDropDownMenu.getOption().getRecipe().getItemIngredients();
 
             final int[] y = {0};
             resources.forEach((resource, amount) -> {
@@ -120,17 +146,54 @@ public class FieldView extends GameScene{
     @Override
     public void update(InputEntry inputEntry, long l) {
 
+        GraphDrawer.update(inputEntry,l);
+
         inputEntry.getMouseEntries().forEach(entry -> {
 
-            if(entry.getPoint().getY() <= 500 && entry.getButton() == 1) {
-                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
+
+            if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
+                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if (vertex != null) {
-                    this.currentField = vertex.getField();
+                    this.currentVertex = vertex;
+                    this.currentField = this.currentVertex.getField();
+                    this.unitDropDownMenu.setOptions(new LinkedList<Integer>() {{
+
+                        for (int i = 0; i <= currentField.getUnmovedUnits().size(); i++) {
+                            this.add(i);
+                        }
+
+                    }});
                 } else {
+                    this.currentVertex = null;
                     this.currentField = null;
                 }
+            } else if(move == true){
+
+                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
+                if(vertex != null) {
+                    if (vertex.isMarkTarget()) {
+                        GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption());
+                    }
+                }
+                this.unitDropDownMenu.setSelectedIndex(0);
+
             }
         });
+
+        if (this.currentField != null && this.currentVertex != null){
+            if (this.unitDropDownMenu.getOption() > 0) {
+
+                marked = GameOfGraphs.getGame().getSimulationController().showMovementPossibilities(this.currentVertex);
+                move = true;
+            } else {
+                if(move == true){
+                    for (Vertex vertex : marked){
+                        vertex.setMarkTarget(false);
+                    }
+                }
+                move = false;
+            }
+        }
 
     }
 
