@@ -9,6 +9,7 @@ import field.FieldView;
 import game.ui.CheckBox;
 import game.ui.DropDownMenu;
 import game.ui.UIComponent;
+import ki.TradeView;
 import mapEditor.MapEditorView;
 
 import java.awt.*;
@@ -48,6 +49,8 @@ public class MenuView extends GameScene {
 
         this.checkBox.handleDraw(layers.first());
         this.dropDownMenu.handleDraw(layers.first());
+
+        TradeView.drawer(200,300,g,null,null);
 
         //draw menu
         int x = 0;
