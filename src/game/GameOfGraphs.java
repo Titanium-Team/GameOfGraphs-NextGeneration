@@ -16,6 +16,10 @@ public class GameOfGraphs {
 
     private static GameOfGraphs game;
 
+
+    private int currentPlayer = 0;
+    private List<Player> players = new ArrayList<>();
+
     private TextBuilder textBuilder = new TextBuilder();
     private LoadingManager loadingManager = new LoadingManager();
 
@@ -76,10 +80,8 @@ public class GameOfGraphs {
         return SimulationController;
     }
 
-
-
     public Player getCurrentPlayer() {
-        return null;
+        return this.players.get(this.currentPlayer);
     }
 
     public List<Player> getPlayers() {

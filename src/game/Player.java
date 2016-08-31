@@ -89,4 +89,5 @@ public class Player {
     public void setRequests(Queue<Request> requests) {
         this.requests = requests;
     }
+
 }
