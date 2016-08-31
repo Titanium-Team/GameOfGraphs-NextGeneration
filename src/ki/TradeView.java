@@ -14,27 +14,35 @@ import java.util.ConcurrentModificationException;
  */
 public class TradeView  {
 
-	private static ArrayList<EditText> textFields;
+	private static ArrayList<EditText> textFields=new ArrayList<>();
+	private static boolean firstTime=true;
 	private static EditText enabled;
 
+
 	public static void drawer( int x,int y,Graphics2D g, Player currentPlayer, Vertex currentVertex){
-		textFields=new ArrayList<>();
 		g.setColor(Color.WHITE);
 		int height= Resources.values().length*50 +50;
 		int width=200;
 		g.fillRoundRect(x,y,width,height,10,10);
 		g.setColor(Color.BLACK);
 		g.drawRoundRect(x,y,width,height,10,10);
-
-		for (int i=0;i<Resources.values().length;i++) {
-			g.setColor(Color.BLACK);
-			g.drawString(Resources.values()[i].getName() +":", x + 10, y + 50 * i + 50);
-			EditText wanted=new EditText(35,15,x+50,y+50*i+47,"",true,false,"wanted"),offered=new EditText(35,15,x+100,y+50*i+47,"",true,false,"offered");
-			textFields.add(wanted);
-			textFields.add(offered);
-			wanted.drawer(g);
-			g.setColor(Color.BLACK);
-			offered.drawer(g);
+		if(firstTime) {
+			for (int i = 0; i < Resources.values().length; i++) {
+				g.setColor(Color.BLACK);
+				g.drawString(Resources.values()[i].getName() + ":", x + 10, y + 50 * i + 50);
+				EditText wanted = new EditText(35, 15, x + 50, y + 50 * i + 47, "", true, false, "wanted"), offered = new EditText(35, 15, x + 100, y + 50 * i + 47, "", true, false, "offered");
+				textFields.add(wanted);
+				textFields.add(offered);
+				wanted.drawer(g);
+				g.setColor(Color.BLACK);
+				offered.drawer(g);
+			}
+			firstTime=false;
+		}else{
+			for(EditText txt:textFields){
+				g.setColor(Color.black);
+				txt.drawer(g);
+			}
 		}
 
 
