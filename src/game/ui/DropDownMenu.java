@@ -48,47 +48,49 @@ public class DropDownMenu<T> implements UIComponent {
     @Override
     public void update(InputEntry inputEntry, long delta) {
 
-        inputEntry.getMouseEntries().forEach(entry -> {
+        if(!(this.boundingBoxes.isEmpty())) {
+            inputEntry.getMouseEntries().forEach(entry -> {
 
-            // Wenn das Menu aktuell offen ist...
-            if(this.open) {
+                // Wenn das Menu aktuell offen ist...
+                if (this.open) {
 
-                // Die BoundingBox bereits existiert
-                if(!(this.openBoxBoundings == null)) {
+                    // Die BoundingBox bereits existiert
+                    if (!(this.openBoxBoundings == null)) {
 
-                    // Die Mouse irgendwo in den offenen Bereich geclickt hat & mit dem linken MouseButton geclickt wurde...
-                    if(this.openBoxBoundings.contains(new ILocation(entry.getPoint())) && (entry.getButton() == MouseEvent.BUTTON1)) {
+                        // Die Mouse irgendwo in den offenen Bereich geclickt hat & mit dem linken MouseButton geclickt wurde...
+                        if (this.openBoxBoundings.contains(new ILocation(entry.getPoint())) && (entry.getButton() == MouseEvent.BUTTON1)) {
 
-                        for(int i = 0; i < this.options.size(); i++) {
+                            for (int i = 0; i < this.options.size(); i++) {
 
-                            if(this.boundingBoxes.get(this.options.get(i)).contains(new ILocation(entry.getPoint()))) {
-                                this.callable.call(this.options.get(i));
-                                this.selectedIndex = i;
-                                this.open = false;
+                                if (this.boundingBoxes.get(this.options.get(i)).contains(new ILocation(entry.getPoint()))) {
+                                    this.callable.call(this.options.get(i));
+                                    this.selectedIndex = i;
+                                    this.open = false;
+                                }
+
                             }
 
+                        } else {
+                            // Falls nicht dann wird das Menu wieder geschlossen...
+                            this.open = false;
                         }
 
-                    } else {
-                        // Falls nicht dann wird das Menu wieder geschlossen...
-                        this.open = false;
+                    }
+
+                } else {
+
+                    if (entry.getButton() == MouseEvent.BUTTON1) {
+                        BoundingBox box = this.boundingBoxes.get(this.options.get(0));
+
+                        if (box.contains(new ILocation(entry.getPoint()))) {
+                            this.open = true;
+                        }
                     }
 
                 }
 
-            } else {
-
-                if(entry.getButton() == MouseEvent.BUTTON1) {
-                    BoundingBox box = this.boundingBoxes.get(this.options.get(0));
-
-                    if (box.contains(new ILocation(entry.getPoint()))) {
-                        this.open = true;
-                    }
-                }
-
-            }
-
-        });
+            });
+        }
 
     }
 

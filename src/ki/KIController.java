@@ -31,8 +31,8 @@ public class KIController {
     }
 
     /**
-     * steuert den gesamten Ablauf der KI,indem zunächst durch alle Felder und dann durch die der KI-Fraktionen iteriert wird.
-     * Dabei werden die Abläufe auf diesen Feldern anhand diverser Eigenschaften gesteuert und sowohl Benachrichtigungen als auch Anfragen bearbeitet;
+     * steuert den gesamten Ablauf der KI,indem zun?chst durch alle Felder und dann durch die der KI-Fraktionen iteriert wird.
+     * Dabei werden die Abl?ufe auf diesen Feldern anhand diverser Eigenschaften gesteuert und sowohl Benachrichtigungen als auch Anfragen bearbeitet;
      */
     public void run(){
 	    allFields=getGame().getGraphController().getGraph().getVertices();
@@ -385,9 +385,9 @@ public class KIController {
     }
 
     /**
-     * Ein Gegenangriff wird vom nächsten Vertex gestartet
+     * Ein Gegenangriff wird vom n?chsten Vertex gestartet
      * @param current der aktuelle Spieler
-     * @param place der zu zurückerobernde Vertex
+     * @param place der zu zur?ckerobernde Vertex
      */
     private void reclaim(KIFraction current, Vertex place) {
         Vertex v = this.getClosestVertex(place,current);
@@ -397,10 +397,10 @@ public class KIController {
     }
 
     /**
-     * gibt den nächsten Vertex eines Spielers mithilfe der Breitensuche zurück
+     * gibt den n?chsten Vertex eines Spielers mithilfe der Breitensuche zur?ck
      * @param start der UrsprungsVertex
      * @param p der Spieler
-     * @return den nächsten Vertex
+     * @return den n?chsten Vertex
      */
     public  Vertex getClosestVertex(Vertex start, Player p) {
         return getClosestVertex(null, start, getGame().getGraphController().getGraph(),p);
@@ -408,11 +408,11 @@ public class KIController {
 
     /**
      * s.o.
-     * @param q wird für Breitensuche benötigt
+     * @param q wird f?r Breitensuche ben?tigt
      * @param start der StartVertex
      * @param graph der Graph
      * @param p der Spieler
-     * @return den nächsten Vertex
+     * @return den n?chsten Vertex
      */
     private Vertex getClosestVertex(Queue<Vertex> q,  Vertex start, Graph graph, Player p) {
         if(!p.getFields().isEmpty()) {
