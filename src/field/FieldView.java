@@ -84,7 +84,7 @@ public class FieldView extends GameScene{
         }else{
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
-            g.setColor(Color.DARK_GRAY);
+            g.setColor(Color.LIGHT_GRAY);
             g.drawString(String.valueOf("MOUNTAIN: " + currentField.getMountains()), 120, 520);
             g.setColor(Color.RED);
             g.drawString("UNITS: " + currentField.getUnits().size() + " (" + currentField.getUnmovedUnits().size() + ")", 220, 520);
@@ -94,9 +94,11 @@ public class FieldView extends GameScene{
             g.drawString(String.valueOf("FOREST: ") + currentField.getForestType(), 320, 540);
             g.setColor(Color.BLACK);
 
+            g.setColor(Color.LIGHT_GRAY);
             this.buildingDropDownMenu.handleDraw(layers.first());
             this.buildButton.handleDraw(layers.first());
             this.unitDropDownMenu.handleDraw(layers.first());
+            g.setColor(Color.BLACK);
 
             Map<Resource, Integer> resources = currentField.getResources();
             Map<Building, Integer> buildings = currentField.getBuildings();

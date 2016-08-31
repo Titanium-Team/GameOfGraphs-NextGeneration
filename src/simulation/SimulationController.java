@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class SimulationController {
 
-    private Graph graph;
+    private Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
     private Player currentPlayer;
 
     public SimulationController(){}
