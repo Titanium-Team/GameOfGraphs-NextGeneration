@@ -50,7 +50,9 @@ public class GameOfGraphs {
 
     public void nextTurn() {
 
-        
+
+        fieldController.run();
+
     }
 
     public TextBuilder getTextBuilder() {
