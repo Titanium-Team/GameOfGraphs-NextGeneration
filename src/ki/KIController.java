@@ -60,6 +60,15 @@ public class KIController {
             }
             if(v1.getField().getPlayer() instanceof KIFraction ){
                 current = ((KIFraction) v1.getField().getPlayer());
+                if(current.getGoals().containsKey(v1)) {
+                    for (Map.Entry<Resource, Integer> e : current.getGoals().get(v1).entrySet()) {
+                        if(v1.getField().getResources().get(e.getKey())>=e.getValue()){
+	                        current.getGoals().get(v1).remove(e.getKey());
+                        }
+                    }
+                }else{
+                    current.getGoals().put(v1,new HashMap<Resource, Integer>());
+                }
                 if(!current.isFraction()) {
                     if(!current.getProperties().contains(Property.PEACEFUL)){
                         int minUnits=Integer.MAX_VALUE;
@@ -184,7 +193,7 @@ public class KIController {
 		                        int greed = r.nextInt(goals.entrySet().size() + 1);
 		                        for (Map.Entry<Resource, Integer> e : goals.entrySet()) {
 			                        if (greed > 0) {
-				                        wanted.put(e.getKey(), e.getValue());
+				                        wanted.put(e.getKey(),e.getValue() - v1.getField().getResources().get(e.getKey()));
 				                        greed--;
 			                        }
 		                        }
@@ -369,7 +378,7 @@ public class KIController {
             Recipe recipe=b.getRecipe();
             for(RecipeResource rRes:recipe.getItemIngredients()){
                 if(v.getField().getResources().get(rRes.getResource())<rRes.getAmount()){
-                    ((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(),rRes.getAmount()-v.getField().getResources().get(rRes.getResource()));
+                    ((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(),rRes.getAmount());
                 }
             }
         }
