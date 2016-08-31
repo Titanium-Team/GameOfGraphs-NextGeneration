@@ -9,6 +9,8 @@ import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.buildings.Building;
 import field.buildings.Buildings;
+import field.recipe.Recipe;
+import field.recipe.RecipeResource;
 import field.resource.Resource;
 import game.GameOfGraphs;
 import game.GraphDrawer;
@@ -18,6 +20,8 @@ import graph.Graph;
 import graph.Vertex;
 
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -29,7 +33,7 @@ public class FieldView extends GameScene{
 
     private Field currentField = null;
     private Graph graph;
-    private UIComponent dropDownMenu = new DropDownMenu<Building>(this, new ILocation(700, 600), new LinkedList<Building>() {{
+    private DropDownMenu<Building> dropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
         for( Building building : Buildings.values()){
             this.add(building);
         }
@@ -75,13 +79,31 @@ public class FieldView extends GameScene{
 
             Map<Resource, Integer> resources = currentField.getResources();
             Map<Building, Integer> buildings = currentField.getBuildings();
+            List<RecipeResource> recipeList = dropDownMenu.getOption().getRecipe().getItemIngredients();
 
             final int[] y = {0};
             resources.forEach((resource, amount) -> {
 
                 g.drawString(resource.getName() + ": " + amount, 20, 540 + y[0] * 20);
+
+                for (RecipeResource recipe : recipeList){
+
+                    if(recipe.getResource() == resource){
+
+                        if(recipe.getAmount() <= amount){
+                            g.setColor(Color.GREEN);
+                        } else {
+                            g.setColor(Color.RED);
+                        }
+                        g.drawString(" -" + recipe.getAmount(), 80, 540 + y[0] * 20);
+                        g.setColor(Color.BLACK);
+                    }
+
+                }
+
                 y[0]++;
             });
+
 
             y[0] = 0;
             buildings.forEach((building, amount) -> {
