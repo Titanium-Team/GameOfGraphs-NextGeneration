@@ -117,8 +117,7 @@ public class SimulationController {
     public void moveUnits(Vertex start, Vertex end, int amountUnits) {
         if (currentPlayer == start.getField().getPlayer()) {
             List<Vertex> path = giveListOfVerticesToFollow(start, end);
-            boolean possiblePath = isMovementPossible(path);
-            if (!possiblePath) {
+            if (!isMovementPossible(path)) {
                 JOptionPane.showMessageDialog(null, "Das Zielfeld ist zuweit weg! Bitte wähle einen nähres Feld (unter 50 km)");
             } else {
                 if (path != null) {
@@ -138,7 +137,7 @@ public class SimulationController {
                         } else {
                             path.getNext().getField().setPlayer(currentPlayer);
                         }
-                        addUnitsToField(path.getContent().getField(), units);
+                        addUnitsToField(path.getNext(), units);
                         path.next();
                     }
                 }
@@ -155,9 +154,9 @@ public class SimulationController {
      * Die ArrayList der Units die hinzugefügt werden soll.
      */
 
-    private void addUnitsToField(Field field, ArrayList<Unit> units){
-        if (currentPlayer == field.getPlayer()) {
-            field.getUnits().addAll(units);
+    private void addUnitsToField(Vertex vertex, ArrayList<Unit> units){
+        if (currentPlayer == vertex.getField().getPlayer()) {
+            vertex.getField().getUnits().addAll(units);
         }
     }
 
