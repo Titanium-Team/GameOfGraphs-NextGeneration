@@ -31,6 +31,8 @@ public class MapEditorView extends GameScene{
 
     private boolean leftMouse = false;
 
+    private Button addVertex, addEdge, save, load, move, check;
+
     public MapEditorView() {
         Random r = new Random();
 
@@ -40,12 +42,15 @@ public class MapEditorView extends GameScene{
         }
         graph.setWidth(3000);
         graph.setHeight(1000);
+
+        addVertex = new Button(5, 505, 310, 100, Color.BLACK, Color.WHITE, "Add Vertex");
     }
 
     @Override
     public void render(Layers layers) {
+        Graphics2D g = layers.first().getGraphics2D();
 
-        GraphDrawer.drawer(layers.first().getGraphics2D(), graph, "MapEditor");
+        GraphDrawer.drawer(g, graph, "MapEditor");
 
         if (propertiesVertex != null){
             propertiesVertex.drawer(layers.first().getGraphics2D());
@@ -54,6 +59,8 @@ public class MapEditorView extends GameScene{
         if (propertiesEdge != null){
             propertiesEdge.drawer(layers.first().getGraphics2D());
         }
+
+        addVertex.draw(g);
     }
 
     @Override
@@ -105,7 +112,7 @@ public class MapEditorView extends GameScene{
                                 } else {
                                     ArrayList<Vertex> vertexList = graph.getVertices();
 
-                                    graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(null)));
+                                    graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(null)));
                                 }
                                 break;
                             case 1:
@@ -169,15 +176,15 @@ public class MapEditorView extends GameScene{
                                 double x = (mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom();
                                 double y = (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom();
 
-                                if ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) - graph.getRadius() < 0) {
+                                if (mouseEntry.getPoint().getX() - graph.getRadius() < 0) {
                                     x = GraphDrawer.getHorizontal().getValue()/GraphDrawer.getZoom()+graph.getRadius();
-                                }else if ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) + graph.getRadius() > 1280 - 25){
+                                }else if (mouseEntry.getPoint().getX() + graph.getRadius() > 1280 - 25){
                                     x = (1280-25+GraphDrawer.getHorizontal().getValue())/GraphDrawer.getZoom()-graph.getRadius();
                                 }
 
-                                if ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) - graph.getRadius() < 0){
+                                if (mouseEntry.getPoint().getY() - graph.getRadius() < 0){
                                     y = GraphDrawer.getVertical().getValue()/GraphDrawer.getZoom()+graph.getRadius();
-                                }else if ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) + graph.getRadius() > 500 - 25){
+                                }else if (mouseEntry.getPoint().getY() + graph.getRadius() > 500 - 25){
                                     y = (500-25+GraphDrawer.getVertical().getValue())/GraphDrawer.getZoom()-graph.getRadius();
                                 }
 
@@ -202,15 +209,15 @@ public class MapEditorView extends GameScene{
                                     vector1.setX(vertex1.getX() - vector1.getX() + vertex1.getX());
                                     vector1.setY(vertex1.getY() - vector1.getY() + vertex1.getY());
 
-                                    if ((vector1.getX() + GraphDrawer.getHorizontal().getValue()) - graph.getRadius() < 0) {
+                                    if (vector1.getX() - graph.getRadius() < 0) {
                                         vector1.setX(GraphDrawer.getHorizontal().getValue()/GraphDrawer.getZoom()+graph.getRadius());
-                                    }else if ((vector1.getX() + GraphDrawer.getHorizontal().getValue()) + graph.getRadius() > 1280 - 25){
+                                    }else if (vector1.getX() + graph.getRadius() > 1280 - 25){
                                         vector1.setX((1280-25+GraphDrawer.getHorizontal().getValue())/GraphDrawer.getZoom()-graph.getRadius());
                                     }
 
-                                    if ((vector1.getY() + GraphDrawer.getVertical().getValue()) - graph.getRadius() < 0){
+                                    if (vector1.getY() - graph.getRadius() < 0){
                                         vector1.setY(GraphDrawer.getVertical().getValue()/GraphDrawer.getZoom()+graph.getRadius());
-                                    }else if ((vector1.getY() + GraphDrawer.getVertical().getValue()) + graph.getRadius() > 500 - 25){
+                                    }else if (vector1.getY() + graph.getRadius() > 500 - 25){
                                         vector1.setY((500-25+GraphDrawer.getVertical().getValue())/GraphDrawer.getZoom()-graph.getRadius());
                                     }
 
@@ -370,7 +377,7 @@ public class MapEditorView extends GameScene{
                 enabled.update(inputEntry, l);
             }
 
-            if (enabled == weight){
+            if (enabled.equals(weight)){
                 e.setWeight(Double.parseDouble(enabled.getText()));
             }
         }
@@ -390,127 +397,6 @@ public class MapEditorView extends GameScene{
         public int getHeight() {
 
             return height;
-        }
-    }
-
-    private class EditText{
-        private int width, height;
-        private int x, y;
-
-        private String text;
-        private boolean onlyNumbers;
-        private boolean dot;
-
-        private double cursorBlink;
-        private int cursor = 0;
-
-        public EditText(int width, int height, int x, int y, String text, boolean onlyNumbers, boolean dot) {
-            this.width = width;
-            this.height = height;
-            this.x = x;
-            this.y = y;
-            this.text = text;
-            this.onlyNumbers = onlyNumbers;
-            this.dot = dot;
-        }
-
-        public void drawer(Graphics2D g){
-            g.drawRect(x, y, width, height);
-
-            g.setClip(new Rectangle(x, y, width, height));
-
-            String s1 = text.substring(0, cursor);
-            String s2 = text.substring(cursor, text.length());
-
-            String textWCursor;
-            if (cursorBlink <= 1){
-                textWCursor = s1 + "|" + s2;
-            }else {
-                textWCursor = s1 + " " + s2;
-            }
-
-            g.drawString(textWCursor, x+5, y+15);
-        }
-
-        public void update(InputEntry inputEntry, long l){
-            if (cursorBlink <=2){
-                cursorBlink = cursorBlink + 0.005*l;
-            }else {
-                cursorBlink = 0;
-            }
-            inputEntry.getKeyEntries().forEach(keyEntry -> {
-                if (onlyNumbers){
-                    if (Character.isDigit(keyEntry.getCharacter())){
-                        String s1 = text.substring(0, cursor);
-                        String s2 = text.substring(cursor, text.length());
-                        text = s1 + keyEntry.getCharacter() + s2;
-
-                        cursor++;
-                    }
-                }else {
-                    if (Character.isLetterOrDigit(keyEntry.getCharacter())) {
-                        String s1 = text.substring(0, cursor);
-                        String s2 = text.substring(cursor, text.length());
-                        text = s1 + keyEntry.getCharacter() + s2;
-
-                        cursor++;
-                    }
-                }
-                if (dot && !text.contains(".")){
-                    if (keyEntry.getCharacter() == '.'){
-                        String s1 = text.substring(0, cursor);
-                        String s2 = text.substring(cursor, text.length());
-                        text = s1 + keyEntry.getCharacter() + s2;
-
-                        cursor++;
-                    }
-                }
-
-                if (keyEntry.getKeyCode() == 8){
-                    String s1 = text.substring(0, cursor);
-                    s1 = (String) s1.subSequence(0, s1.length()-1 != -1 ? s1.length()-1:0);
-                    String s2 = text.substring(cursor, text.length());
-
-                    text = s1 + s2;
-
-                    if (cursor != 0) {
-                        cursor--;
-                    }
-                }
-                if (keyEntry.getKeyCode() == 127){
-                    String s1 = text.substring(0, cursor);
-                    String s2 = text.substring(cursor, text.length());
-                    s2 = (String) s2.subSequence(s2.length() != 0 ? 1:0, s2.length());
-
-                    text = s1 + s2;
-                }
-                if (keyEntry.getKeyCode() == 37 && cursor != 0){
-                    cursor--;
-                }
-                if (keyEntry.getKeyCode() == 39 && cursor != text.length()){
-                    cursor++;
-                }
-            });
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public String getText() {
-            return text;
         }
     }
 }

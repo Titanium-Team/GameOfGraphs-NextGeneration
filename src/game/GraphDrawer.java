@@ -18,7 +18,6 @@ public class GraphDrawer {
     private static double zoom = 1.0;
     private static final double SCALE_STEP = 0.1d;
     private static Graph graph;
-    private Point origin;
     private static double previousZoom = zoom;
     private static double scrollX = 0d;
     private static double scrollY = 0d;
@@ -28,8 +27,8 @@ public class GraphDrawer {
 
     public static void drawer(Graphics2D g, Graph graph, String whoAreYou){
         GraphDrawer.graph = graph;
-        g.scale(zoom, zoom);
         AffineTransform veryoldTransform = g.getTransform();
+        g.scale(zoom, zoom);
         if (horizontal != null && vertical != null) {
             g.translate(-horizontal.getValue(), -vertical.getValue());
         }
@@ -184,20 +183,33 @@ public class GraphDrawer {
             Dimension d = new Dimension((int)(graph.getWidth()*zoom), (int)(graph.getHeight()*zoom));
 
 
-            if (d.getWidth() <= 1263) {
-                d.setSize(1263, d.getHeight());
+            if (d.getWidth() <= 1280-25) {
+                d.setSize(1280-25, d.getHeight());
                 zoom = d.getWidth()/graph.getWidth();
             }
 
-            if (d.getHeight() <= 523) {
-                d.setSize(d.getWidth(), 523);
+            if (d.getHeight() <= 500-25) {
+                d.setSize(d.getWidth(), 500-25);
                 zoom = d.getHeight()/graph.getHeight();
             }
 
-            scrollX = mouseWheelEntry.getPoint().getX() / previousZoom * zoom - (mouseWheelEntry.getPoint().getX() - horizontal.getValue());
-            scrollY = mouseWheelEntry.getPoint().getY() / previousZoom * zoom - (mouseWheelEntry.getPoint().getY() - vertical.getValue());
+
+
+            scrollX = (mouseWheelEntry.getPoint().getX() - horizontal.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getX() - horizontal.getValue()*2);
+            scrollY = (mouseWheelEntry.getPoint().getY() - vertical.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getY() - vertical.getValue()*2);
+
+           // horizontal.setEnd((int) (horizontal.getEnd() * SCALE_STEP));
+          //  vertical.setEnd((int) (vertical.getEnd()/previousZoom*zoom));
+
+            horizontal.setEnd((int) (d.getWidth()));
+            vertical.setEnd((int) (d.getHeight()));
 
             previousZoom = zoom;
+
+            horizontal.setValue((int) scrollX);
+            vertical.setValue((int) scrollY);
+
+
         });
     }
 
@@ -272,6 +284,8 @@ public class GraphDrawer {
         }
 
         public void update(InputEntry inputEntry, long l){
+           // System.out.println(value + "  " + end + "   " + zoom);
+
             inputEntry.getMouseEntries().forEach(mouseEntry -> {
                 if (vertical){
                     if (mouseEntry.getPoint().getX() >= x && mouseEntry.getPoint().getX() <= x + width && mouseEntry.getPoint().getY() >= (int) (value * factor) + width && mouseEntry.getPoint().getY() <= (int) (value * factor) + width + 50) {
@@ -329,6 +343,20 @@ public class GraphDrawer {
 
         public void setEnd(int end) {
             this.end = end;
+
+            if (vertical){
+                factor = ((double) (height - width * 2 - 50) / (double) (end - start));
+            }else {
+                factor = ((double) (width - height * 2 - 50) / (double) (end - start));
+            }
+        }
+
+        public int getEnd() {
+            return end;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
         }
     }
 }
