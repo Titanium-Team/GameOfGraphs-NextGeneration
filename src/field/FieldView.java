@@ -57,9 +57,7 @@ public class FieldView extends GameScene{
     public FieldView(){
 
         this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
-        //graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null, false)));
-        //graph.addVertex(new Vertex("Test2",500,200,GameOfGraphs.getGame().getFieldController().createField(null, true)));
-        //graph.addEdge(new Edge(new String[] {"Test","Test2"}, 20));
+
         E.getE().addComponent(buildingDropDownMenu);
         E.getE().addComponent(buildButton);
         E.getE().addComponent(unitDropDownMenu);
@@ -150,7 +148,6 @@ public class FieldView extends GameScene{
 
         inputEntry.getMouseEntries().forEach(entry -> {
 
-
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
                 Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if (vertex != null) {
@@ -194,6 +191,7 @@ public class FieldView extends GameScene{
                 move = false;
             }
         }
+
 
     }
 
