@@ -27,8 +27,9 @@ public class TradeView  {
 
 		for (int i=0;i<Resources.values().length;i++) {
 			g.drawString(Resources.values()[i].getName() +":", x + 10, y + 50 * i + 50);
-			EditText wanted=new EditText(35,15,x+50,y+50*i+50,"wanted",true,false),offered=new EditText(35,15,x+50,y+50*i+50,"wanted",true,false);
-
+			EditText wanted=new EditText(35,15,x+50,y+50*i+50,"",true,false,"wanted"),offered=new EditText(35,15,x+50,y+50*i+50,"",true,false,"offered");
+			wanted.drawer(g);
+			offered.drawer(g);
 		}
 	}
 }

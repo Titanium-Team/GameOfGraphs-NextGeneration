@@ -8,7 +8,7 @@ public class EditText{
     private int width, height;
     private int x, y;
 
-    private String text;
+    private String text,hint;
     private boolean onlyNumbers;
     private boolean dot;
 
@@ -25,22 +25,43 @@ public class EditText{
         this.dot = dot;
     }
 
+	public EditText(int width, int height, int x, int y,String text, boolean onlyNumbers, boolean dot,String hint) {
+		this.width = width;
+		this.height = height;
+		this.x = x;
+		this.y = y;
+		this.text = text;
+		this.onlyNumbers = onlyNumbers;
+		this.dot = dot;
+		this.hint=hint;
+	}
+
     public void drawer(Graphics2D g){
         g.drawRect(x, y, width, height);
 
         g.setClip(new Rectangle(x, y, width, height));
+		if(!text.isEmpty() || hint==null) {
+			String s1 = text.substring(0, cursor);
+			String s2 = text.substring(cursor, text.length());
 
-        String s1 = text.substring(0, cursor);
-        String s2 = text.substring(cursor, text.length());
+			String textWCursor;
+			if (cursorBlink <= 1) {
+				textWCursor = s1 + "|" + s2;
+			} else {
+				textWCursor = s1 + " " + s2;
+			}
 
-        String textWCursor;
-        if (cursorBlink <= 1){
-            textWCursor = s1 + "|" + s2;
-        }else {
-            textWCursor = s1 + " " + s2;
-        }
-
-        g.drawString(textWCursor, x+5, y+15);
+			g.drawString(textWCursor, x + 5, y + 15);
+		}else{
+			g.setColor(Color.GRAY);
+			String hintWCursor;
+			if (cursorBlink <= 1) {
+				hintWCursor =  "|" + hint;
+			} else {
+				hintWCursor = hint;
+			}
+			g.drawString(hintWCursor,x+5,y+15);
+		}
     }
 
     public void update(InputEntry inputEntry, long l){
