@@ -6,15 +6,10 @@ import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.FieldView;
-<<<<<<< HEAD
-import game.ui.*;
 import game.ui.Button;
-=======
-import game.ui.CheckBox;
 import game.ui.DropDownMenu;
 import game.ui.UIComponent;
 import ki.TradeView;
->>>>>>> 78b947417c6b95090dc3f37d720eaf8e5b0ec98e
 import mapEditor.MapEditorView;
 
 import java.awt.*;
@@ -27,10 +22,10 @@ import java.util.Map;
 public class MenuView extends GameScene {
 
     private int selectedOption = 0;
-    private UIComponent checkBox = new Button<String>(this, "Text", new ILocation(300, 300), (v) -> {
+    private UIComponent checkBox = new Button<>(this, "Text", new ILocation(300, 300), (v) -> {
         System.out.println("pressed");
     });
-    private UIComponent dropDownMenu = new DropDownMenu<String>(this, new ILocation(300, 350), new LinkedList<String>() {{
+    private UIComponent dropDownMenu = new DropDownMenu<>(this, new ILocation(300, 350), new LinkedList<String>() {{
         this.add("ABCEFGH");
         this.add("IJKLMNO");
         this.add("PQRSTUV");
