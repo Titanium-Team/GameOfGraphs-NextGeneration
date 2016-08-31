@@ -31,12 +31,16 @@ public class TradeView  {
 			for (int i = 0; i < Resources.values().length; i++) {
 				g.setColor(Color.BLACK);
 				g.drawString(Resources.values()[i].getName() + ":", x + 10, y + 50 * i + 50);
-				EditText wanted = new EditText(35, 15, x + 50, y + 50 * i + 47, "", true, false, "wanted"), offered = new EditText(35, 15, x + 100, y + 50 * i + 47, "", true, false, "offered");
-				textFields.add(wanted);
-				textFields.add(offered);
-				wanted.drawer(g);
-				g.setColor(Color.BLACK);
-				offered.drawer(g);
+				if (textFields.isEmpty()) {
+					EditText wanted = new EditText(35, 15, x + 50, y + 50 * i + 47, "", true, false, "wanted");
+					EditText offered = new EditText(35, 15, x + 100, y + 50 * i + 47, "", true, false, "offered");
+
+					textFields.add(wanted);
+					textFields.add(offered);
+				}
+				for (EditText txt:textFields) {
+					txt.drawer(g);
+				}
 			}
 			firstTime=false;
 		}else{
@@ -58,10 +62,10 @@ public class TradeView  {
 							enabled = e;
 						}
 					});
-					if (enabled != null) {
-						enabled.update(inputEntry, l);
-					}
 				}
+			}
+			if (enabled != null) {
+				enabled.update(inputEntry, l);
 			}
 		}catch(ConcurrentModificationException c){
 			enabled = null;

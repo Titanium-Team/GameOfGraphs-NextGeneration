@@ -15,7 +15,6 @@ import graph.Vertex;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MapEditorView extends GameScene{
     private Graph graph;
@@ -32,7 +31,7 @@ public class MapEditorView extends GameScene{
     private boolean leftMouse = false;
 
     private Button addVertex, addEdge, save, load, move, check;
-    private TextureChooser vertexChooser;
+    private TextureChooser vertexChooser, edgeChooser, backgroundChooser;
 
     public MapEditorView() {
         graph = GameOfGraphs.getGame().getGraphController().getGraph();
@@ -44,7 +43,9 @@ public class MapEditorView extends GameScene{
         move = new Button(950, 615, 310, 48, Color.WHITE, Color.BLACK, "Move");
         check = new Button(950, 667, 310, 48, Color.WHITE, Color.BLACK, "Check");
 
-        vertexChooser = new TextureChooser("Vertex", 5, 610);
+        //vertexChooser = new TextureChooser("Vertex", 5, 610);
+        //edgeChooser = new TextureChooser("Edge", 320, 610);
+        backgroundChooser = new TextureChooser("Background", 635, 610);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class MapEditorView extends GameScene{
         move.draw(g);
         check.draw(g);
 
-        vertexChooser.draw(g);
+        backgroundChooser.draw(g);
     }
 
     @Override
@@ -125,7 +126,7 @@ public class MapEditorView extends GameScene{
                         }else if (move.isPushed(mouseEntry.getPoint())){
                             chooser = 2;
                         }else {
-                            vertexChooser.update(inputEntry, l);
+                            backgroundChooser.update(inputEntry, l);
                         }
                     } else {
 
@@ -448,7 +449,6 @@ public class MapEditorView extends GameScene{
             green = new Button(x+137, y+5, 40, 40, Color.GREEN, Color.GREEN, "");
             blue = new Button(x+181, y+5, 40, 40, Color.BLUE, Color.BLUE, "");
             yellow = new Button(x+225, y+5, 40, 40, Color.YELLOW, Color.YELLOW, "");
-
         }
 
         public void draw(Graphics2D g){
