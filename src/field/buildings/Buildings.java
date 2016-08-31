@@ -65,7 +65,7 @@ public enum Buildings implements Building {
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
                     .addIngredient(new RecipeResource(Resources.WOOD,3))
-                    .addIngredient(new RecipeResource(Resources.STONE,2));
+                    .addIngredient(new RecipeResource(Resources.FOOD,2));
         }
 
         @Override
@@ -102,7 +102,7 @@ public enum Buildings implements Building {
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
                     .addIngredient(new RecipeResource(Resources.WOOD,3))
-                    .addIngredient(new RecipeResource(Resources.FOOD,2));
+                    .addIngredient(new RecipeResource(Resources.STONE,2));
         }
 
         @Override
@@ -128,7 +128,7 @@ public enum Buildings implements Building {
         @Override
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
-                    .addIngredient(new RecipeResource(Resources.WOOD,2))
+                    .addIngredient(new RecipeResource(Resources.WOOD,3))
                     .addIngredient(new RecipeResource(Resources.STONE,2))
                     .addIngredient(new RecipeResource(Resources.WHEAT,2));
         }
@@ -156,8 +156,8 @@ public enum Buildings implements Building {
         @Override
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
-                    .addIngredient(new RecipeResource(Resources.WOOD,3))
-                    .addIngredient(new RecipeResource(Resources.STONE,2))
+                    .addIngredient(new RecipeResource(Resources.WOOD,4))
+                    .addIngredient(new RecipeResource(Resources.STONE,3))
                     .addIngredient(new RecipeResource(Resources.CATTLE,2));
         }
 

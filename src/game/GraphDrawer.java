@@ -166,6 +166,9 @@ public class GraphDrawer {
     }
 
     public static void update(InputEntry inputEntry, long l){
+        if(graph == null){
+            return;
+        }
         if (horizontal == null){
             horizontal = new Scrollbar(false, 1280-25, 25, 0, 475, 0, graph.getWidth()-1280, 25);
         }

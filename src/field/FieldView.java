@@ -14,6 +14,7 @@ import game.GameOfGraphs;
 import game.GraphDrawer;
 import game.ui.*;
 import game.ui.Button;
+import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 import org.omg.CORBA.INTERNAL;
@@ -28,6 +29,7 @@ import java.util.Map;
  */
 public class FieldView extends GameScene{
 
+    private Vertex currentVertex = null;
     private Field currentField = null;
     private Graph graph;
     private DropDownMenu<Building> buildingDropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
@@ -36,14 +38,11 @@ public class FieldView extends GameScene{
         }
     }}, (value) -> {});
 
-    private DropDownMenu<Integer> unitDropDownMenu = new DropDownMenu<Integer>(this, new ILocation(220, 540), new LinkedList<Integer>() {{
-
-        
-
+    private DropDownMenu<Integer> unitDropDownMenu = new DropDownMenu<Integer>(this, new ILocation(220, 530), new LinkedList<Integer>() {{
     }}, (value) -> {});
 
 
-    private Button buildButton = new Button(this, "Build", new ILocation(540, 510),(value -> {
+    private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(value -> {
 
         if( Buildings.isBuildable(buildingDropDownMenu.getOption(), currentField)){
 
@@ -54,11 +53,15 @@ public class FieldView extends GameScene{
 
     public FieldView(){
 
-        this.graph = new Graph();
-        graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null, false)));
-        graph.addVertex(new Vertex("Test2",500,200,GameOfGraphs.getGame().getFieldController().createField(null, true)));
+        this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
+        //graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null, false)));
+        //graph.addVertex(new Vertex("Test2",500,200,GameOfGraphs.getGame().getFieldController().createField(null, true)));
+        //graph.addEdge(new Edge(new String[] {"Test","Test2"}, 20));
         E.getE().addComponent(buildingDropDownMenu);
         E.getE().addComponent(buildButton);
+        E.getE().addComponent(unitDropDownMenu);
+
+
 
     }
 
@@ -69,6 +72,8 @@ public class FieldView extends GameScene{
 
         GraphDrawer.drawer(g,graph,"Field");
 
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(0,500,1280,220);
         g.setColor(Color.BLACK);
         g.drawLine(0,500,1280,500);
         g.drawLine(420, 500, 420, 720);
@@ -91,6 +96,7 @@ public class FieldView extends GameScene{
 
             this.buildingDropDownMenu.handleDraw(layers.first());
             this.buildButton.handleDraw(layers.first());
+            this.unitDropDownMenu.handleDraw(layers.first());
 
             Map<Resource, Integer> resources = currentField.getResources();
             Map<Building, Integer> buildings = currentField.getBuildings();
@@ -135,17 +141,35 @@ public class FieldView extends GameScene{
     @Override
     public void update(InputEntry inputEntry, long l) {
 
+        GraphDrawer.update(inputEntry,l);
+
         inputEntry.getMouseEntries().forEach(entry -> {
 
-            if(entry.getPoint().getY() <= 500 && entry.getButton() == 1) {
-                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
+            if (entry.getPoint().getY() <= 500 && entry.getButton() == 1) {
+                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if (vertex != null) {
-                    this.currentField = vertex.getField();
+                    this.currentVertex = vertex;
+                    this.currentField = this.currentVertex.getField();
+                    this.unitDropDownMenu.setOptions(new LinkedList<Integer>() {{
+
+                        for (int i = 0; i <= currentField.getUnmovedUnits().size(); i++) {
+                            this.add(i);
+                        }
+
+                    }});
                 } else {
+                    this.currentVertex = null;
                     this.currentField = null;
                 }
             }
         });
+
+        if (this.currentField != null && this.currentVertex != null){
+            if (this.unitDropDownMenu.getOption() > 0) {
+
+                GameOfGraphs.getGame().getSimulationController().showMovementPossibilities(this.currentVertex);
+            }
+        }
 
     }
 
