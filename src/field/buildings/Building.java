@@ -13,4 +13,6 @@ public interface Building {
     boolean isMoveable();
 
     Recipe getRecipe();
+
+    String getName();
 }
