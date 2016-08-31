@@ -95,7 +95,7 @@ public class Main {
         e.addScene(new FieldView());
         e.addScene(new MapEditorView());
 
-        e.show(MenuView.class);
+        e.show(FieldView.class);
 
         e.run();
 

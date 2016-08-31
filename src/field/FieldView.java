@@ -1,6 +1,5 @@
 package field;
 
-import com.sun.org.apache.regexp.internal.RE;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 
@@ -9,20 +8,18 @@ import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
 import field.buildings.Building;
 import field.buildings.Buildings;
-import field.recipe.Recipe;
 import field.recipe.RecipeResource;
 import field.resource.Resource;
 import game.GameOfGraphs;
 import game.GraphDrawer;
-import game.ui.DropDownMenu;
-import game.ui.UIComponent;
+import game.ui.*;
+import game.ui.Button;
 import graph.Graph;
 import graph.Vertex;
+import org.omg.CORBA.INTERNAL;
 
 import java.awt.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -33,18 +30,35 @@ public class FieldView extends GameScene{
 
     private Field currentField = null;
     private Graph graph;
-    private DropDownMenu<Building> dropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
+    private DropDownMenu<Building> buildingDropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
         for( Building building : Buildings.values()){
             this.add(building);
         }
     }}, (value) -> {});
+
+    private DropDownMenu<Integer> unitDropDownMenu = new DropDownMenu<Integer>(this, new ILocation(220, 540), new LinkedList<Integer>() {{
+
+        
+
+    }}, (value) -> {});
+
+
+    private Button buildButton = new Button(this, "Build", new ILocation(540, 510),(value -> {
+
+        if( Buildings.isBuildable(buildingDropDownMenu.getOption(), currentField)){
+
+            Buildings.build(buildingDropDownMenu.getOption(), currentField);
+        }
+
+    }));
 
     public FieldView(){
 
         this.graph = new Graph();
         graph.addVertex(new Vertex("Test",300,300,GameOfGraphs.getGame().getFieldController().createField(null, false)));
         graph.addVertex(new Vertex("Test2",500,200,GameOfGraphs.getGame().getFieldController().createField(null, true)));
-        E.getE().addComponent(dropDownMenu);
+        E.getE().addComponent(buildingDropDownMenu);
+        E.getE().addComponent(buildButton);
 
     }
 
@@ -75,11 +89,12 @@ public class FieldView extends GameScene{
             g.drawString(String.valueOf("FOREST: ") + currentField.getForestType(), 320, 540);
             g.setColor(Color.BLACK);
 
-            this.dropDownMenu.handleDraw(layers.first());
+            this.buildingDropDownMenu.handleDraw(layers.first());
+            this.buildButton.handleDraw(layers.first());
 
             Map<Resource, Integer> resources = currentField.getResources();
             Map<Building, Integer> buildings = currentField.getBuildings();
-            List<RecipeResource> recipeList = dropDownMenu.getOption().getRecipe().getItemIngredients();
+            List<RecipeResource> recipeList = buildingDropDownMenu.getOption().getRecipe().getItemIngredients();
 
             final int[] y = {0};
             resources.forEach((resource, amount) -> {
