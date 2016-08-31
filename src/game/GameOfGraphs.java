@@ -9,12 +9,15 @@ import ki.KIController;
 import mapEditor.MapEditorController;
 import simulation.SimulationController;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GameOfGraphs {
 
     private static GameOfGraphs game;
+
+    private List<Player> players = new LinkedList<>();
+    private int currentPlayerIndex = 0;
 
     private TextBuilder textBuilder = new TextBuilder();
     private LoadingManager loadingManager = new LoadingManager();
@@ -67,13 +70,11 @@ public class GameOfGraphs {
         return SimulationController;
     }
 
-
-
     public Player getCurrentPlayer() {
-        return null;
+        return this.players.get(this.currentPlayerIndex);
     }
 
     public List<Player> getPlayers() {
-        return new ArrayList<>();
+        return this.players;
     }
 }

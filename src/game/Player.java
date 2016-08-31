@@ -1,39 +1,32 @@
 package game;
 
-import graph.Vertex;
-import ki.*;
-
+import ki.AllianceRequest;
+import ki.Notification;
+import ki.Request;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class Player {
 
     protected String name;
-    private List<Vertex> fields = new ArrayList<>();
-    protected ArrayList<Player> alliances;
-    private Random r;
-    protected Queue<Request> requests;
+    protected ArrayList<Player> alliances = new ArrayList<>();
+    protected Queue<Request> requests = new Queue<>();
     protected ArrayList<Notification> notifications;
 
-    public Player(String name) {
+    private boolean isKI;
+
+    public Player(String name, boolean isKI) {
         this.name = name;
-        alliances=new ArrayList<Player>();
-        r=new Random();
-
-        requests=new Queue<Request>();
-
+        this.isKI = isKI;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public ArrayList<Vertex> getFields() {
-        return ((ArrayList<Vertex>) this.fields);
+    public boolean isKI() {
+        return this.isKI;
     }
-
 
     /*public boolean requestAlliance(Player p){
         if(p!=null) {
