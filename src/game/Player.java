@@ -1,5 +1,6 @@
 package game;
 
+import graph.Vertex;
 import ki.AllianceRequest;
 import ki.Notification;
 import ki.Request;
@@ -10,6 +11,7 @@ public class Player {
 
     protected String name;
     protected ArrayList<Player> alliances = new ArrayList<>();
+    private ArrayList<Vertex> fields = new ArrayList<>();
     protected Queue<Request> requests = new Queue<>();
     protected ArrayList<Notification> notifications;
 
@@ -22,6 +24,10 @@ public class Player {
 
     public String getName() {
         return this.name;
+    }
+
+    public ArrayList<Vertex> getFields() {
+        return this.fields;
     }
 
     public boolean isKI() {

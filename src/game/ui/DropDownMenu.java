@@ -39,17 +39,17 @@ public class DropDownMenu<T> implements UIComponent {
     public void setOptions(LinkedList<T> options) {
         this.options = options;
         this.boundingBoxes.clear();
+        this.selectedIndex = 0;
     }
 
     public T getOption() {
+        if(this.options.isEmpty()) {
+            return null;
+        }
+
         return this.options.get(this.selectedIndex);
     }
 
-    /**
-     * Diese Methode wird in der GameComponent#update Methode aufgerufen.
-     *
-     * @param inputEntry
-     */
     @Override
     public void update(InputEntry inputEntry, long delta) {
 

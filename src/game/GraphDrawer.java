@@ -1,12 +1,12 @@
 package game;
 
+import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 import mapEditor.MapEditorView;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -119,6 +119,37 @@ public class GraphDrawer {
                 g.setColor(Color.RED);
                 g.drawPolyline(x, y, 4);
             }
+
+            // Weight
+            Shape tmp = g.getClip();
+
+            g.setClip(0, 0, E.getE().getSettings().getWidth(), E.getE().getSettings().getHeight());
+            g.setColor(Color.BLACK);
+            int startX = vertex1.getX(), startY = vertex1.getY();
+            int endX = vertex2.getX(), endY = vertex2.getY();
+
+            int weightX = (startX + endX) / 2;
+            int weightY = (startY + endY) / 2;
+
+            Font copyCat = g.getFont();
+
+            double angle = Math.toDegrees(
+                    Math.atan2(endY - startY, endX - startX)
+            );
+
+            if(angle < -90 || angle > 90) {
+                angle += 180;
+            }
+
+            AffineTransform affineTransform = new AffineTransform();
+            affineTransform.rotate(Math.toRadians(angle), 0, 0);
+            Font rotatedFont = g.getFont().deriveFont(affineTransform);
+            g.setFont(rotatedFont);
+            g.drawString(String.format("%.2f", edge.getWeight()), weightX, weightY);
+            g.setFont(copyCat);
+
+            g.setClip(tmp);
+
         }
 
         g.setTransform(oldTransform);
