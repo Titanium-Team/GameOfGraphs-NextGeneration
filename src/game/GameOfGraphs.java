@@ -9,25 +9,22 @@ import ki.KIController;
 import mapEditor.MapEditorController;
 import simulation.SimulationController;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameOfGraphs {
 
     private static GameOfGraphs game;
 
-    private List<Player> players = new LinkedList<>();
-    private int currentPlayerIndex = 0;
-
     private TextBuilder textBuilder = new TextBuilder();
     private LoadingManager loadingManager = new LoadingManager();
 
-    private EventManager eventManager = new EventManager();
-    private FieldController fieldController = new FieldController();
-    private GraphController graphController = new GraphController();
-    private KIController kiController = new KIController();
-    private MapEditorController mapEditorController = new MapEditorController();
-    private SimulationController SimulationController = new SimulationController();
+    private EventManager eventManager;
+    private FieldController fieldController;
+    private GraphController graphController;
+    private KIController kiController;
+    private MapEditorController mapEditorController;
+    private SimulationController SimulationController;
 
     public GameOfGraphs() {
         GameOfGraphs.game = this;
@@ -35,6 +32,15 @@ public class GameOfGraphs {
         // load stuff
         this.loadingManager.add(Textures.values());
         this.loadingManager.load();
+
+        //Controller
+        eventManager = new EventManager();
+        fieldController = new FieldController();
+        graphController = new GraphController();
+        kiController = new KIController();
+        mapEditorController = new MapEditorController();
+        SimulationController = new SimulationController();
+
 
     }
 
@@ -70,11 +76,13 @@ public class GameOfGraphs {
         return SimulationController;
     }
 
+
+
     public Player getCurrentPlayer() {
-        return this.players.get(this.currentPlayerIndex);
+        return null;
     }
 
     public List<Player> getPlayers() {
-        return this.players;
+        return new ArrayList<>();
     }
 }

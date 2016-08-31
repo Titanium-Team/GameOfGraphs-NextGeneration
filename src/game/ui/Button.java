@@ -13,8 +13,6 @@ public class Button<T> implements UIComponent {
 
     private IBoundingBox boundingBox;
 
-    private boolean enabled = true;
-
     private final GameScene gameScene;
     private final T text;
     private final ILocation location;
@@ -25,14 +23,6 @@ public class Button<T> implements UIComponent {
         this.text = text;
         this.location = location;
         this.trigger = trigger;
-    }
-
-    public void setEnable(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isEnabled() {
-        return this.enabled;
     }
 
     @Override
@@ -52,7 +42,7 @@ public class Button<T> implements UIComponent {
     @Override
     public void update(InputEntry inputEntry, long l) {
 
-        if(!(this.boundingBox == null) && this.isEnabled()) {
+        if(!(this.boundingBox == null)) {
 
             inputEntry.getMouseEntries().forEach(e -> {
 

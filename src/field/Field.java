@@ -8,6 +8,7 @@ import field.buildings.Buildings;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.Player;
+import graph.Vertex;
 import simulation.Unit;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class Field {
     private Player player;
 
     @JsonCreator
-    protected Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  int forestType,@JsonProperty("localResource")  Resources localResource, @JsonProperty("start") boolean start) {
+    public Field(@JsonProperty("fertility") int fertility, @JsonProperty("mountains")  int mountains, @JsonProperty("player")  Player player, @JsonProperty("forestType")  int forestType, @JsonProperty("localResource")  Resources localResource, @JsonProperty("start") boolean start) {
         units = new ArrayList<>();
         this.player = player;
 
@@ -146,4 +147,5 @@ public class Field {
     public Map<Building, Integer> getBuildings() {
         return buildings;
     }
+
 }

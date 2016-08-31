@@ -24,8 +24,8 @@ public class DropDownMenu<T> implements UIComponent {
     private BoundingBox openBoxBoundings;
 
     private final Map<T, BoundingBox> boundingBoxes = new HashMap<>();
-
     private List<T> options;
+
     private int selectedIndex = 0;
     private boolean open = false;
 
@@ -40,6 +40,13 @@ public class DropDownMenu<T> implements UIComponent {
         this.options = options;
         this.boundingBoxes.clear();
         this.selectedIndex = 0;
+<<<<<<< HEAD
+=======
+    }
+
+    public void setSelectedIndex(int selectedIndex){
+        this.selectedIndex = selectedIndex;
+>>>>>>> a006bf0b2f5cf0bb1148ccff578811ac95e6d392
     }
 
     public T getOption() {
