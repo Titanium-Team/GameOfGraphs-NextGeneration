@@ -24,7 +24,7 @@ public enum Resources implements Resource {
 
         @Override
         public String getName() {
-            return "People";
+            return "Food";
         }
     },
     STONE {

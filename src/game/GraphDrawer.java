@@ -20,13 +20,13 @@ public class GraphDrawer {
     private double scrollX = 0d;
     private double scrollY = 0d;
 
+
+
     public static void drawer(Graphics2D g, Graph graph, String whoAreYou){
         g.scale(zoom, zoom);
         g.setStroke(new BasicStroke(2));
         Shape oldClip = g.getClip();
-        AffineTransform oldTransform =  g.getTransform();
-
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        AffineTransform oldTransform = g.getTransform();
 
         if (whoAreYou.equals("MapEditor") && MapEditorView.getPreviewBackground() != null){
             g.drawImage(MapEditorView.getPreviewBackground(), 0, 0, graph.getWidth(), graph.getHeight(), null);
@@ -47,14 +47,14 @@ public class GraphDrawer {
         g.setClip(oldClip);
 
         ArrayList<Edge> edgeList = graph.getEdges();
-        if (whoAreYou.equals("MapEditor") && MapEditorView.isDragEdge() ) {
+        if (whoAreYou.equals("MapEditor") && MapEditorView.getDragEdge() != null ) {
             edgeList.add(new Edge(new String[]{"equals", "equals"}, 0));
         }
         for (Edge edge:edgeList) {
             Vertex vertex1 = null, vertex2 = null;
             if (whoAreYou.equals("MapEditor") && edge.getVerticesId()[0].equals("equals") && edge.getVerticesId()[1].equals("equals")){
-                vertex1 = MapEditorView.getDragEdgePos()[0];
-                vertex2 = MapEditorView.getDragEdgePos()[1];
+                vertex1 = MapEditorView.getDragEdge()[0];
+                vertex2 = MapEditorView.getDragEdge()[1];
             }else {
                 vertex1 = edge.getVerticesId(graph)[0];
                 vertex2 = edge.getVerticesId(graph)[1];
@@ -143,7 +143,8 @@ public class GraphDrawer {
             }
         }
 
-        g.dispose();
+        g.setTransform(oldTransform);
+        g.setClip(oldClip);
 
         //jScrollPane.getVerticalScrollBar().repaint();
         //jScrollPane.getHorizontalScrollBar().repaint();

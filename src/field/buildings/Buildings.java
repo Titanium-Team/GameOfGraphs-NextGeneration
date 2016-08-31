@@ -32,6 +32,11 @@ public enum Buildings implements Building {
                     .addIngredient(new RecipeResource(Resources.IRON,1))
                     .addIngredient(new RecipeResource(Resources.STONE,2));
         }
+
+        @Override
+        public String getName() {
+            return "Units";
+        }
     },
     MINE {
 
@@ -61,6 +66,11 @@ public enum Buildings implements Building {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
                     .addIngredient(new RecipeResource(Resources.WOOD,3))
                     .addIngredient(new RecipeResource(Resources.STONE,1));
+        }
+
+        @Override
+        public String getName() {
+            return "Mines";
         }
     },
     FARM {
@@ -94,6 +104,11 @@ public enum Buildings implements Building {
                     .addIngredient(new RecipeResource(Resources.WOOD,3))
                     .addIngredient(new RecipeResource(Resources.FOOD,1));
         }
+
+        @Override
+        public String getName() {
+            return "Farms";
+        }
     },
     WINDMILL {
         @Override
@@ -116,6 +131,11 @@ public enum Buildings implements Building {
                     .addIngredient(new RecipeResource(Resources.WOOD,2))
                     .addIngredient(new RecipeResource(Resources.STONE,2))
                     .addIngredient(new RecipeResource(Resources.WHEAT,2));
+        }
+
+        @Override
+        public String getName() {
+            return "Windmills";
         }
     },
     BUTCHER {
@@ -140,6 +160,11 @@ public enum Buildings implements Building {
                     .addIngredient(new RecipeResource(Resources.STONE,2))
                     .addIngredient(new RecipeResource(Resources.CATTLE,2));
         }
+
+        @Override
+        public String getName() {
+            return "Butchers";
+        }
     },
     BARRACKS {
         @Override
@@ -157,6 +182,11 @@ public enum Buildings implements Building {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD,3))
                     .addIngredient(new RecipeResource(Resources.STONE,2))
                     .addIngredient(new RecipeResource(Resources.IRON,1));
+        }
+
+        @Override
+        public String getName() {
+            return "Barracks";
         }
     };
 

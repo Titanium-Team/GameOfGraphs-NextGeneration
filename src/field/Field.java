@@ -12,6 +12,7 @@ import simulation.Unit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Field {
@@ -33,10 +34,23 @@ public class Field {
     private Player player;
 
     @JsonCreator
-    public Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  int forestType,@JsonProperty("localResource")  Resource localResource) {
+    protected Field(@JsonProperty("fertility") int fertility,@JsonProperty("mountains")  int mountains,@JsonProperty("player")  Player player,@JsonProperty("forestType")  int forestType,@JsonProperty("localResource")  Resource localResource) {
         units = new ArrayList<>();
-        buildings = new HashMap<>();
-        resources = new HashMap<>();
+        buildings = new LinkedHashMap<Building, Integer>(){{
+
+            for(Building key : Buildings.values()) {
+                if (key != Buildings.UNIT) {
+                    this.put(key, 0);
+                }
+            }
+        }};
+        resources = new LinkedHashMap<Resource, Integer>(){{
+
+            for(Resource key : Resources.values()) {
+                this.put(key, 0);
+            }
+
+        }};
 
         this.player = player;
         this.fertility = fertility;

@@ -1,8 +1,5 @@
 package game;
 
-import de.SweetCode.e.E;
-import de.SweetCode.e.Settings;
-import de.SweetCode.e.utils.Version;
 import event.EventManager;
 import field.FieldController;
 import game.loading.LoadingManager;
@@ -11,14 +8,9 @@ import graph.GraphController;
 import ki.KIController;
 import mapEditor.MapEditorController;
 import simulation.SimulationController;
-import game.views.MenuView;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class GameOfGraphs {
 

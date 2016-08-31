@@ -19,8 +19,8 @@ public class FieldController {
 
     public Field createField(Player player){
 
-        int fertility = random.nextInt(6);
-        int mountains = random.nextInt(6-fertility);
+        int fertility = random.nextInt(5)+1;
+        int mountains = random.nextInt(6-fertility)+1;
         int forestType = random.nextInt(5)+1;
 
         Resource[] resources = Resources.getSpecialResources();

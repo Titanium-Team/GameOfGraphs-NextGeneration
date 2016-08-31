@@ -98,4 +98,8 @@ public class Player {
     public ArrayList<Notifications> getNotifications() {
         return notifications;
     }
+
+    public void setRequests(Queue<Request> requests) {
+        this.requests = requests;
+    }
 }

@@ -52,4 +52,7 @@ public class Attack extends Notifications {
 		return answer;
 	}
 
+	public void setOpponent(Player opponent) {
+		this.opponent = opponent;
+	}
 }

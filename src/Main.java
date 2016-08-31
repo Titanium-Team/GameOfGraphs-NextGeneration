@@ -1,10 +1,9 @@
 import de.SweetCode.e.E;
 import de.SweetCode.e.Settings;
 import de.SweetCode.e.utils.Version;
-import field.Field;
 import field.FieldView;
 import game.GameOfGraphs;
-import game.views.MenuView;
+import game.MenuView;
 import mapEditor.MapEditorView;
 
 import java.awt.*;
@@ -23,7 +22,7 @@ public class Main {
 
             @Override
             public String getName() {
-                return "Test";
+                return "Game Of Graphs - Best Game Ever";
             }
 
             @Override
@@ -53,7 +52,7 @@ public class Main {
 
             @Override
             public int getTargetFPS() {
-                return 50;
+                return 60;
             }
 
             @Override
@@ -78,18 +77,25 @@ public class Main {
 
             @Override
             public boolean fixAspectRatio() {
-                return true;
+                return false;
             }
 
             @Override
             public Map<RenderingHints.Key, Object> getRenderingHints() {
-                return new HashMap<>();
+                return new HashMap<RenderingHints.Key, Object>() {{
+
+                    this.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                }};
             }
         });
 
+        
         e.addScene(new MenuView());
         e.addScene(new FieldView());
-        e.show(FieldView.class);
+        e.addScene(new MapEditorView());
+
+        e.show(MapEditorView.class);
 
         e.run();
 
