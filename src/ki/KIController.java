@@ -66,6 +66,9 @@ public class KIController {
 				for(int i = 0; i<v1.getField().getResources().get(POPULATION)/2; i++){
 					rebels.add(new Unit(rebelPlayer));
 				}
+				// @TODO: Wie die Rebellen befüllt werden muss noch einmal überarbeitet werden,
+				// denn es gibt den Fall das keine hinzugefügt werden und dann gibt es einen
+				// Fehler in der fight-Methode, da mit keinen Leuten angegriffen wird.
 				v1.getField().getResources().put(POPULATION,v1.getField().getResources().get(POPULATION)-rebels.size());
 				getGame().getSimulationController().fight(null, v1,rebels);
 				p.getNotifications().add(new RebellionNotification(!p.equals(v1.getField().getPlayer()),v1));
@@ -209,9 +212,11 @@ public class KIController {
 								current.requestAlliance(partner);
 							}
 						}
+						current.getProperties().add(Property.ECONOMIC);
 						if (current.getProperties().contains(Property.ECONOMIC)) {
-							Player partner=null;
-							int maxTrust=-1;
+							Player partner= GameOfGraphs.getGame().getPlayers().get(0);
+							/*
+							int maxTrust= -1;
 							for(Vertex vertex:getGame().getGraphController().getGraph().getNeighbours(v)){
 								if(!vertex.getField().getPlayer().equals(current) && current.getTrust().containsKey(vertex.getField().getPlayer()) && current.getTrust().get(vertex.getField().getPlayer())>maxTrust){
 									if(!(partner instanceof KIFraction) || ((KIFraction)partner).isFraction()) {
@@ -219,7 +224,7 @@ public class KIController {
 										maxTrust = current.getTrust().get(vertex.getField().getPlayer());
 									}
 								}
-							}
+							}*/
 							if(partner!=null) {
 								HashMap<Resource, Integer> goals, wanted = new HashMap<>(), offered = new HashMap<>(), res;
 								goals = current.getGoals().get(v);
@@ -233,8 +238,9 @@ public class KIController {
 								res = ((HashMap<Resource, Integer>) v.getField().getResources());
 								int generosity = r.nextInt(res.entrySet().size() - goals.entrySet().size()) + 1;
 								for (Map.Entry<Resource, Integer> e : res.entrySet()) {
-									if (generosity > 0 && (!goals.containsKey(e.getKey()) || goals.get(e.getKey()) > 0)) {
-										offered.put(e.getKey(), r.nextInt(e.getValue() / 2));
+									// @TODO: Ich habe e.getValue() > 2 hinzugefügt, weil wenn das nicht groeßer als 0 ist, dann gitb es einen Fehler
+									if (generosity > 0 && (!goals.containsKey(e.getKey()) || goals.get(e.getKey()) > 0) && e.getValue() > 1) {
+										offered.put(e.getKey(), r.nextInt(2 / 2));
 									}
 								}
 								partner.getRequests().enqueue(new TradeRequest(current,offered,wanted,v,partner));

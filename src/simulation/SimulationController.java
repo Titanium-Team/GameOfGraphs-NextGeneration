@@ -156,7 +156,7 @@ public class SimulationController {
     /**
      * Einfache Methode die eine ArrayList von Units einem Field hinzufügt.
      *
-     * @param field
+     * @param vertex
      * Das Field dem die Units hinzugefügt werden sollen.
      * @param units
      * Die ArrayList der Units die hinzugefügt werden soll.
@@ -330,6 +330,11 @@ public class SimulationController {
 
     //TODO: Verbesserung des Kampf-Systems
     public void fight(Vertex origin, Vertex vertex, ArrayList<Unit> attackingUnits){
+
+        if(attackingUnits.isEmpty()) {
+            throw new IllegalArgumentException("WHY DO YOU ATTACK WITH NO UNITS AT ALL. THAT IS NOT HOW IT WORKS. DAMIT IT A-ARON.");
+        }
+
         ArrayList<Unit> defendingUnits = vertex.getField().getUnits();
 
         boolean attackWin = false;
