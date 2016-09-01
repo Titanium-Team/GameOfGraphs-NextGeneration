@@ -213,7 +213,7 @@ public class KIController {
 							Player partner=null;
 							int maxTrust=-1;
 							for(Vertex vertex:getGame().getGraphController().getGraph().getNeighbours(v)){
-								if(!vertex.getField().getPlayer().equals(current) && current.getTrust().get(vertex.getField().getPlayer())>maxTrust){
+								if(!vertex.getField().getPlayer().equals(current) && current.getTrust().containsKey(vertex.getField().getPlayer()) && current.getTrust().get(vertex.getField().getPlayer())>maxTrust){
 									if(!(partner instanceof KIFraction) || ((KIFraction)partner).isFraction()) {
 										partner = vertex.getField().getPlayer();
 										maxTrust = current.getTrust().get(vertex.getField().getPlayer());
