@@ -31,11 +31,11 @@ public class Button<T> implements UIComponent {
         Graphics2D g = layer.g();
 
         if(this.boundingBox == null) {
-            this.boundingBox = new IBoundingBox(this.location, new ILocation(this.location.getX() + g.getFontMetrics().stringWidth(this.text.toString()), this.location.getY() + g.getFontMetrics().getHeight()));
+            this.boundingBox = new IBoundingBox(this.location, new ILocation(this.location.getX() + g.getFontMetrics().stringWidth(this.text.toString()) + 4, this.location.getY() + g.getFontMetrics().getHeight() + 2));
         }
 
         g.drawRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
-        g.drawString(this.text.toString(), this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY() + this.boundingBox.getHeight());
+        g.drawString(this.text.toString(), this.boundingBox.getMin().getX() + 2, this.boundingBox.getMin().getY() + this.boundingBox.getHeight() - 4);
 
     }
 
