@@ -18,6 +18,8 @@ public class Button<T> implements UIComponent {
     private final ILocation location;
     private final Trigger trigger;
 
+    private boolean enabled = true;
+
     public Button(GameScene gameScene, T text, ILocation location, Trigger<T> trigger) {
         this.gameScene = gameScene;
         this.text = text;
@@ -25,24 +27,34 @@ public class Button<T> implements UIComponent {
         this.trigger = trigger;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
     @Override
     public void handleDraw(Layer layer) {
 
-        Graphics2D g = layer.g();
+        if(this.enabled) {
+            Graphics2D g = layer.g();
 
-        if(this.boundingBox == null) {
-            this.boundingBox = new IBoundingBox(this.location, new ILocation(this.location.getX() + g.getFontMetrics().stringWidth(this.text.toString()) + 4, this.location.getY() + g.getFontMetrics().getHeight() + 2));
+            if (this.boundingBox == null) {
+                this.boundingBox = new IBoundingBox(this.location, new ILocation(this.location.getX() + g.getFontMetrics().stringWidth(this.text.toString()) + 4, this.location.getY() + g.getFontMetrics().getHeight() + 2));
+            }
+
+            g.drawRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
+            g.drawString(this.text.toString(), this.boundingBox.getMin().getX() + 2, this.boundingBox.getMin().getY() + this.boundingBox.getHeight() - 4);
         }
-
-        g.drawRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
-        g.drawString(this.text.toString(), this.boundingBox.getMin().getX() + 2, this.boundingBox.getMin().getY() + this.boundingBox.getHeight() - 4);
 
     }
 
     @Override
     public void update(InputEntry inputEntry, long l) {
 
-        if(!(this.boundingBox == null)) {
+        if(this.enabled && !(this.boundingBox == null)) {
 
             inputEntry.getMouseEntries().forEach(e -> {
 
@@ -58,6 +70,6 @@ public class Button<T> implements UIComponent {
 
     @Override
     public boolean isActive() {
-        return this.gameScene.isActive();
+        return this.gameScene.isActive() && this.enabled;
     }
 }
