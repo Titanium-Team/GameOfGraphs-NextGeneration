@@ -6,7 +6,6 @@ import game.loading.LoadingManager;
 import game.sprite.Textures;
 import graph.GraphController;
 import ki.KIController;
-import ki.KIFraction;
 import mapEditor.MapEditorController;
 import simulation.SimulationController;
 
@@ -39,9 +38,9 @@ public class GameOfGraphs {
         this.loadingManager.load();
 
         //Players
-        this.players.add(new Player("1", false));
-        this.players.add(new Player("2", false));
-        this.players.add(new KIFraction("Independent"));
+        this.players.add(new Player("Jan", false));
+        this.players.add(new Player("Jonas", false));
+        //this.players.add(new KIFraction("Independent"));
 
         //Controller
         eventManager = new EventManager();
@@ -49,7 +48,8 @@ public class GameOfGraphs {
         graphController = new GraphController();
         kiController = new KIController();
         mapEditorController = new MapEditorController();
-        simulationController = new SimulationController(this.players.get(0));
+        simulationController = new SimulationController(this.getCurrentPlayer());
+
 
 
     }
@@ -61,16 +61,25 @@ public class GameOfGraphs {
     public void nextTurn() {
 
         fieldController.run(this.getCurrentPlayer());
-        kiController.run();
-        simulationController.run(this.getCurrentPlayer());
-
         this.currentPlayer++;
 
         if(this.currentPlayer >= this.players.size()) {
             this.currentPlayer = 0;
         }
 
+        while(!(this.getCurrentPlayer().isActive())) {
+            this.currentPlayer++;
+            if(this.currentPlayer >= this.players.size()) {
+                this.currentPlayer = 0;
+            }
+        }
 
+        if(this.currentPlayer >= this.players.size()) {
+            this.currentPlayer = 0;
+        }
+
+        kiController.run();
+        simulationController.run(this.getCurrentPlayer());
 
     }
 

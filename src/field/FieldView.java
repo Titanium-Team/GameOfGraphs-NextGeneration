@@ -2,7 +2,6 @@ package field;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
-
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
@@ -13,20 +12,18 @@ import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
 import game.GraphDrawer;
-import game.Player;
-import game.ui.*;
 import game.ui.Button;
-import graph.Edge;
+import game.ui.DropDownMenu;
 import graph.Graph;
 import graph.Vertex;
 import ki.KIFraction;
 import org.omg.CORBA.INTERNAL;
-
 import javax.swing.*;
+
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -120,10 +117,9 @@ public class FieldView extends GameScene{
                 this.buildingDropDownMenu.handleDraw(layers.first());
                 this.buildButton.handleDraw(layers.first());
                 this.unitDropDownMenu.handleDraw(layers.first());
+                this.nextTurnButton.handleDraw(layers.first());
             }
 
-
-            this.nextTurnButton.handleDraw(layers.first());
             g.setColor(Color.BLACK);
 
             Map<Resource, Integer> resources = currentField.getResources();
@@ -160,8 +156,6 @@ public class FieldView extends GameScene{
                 g.drawString(building.getName() + ": " + amount, 120, 540 + y[0] * 20);
                 y[0]++;
             });
-
-
 
         }
     }
@@ -209,9 +203,9 @@ public class FieldView extends GameScene{
             }
         });
 
+        // Movement
         if (this.currentField != null && this.currentVertex != null){
             if (this.unitDropDownMenu.getOption() > 0) {
-
                 marked = GameOfGraphs.getGame().getSimulationController().showMovementPossibilities(this.currentVertex);
                 move = true;
             } else {

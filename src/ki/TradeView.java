@@ -4,15 +4,14 @@ import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.layers.Layer;
-import de.SweetCode.e.rendering.layers.Layers;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.MenuView;
 import game.Player;
 import game.ui.DropDownMenu;
 import graph.Vertex;
-import mapEditor.*;
 import mapEditor.Button;
+import mapEditor.EditText;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -40,6 +39,10 @@ public class TradeView  {
 		int width = 200;
 		g.fillRoundRect(x,y, width,height,10,10);
 		g.setColor(Color.BLACK);
+		Font font=g.getFont();
+		g.setFont(new Font("Arial",Font.BOLD,12));
+		g.drawString("TRADE",x+50,y+15);
+		g.setFont(font);
 		g.drawRoundRect(x,y, width,height,10,10);
 		if(cancel!=null)cancel.draw(g);
 		if (submit != null)submit.draw(g);

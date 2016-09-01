@@ -1,11 +1,16 @@
 import de.SweetCode.e.E;
+import de.SweetCode.e.GameComponent;
 import de.SweetCode.e.Settings;
+import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.utils.Version;
 import field.FieldView;
 import game.GameOfGraphs;
 import game.MenuView;
+import game.Player;
+import ki.KIFraction;
 import mapEditor.MapEditorView;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,9 +100,30 @@ public class Main {
         e.addScene(new FieldView());
         e.addScene(new MapEditorView());
 
-
         e.show(MenuView.class);
 
+        E.getE().addComponent(new GameComponent() {
+            @Override
+            public void update(InputEntry inputEntry, long l) {
+
+                Player player = GameOfGraphs.getGame().getCurrentPlayer();
+
+                if(!(player == null) && !(player.getNotifications().isEmpty()) && !(player instanceof KIFraction)) {
+
+                    player.getNotifications().forEach(e -> {
+                        JOptionPane.showMessageDialog(null, e.getDisplayMessage());
+                    });
+                    player.getNotifications().clear();
+
+                }
+
+            }
+
+            @Override
+            public boolean isActive() {
+                return true;
+            }
+        });
 
         e.run();
 

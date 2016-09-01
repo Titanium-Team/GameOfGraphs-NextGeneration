@@ -1,12 +1,12 @@
 package game;
 
-import field.Field;
 import graph.Vertex;
-
 import ki.AllianceRequest;
 import ki.Notification;
 import ki.Request;
+
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Player {
 
@@ -29,22 +29,17 @@ public class Player {
 
     public ArrayList<Vertex> getFields() {
 
-        ArrayList<Vertex> fields = new ArrayList<>();
+        return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer() == this).collect(Collectors.toCollection(ArrayList::new));
 
-        for(Vertex vertex : GameOfGraphs.getGame().getGraphController().getGraph().getVertices()){
-
-            if(vertex.getField().getPlayer() == this){
-                fields.add(vertex);
-            }
-
-        }
-
-        return fields;
     }
 
     public boolean isKI() {
         return this.isKI;
 
+    }
+
+    public boolean isActive() {
+        return !(this.getFields().isEmpty());
     }
 
 

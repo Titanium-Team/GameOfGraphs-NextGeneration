@@ -51,7 +51,6 @@ public class MenuView extends GameScene {
         this.checkBox.handleDraw(layers.first());
         this.dropDownMenu.handleDraw(layers.first());
 
-
         g.setColor(Color.MAGENTA);
         g.draw(new Ellipse2D.Double(500, 500, 100, 100));
 
@@ -69,7 +68,7 @@ public class MenuView extends GameScene {
             x++;
 
         }
-	    TradeView.drawer(200,200,g,null,null,layers.first());
+	    TradeView.drawer(600,200,g,null,null,layers.first());
     }
 
     @Override

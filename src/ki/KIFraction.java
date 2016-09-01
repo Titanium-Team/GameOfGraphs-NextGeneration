@@ -1,12 +1,12 @@
 package ki;
 
-import de.SweetCode.e.E;
 import field.resource.Resource;
-import game.GameOfGraphs;
 import game.Player;
 import graph.Vertex;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 import static game.GameOfGraphs.getGame;
 
@@ -18,17 +18,14 @@ public class KIFraction extends Player{
     private ArrayList<Property> properties = new ArrayList<Property>();
     private Random r = new Random();
     private int developingChance = r.nextInt(10);
-    private HashMap<Player,Integer> trust = new HashMap<Player,Integer>();
-    private HashMap<Vertex,HashMap<Resource,Integer>> goals = new HashMap<Vertex, HashMap<Resource, Integer>>();
-
+    private HashMap<Player,Integer> trust=new HashMap<Player,Integer>();
+    private HashMap<Vertex,HashMap<Resource,Integer>> goals = new HashMap<>();
 
     public KIFraction(String name) {
+        //super(name);
         super(name, true);
-
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
-
-
     }
 
     public int getDevelopingChance() {
@@ -53,15 +50,20 @@ public class KIFraction extends Player{
             Player p;
             ArrayList<Vertex> fields = getGame().getGraphController().getGraph().getVertices();
             fields.removeAll(this.getFields());
+
             for (Vertex v : fields) {
+
                 p = v.getField().getPlayer();
                 if (properties.contains(Property.DISTRUSTFUL)) {
                     trust.put(p, 10);
                 } else {
                     trust.put(p, 40);
                 }
-                fields.removeAll(p.getFields());
+                // @TODO: Tim: Warum rufst du hier nochmal removeAll auf? Es werden doch in der Zwischenzet
+                // keine neuen Felder der Liste hinzugefügt, oder? :)
+                //fields.removeAll(p.getFields());
             }
+
         }
 
         return trust;
