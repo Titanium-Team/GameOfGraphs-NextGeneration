@@ -91,8 +91,6 @@ public class DropDownMenu<T> implements UIComponent {
 
                     if (entry.getButton() == MouseEvent.BUTTON1) {
                         IBoundingBox box = this.boundingBoxes.get(this.options.get(0));
-                        System.out.println(box);
-                        System.out.println(entry);
                         if (box.contains(new ILocation(entry.getPoint()))) {
                             this.open = true;
                         }

@@ -2,7 +2,6 @@ package field;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
-
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
@@ -12,17 +11,15 @@ import field.recipe.RecipeResource;
 import field.resource.Resource;
 import game.GameOfGraphs;
 import game.GraphDrawer;
-import game.ui.*;
 import game.ui.Button;
-import graph.Edge;
+import game.ui.DropDownMenu;
 import graph.Graph;
 import graph.Vertex;
-import org.omg.CORBA.INTERNAL;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**

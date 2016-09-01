@@ -51,7 +51,6 @@ public class MenuView extends GameScene {
         this.checkBox.handleDraw(layers.first());
         this.dropDownMenu.handleDraw(layers.first());
 
-
         g.setColor(Color.MAGENTA);
         g.draw(new Ellipse2D.Double(500, 500, 100, 100));
 
