@@ -49,13 +49,20 @@ public class FieldView extends GameScene{
 
     private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(value -> {
 
-        if( Buildings.isBuildable(buildingDropDownMenu.getOption(), currentField)){
+        if( Buildings.isBuildable(buildingDropDownMenu.getOption(), this.currentField)){
             if(this.currentField.getResources().get(Resources.POPULATION) > 1) {
-                Buildings.build(buildingDropDownMenu.getOption(), currentField);
+                Buildings.build(buildingDropDownMenu.getOption(), this.currentField, false);
             } else {
                 JOptionPane.showMessageDialog(null, "You can't have 0 People.");
             }
         }
+
+    }));
+
+    private Button<String> freeBuildButton = new Button<String>(this, "FreeBuild", new ILocation(640, 510),(value -> {
+
+        Buildings.build(buildingDropDownMenu.getOption(), this.currentField, true);
+
 
     }));
 
@@ -75,6 +82,7 @@ public class FieldView extends GameScene{
         E.getE().addComponent(buildButton);
         E.getE().addComponent(unitDropDownMenu);
         E.getE().addComponent(nextTurnButton);
+        E.getE().addComponent(freeBuildButton);
 
     }
 
@@ -116,6 +124,7 @@ public class FieldView extends GameScene{
             if(GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer()) {
                 this.buildingDropDownMenu.handleDraw(layers.first());
                 this.buildButton.handleDraw(layers.first());
+                this.freeBuildButton.handleDraw(layers.first());
                 this.unitDropDownMenu.handleDraw(layers.first());
                 this.nextTurnButton.handleDraw(layers.first());
             }

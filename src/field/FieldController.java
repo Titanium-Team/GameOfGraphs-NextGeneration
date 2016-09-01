@@ -67,7 +67,7 @@ public class FieldController {
             }
 
 
-            vertex.getField().getResources().put(Resources.WOOD, vertex.getField().getResources().get(Resources.WOOD) + random.nextInt(vertex.getField().getForestType()));
+            vertex.getField().getResources().put(Resources.WOOD, vertex.getField().getResources().get(Resources.WOOD) + random.nextInt(vertex.getField().getForestType() + 1));
 
         }
 

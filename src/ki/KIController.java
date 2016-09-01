@@ -410,7 +410,7 @@ public class KIController {
 
 	private void buildIfBuildable(Buildings b,Vertex v){
 		if(Buildings.isBuildable(b,v.getField())){
-			Buildings.build(b,v.getField());
+			Buildings.build(b,v.getField(), false);
 		}else{
 			Recipe recipe=b.getRecipe();
 			for(RecipeResource rRes:recipe.getItemIngredients()){

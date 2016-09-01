@@ -227,14 +227,15 @@ public enum Buildings implements Building {
 
     }
 
-    public static void build(Building building, Field field){
+    public static void build(Building building, Field field, boolean freebuild){
 
-        if (isBuildable(building,field)){
+        if(freebuild){
+            field.getBuildings().put(building, field.getBuildings().get(building)+1);
+        } else if (isBuildable(building,field)){
 
             Recipe recipe = building.getRecipe();
 
             for (RecipeResource resource : recipe.getItemIngredients()){
-
                 field.getResources().put(resource.getResource(),field.getResources().get(resource.getResource())-resource.getAmount());
             }
 
