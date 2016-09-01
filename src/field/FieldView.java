@@ -53,7 +53,7 @@ public class FieldView extends GameScene{
             if(this.currentField.getResources().get(Resources.POPULATION) > 1) {
                 Buildings.build(buildingDropDownMenu.getOption(), this.currentField, false);
             } else {
-                JOptionPane.showMessageDialog(null, "You can't have 0 People.");
+                JOptionPane.showMessageDialog(null, "You need at least 1 citizen.");
             }
         }
 

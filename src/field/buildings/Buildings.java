@@ -14,17 +14,14 @@ import java.util.Random;
  * Created by boeschemeier on 20.06.2016.
  */
 public enum Buildings implements Building {
-
+    /**
+     * Die Auflistung aller Gebäude, die man auf einem Feld bauen kann.
+     */
     UNIT {
 
         @Override
         public void production(Field field) {
 
-        }
-
-        @Override
-        public boolean isMoveable() {
-            return true;
         }
 
         @Override
@@ -55,11 +52,6 @@ public enum Buildings implements Building {
 
             int gold = n - 2;
             //productionResource(field,Resources.GOLD,this,3,gold);
-        }
-
-        @Override
-        public boolean isMoveable() {
-            return false;
         }
 
         @Override
@@ -94,11 +86,6 @@ public enum Buildings implements Building {
         }
 
         @Override
-        public boolean isMoveable() {
-            return false;
-        }
-
-        @Override
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
                     .addIngredient(new RecipeResource(Resources.WOOD,3))
@@ -118,11 +105,6 @@ public enum Buildings implements Building {
                 field.getResources().put(Resources.WHEAT, field.getResources().get(Resources.WHEAT)-1);
                 productionResource(field,Resources.FOOD,this,1,8);
             }
-        }
-
-        @Override
-        public boolean isMoveable() {
-            return false;
         }
 
         @Override
@@ -149,11 +131,6 @@ public enum Buildings implements Building {
         }
 
         @Override
-        public boolean isMoveable() {
-            return false;
-        }
-
-        @Override
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
                     .addIngredient(new RecipeResource(Resources.WOOD,20))
@@ -171,12 +148,7 @@ public enum Buildings implements Building {
         public void production(Field field) {
 
         }
-
-        @Override
-        public boolean isMoveable() {
-            return false;
-        }
-
+        
         @Override
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD,3))
