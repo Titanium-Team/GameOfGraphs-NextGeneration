@@ -20,11 +20,6 @@ public class GameOfGraphs {
     private int currentPlayer = 0;
     private List<Player> players = new ArrayList<>();
 
-    {
-        this.players.add(new Player("StarCitizenIstBeschte", false));
-        this.players.add(new Player("DanielDenktDraußenDankendDrüberDumm", false));
-    }
-
     private TextBuilder textBuilder = new TextBuilder();
     private LoadingManager loadingManager = new LoadingManager();
 
@@ -42,6 +37,10 @@ public class GameOfGraphs {
         this.loadingManager.add(Textures.values());
         this.loadingManager.load();
 
+        //Players
+        this.players.add(new Player("1", false));
+        this.players.add(new Player("2", false));
+
         //Controller
         eventManager = new EventManager();
         fieldController = new FieldController();
@@ -49,6 +48,8 @@ public class GameOfGraphs {
         kiController = new KIController();
         mapEditorController = new MapEditorController();
         simulationController = new SimulationController();
+
+
 
 
     }
@@ -104,7 +105,7 @@ public class GameOfGraphs {
     }
 
     public List<Player> getPlayers() {
-        return new ArrayList<>();
+        return this.players;
     }
 
 

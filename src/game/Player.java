@@ -1,5 +1,6 @@
 package game;
 
+import field.Field;
 import graph.Vertex;
 
 import ki.AllianceRequest;
@@ -12,7 +13,6 @@ public class Player {
     protected String name;
 
     protected ArrayList<Player> alliances = new ArrayList<>();
-    private ArrayList<Vertex> fields = new ArrayList<>();
     private ArrayList<Notification> notifications = new ArrayList<>();
     private boolean isKI = false;
     protected Queue<Request> requests = new Queue<>();
@@ -29,7 +29,17 @@ public class Player {
 
     public ArrayList<Vertex> getFields() {
 
-        return this.fields;
+        ArrayList<Vertex> fields = new ArrayList<>();
+
+        for(Vertex vertex : GameOfGraphs.getGame().getGraphController().getGraph().getVertices()){
+
+            if(vertex.getField().getPlayer() == this){
+                fields.add(vertex);
+            }
+
+        }
+
+        return fields;
     }
 
     public boolean isKI() {
