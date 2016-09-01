@@ -7,6 +7,7 @@ import field.Field;
 
 import game.GameOfGraphs;
 import game.Queue;
+import ki.KIFraction;
 import mapEditor.MapEditorView;
 
 import javax.imageio.ImageIO;
@@ -24,10 +25,14 @@ public class GraphController {
 
         graph = new Graph();
 
+        graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true)));
+        graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(1),true)));
+
+
         for (int i = 0; i < 15; i++){
-            graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(r.nextInt(2)),true)));
+            graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(2),false)));
         }
-        for (int j = 0; j < 7; j++){
+        for (int j = 0; j < 12; j++){
             graph.addEdge(new Edge(new String[] {graph.getVertices().get(r.nextInt(graph.getVertices().size())).getID(), graph.getVertices().get(r.nextInt(graph.getVertices().size())).getID()}, r.nextInt(50)+1));
         }
 

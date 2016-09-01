@@ -1,5 +1,6 @@
 package ki;
 
+import de.SweetCode.e.E;
 import field.resource.Resource;
 import game.GameOfGraphs;
 import game.Player;
@@ -14,35 +15,20 @@ import static game.GameOfGraphs.getGame;
  */
 public class KIFraction extends Player{
 
-    private ArrayList<Property> properties;
-    private Random r;
-    private int developingChance;
-    private HashMap<Player,Integer> trust;
-    private HashMap<Vertex,HashMap<Resource,Integer>> goals;
+    private ArrayList<Property> properties = new ArrayList<Property>();
+    private Random r = new Random();
+    private int developingChance = r.nextInt(10);
+    private HashMap<Player,Integer> trust = new HashMap<Player,Integer>();
+    private HashMap<Vertex,HashMap<Resource,Integer>> goals = new HashMap<Vertex, HashMap<Resource, Integer>>();
 
 
     public KIFraction(String name) {
-        //super(name);
         super(name, true);
-        properties = new ArrayList<Property>();
-        r=new Random();
-        trust=new HashMap<Player,Integer>();
+
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
-        developingChance=r.nextInt(10);
-        Player p;
-        ArrayList<Vertex> fields=getGame().getGraphController().getGraph().getVertices();
-        fields.removeAll(this.getFields());
-        for(Vertex v: fields){
-            p=v.getField().getPlayer();
-            if(properties.contains(Property.DISTRUSTFUL)) {
-                trust.put(p,10);
-            }else{
-                trust.put(p,40);
-            }
-            fields.removeAll(p.getFields());
-        }
-        goals= new HashMap<>();
+
+
     }
 
     public int getDevelopingChance() {
@@ -62,6 +48,22 @@ public class KIFraction extends Player{
     }
 
     public HashMap<Player, Integer> getTrust() {
+
+        if(!(this.trust.isEmpty())) {
+            Player p;
+            ArrayList<Vertex> fields = getGame().getGraphController().getGraph().getVertices();
+            fields.removeAll(this.getFields());
+            for (Vertex v : fields) {
+                p = v.getField().getPlayer();
+                if (properties.contains(Property.DISTRUSTFUL)) {
+                    trust.put(p, 10);
+                } else {
+                    trust.put(p, 40);
+                }
+                fields.removeAll(p.getFields());
+            }
+        }
+
         return trust;
     }
 

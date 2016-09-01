@@ -1,6 +1,5 @@
 package simulation;
 
-import field.Field;
 import game.GameOfGraphs;
 import game.Player;
 import graph.Edge;
@@ -18,7 +17,9 @@ public class SimulationController {
     private Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
     private Player currentPlayer;
 
-    public SimulationController(){}
+    public SimulationController(Player player){
+        this.currentPlayer = player;
+    }
 
     //TODO: If-Verzweigung überprüfen ob nötig. (If not player vertex)
 
