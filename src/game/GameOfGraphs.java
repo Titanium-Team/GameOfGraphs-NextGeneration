@@ -38,8 +38,8 @@ public class GameOfGraphs {
         this.loadingManager.load();
 
         //Players
-        this.players.add(new Player("1", false));
-        this.players.add(new Player("2", false));
+        this.players.add(new Player("Jan", false));
+        this.players.add(new Player("Jonas", false));
         //this.players.add(new KIFraction("Independent"));
 
         //Controller
@@ -48,7 +48,9 @@ public class GameOfGraphs {
         graphController = new GraphController();
         kiController = new KIController();
         mapEditorController = new MapEditorController();
-        simulationController = new SimulationController(this.players.get(0));
+        simulationController = new SimulationController(this.getCurrentPlayer());
+
+
 
     }
 
@@ -59,7 +61,6 @@ public class GameOfGraphs {
     public void nextTurn() {
 
         fieldController.run(this.getCurrentPlayer());
-
         this.currentPlayer++;
 
         if(this.currentPlayer >= this.players.size()) {

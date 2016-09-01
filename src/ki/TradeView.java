@@ -39,6 +39,10 @@ public class TradeView  {
 		int width = 200;
 		g.fillRoundRect(x,y, width,height,10,10);
 		g.setColor(Color.BLACK);
+		Font font=g.getFont();
+		g.setFont(new Font("Arial",Font.BOLD,12));
+		g.drawString("TRADE",x+50,y+15);
+		g.setFont(font);
 		g.drawRoundRect(x,y, width,height,10,10);
 		if(cancel!=null)cancel.draw(g);
 		if (submit != null)submit.draw(g);

@@ -18,17 +18,14 @@ public class KIFraction extends Player{
     private ArrayList<Property> properties = new ArrayList<Property>();
     private Random r = new Random();
     private int developingChance = r.nextInt(10);
-    private HashMap<Player,Integer> trust = new HashMap<Player,Integer>();
-    private HashMap<Vertex,HashMap<Resource,Integer>> goals = new HashMap<Vertex, HashMap<Resource, Integer>>();
-
+    private HashMap<Player,Integer> trust=new HashMap<Player,Integer>();
+    private HashMap<Vertex,HashMap<Resource,Integer>> goals = new HashMap<>();
 
     public KIFraction(String name) {
+        //super(name);
         super(name, true);
-
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
-
-
     }
 
     public int getDevelopingChance() {

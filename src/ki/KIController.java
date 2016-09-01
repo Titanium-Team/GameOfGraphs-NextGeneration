@@ -25,6 +25,7 @@ public class KIController {
 	private Random r;
 	private ArrayList<Vertex> allFields;
 
+
 	public KIController() {
 		this.r = new Random();
 	}
@@ -196,9 +197,11 @@ public class KIController {
 							int max = 0;
 							Player partner = null;
 							for (Player p : GameOfGraphs.getGame().getPlayers()) {
-								if (p.getFields().size() > max) {
-									partner = p;
-									max = partner.getFields().size();
+								if(!(partner instanceof KIFraction) || ((KIFraction)partner).isFraction()) {
+									if (p.getFields().size() > max) {
+										partner = p;
+										max = partner.getFields().size();
+									}
 								}
 							}
 
@@ -211,8 +214,10 @@ public class KIController {
 							int maxTrust=-1;
 							for(Vertex vertex:getGame().getGraphController().getGraph().getNeighbours(v)){
 								if(!vertex.getField().getPlayer().equals(current) && current.getTrust().get(vertex.getField().getPlayer())>maxTrust){
-									partner=vertex.getField().getPlayer();
-									maxTrust=current.getTrust().get(vertex.getField().getPlayer());
+									if(!(partner instanceof KIFraction) || ((KIFraction)partner).isFraction()) {
+										partner = vertex.getField().getPlayer();
+										maxTrust = current.getTrust().get(vertex.getField().getPlayer());
+									}
 								}
 							}
 							if(partner!=null) {
