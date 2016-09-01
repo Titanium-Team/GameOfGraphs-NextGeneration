@@ -36,29 +36,29 @@ public class FieldView extends GameScene{
         for( Building building : Buildings.values()){
             this.add(building);
         }
-    }}, (value) -> {});
+    }}, (t, value) -> {});
 
     private DropDownMenu<Integer> unitDropDownMenu = new DropDownMenu<Integer>(this, new ILocation(220, 530), new LinkedList<Integer>() {{
-    }}, (value) -> {});
+    }}, (t, value) -> {});
 
 
 
-    private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(value -> {
+    private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(t, value) -> {
 
         if( Buildings.isBuildable(buildingDropDownMenu.getOption(), currentField)){
 
             Buildings.build(buildingDropDownMenu.getOption(), currentField);
         }
 
-    }));
+    });
 
-    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(value -> {
+    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(t, value) -> {
 
         this.currentField = null;
         this.currentVertex = null;
         GameOfGraphs.getGame().nextTurn();
 
-    }));
+    });
 
     public FieldView(){
 

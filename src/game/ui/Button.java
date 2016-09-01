@@ -59,7 +59,7 @@ public class Button<T> implements UIComponent {
             inputEntry.getMouseEntries().forEach(e -> {
 
                 if(this.boundingBox.contains(new Location(e.getPoint()))) {
-                    this.trigger.call(this.text);
+                    this.trigger.call(this, this.text);
                 }
 
             });
