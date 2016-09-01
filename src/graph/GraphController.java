@@ -3,11 +3,9 @@ package graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
-import field.Field;
-
 import game.GameOfGraphs;
 import game.Queue;
-import mapEditor.MapEditorView;
+import ki.KIFraction;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,12 +22,32 @@ public class GraphController {
 
         graph = new Graph();
 
-        for (int i = 0; i < 15; i++){
-            graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(r.nextInt(2)),true)));
+        Vertex a = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true));
+        Vertex c = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(1),true));
+
+        KIFraction fraction1 = new KIFraction("KI 1");
+        Vertex b = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction1 ,true));
+        KIFraction fraction2 = new KIFraction("KI 1");
+        Vertex d = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
+
+        graph.addVertex(a);
+        graph.addVertex(b);
+        graph.addVertex(c);
+        graph.addVertex(d);
+
+        graph.addEdge(new Edge(new String[] { a.getID(), b.getID() }, 50));
+        graph.addEdge(new Edge(new String[] { b.getID(), c.getID() }, 50));
+        graph.addEdge(new Edge(new String[] { c.getID(), d.getID() }, 50));
+        graph.addEdge(new Edge(new String[] { d.getID(), a.getID() }, 50));
+
+        GameOfGraphs.getGame().getPlayers().add(fraction1);
+        GameOfGraphs.getGame().getPlayers().add(fraction2);
+        /*for (int i = 0; i < 15; i++){
+            graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(2),false)));
         }
-        for (int j = 0; j < 7; j++){
+        for (int j = 0; j < 12; j++){
             graph.addEdge(new Edge(new String[] {graph.getVertices().get(r.nextInt(graph.getVertices().size())).getID(), graph.getVertices().get(r.nextInt(graph.getVertices().size())).getID()}, r.nextInt(50)+1));
-        }
+        }*/
 
         graph.setWidth(1280);
         graph.setHeight(500);

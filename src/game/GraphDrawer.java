@@ -192,6 +192,7 @@ public class GraphDrawer {
                 g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
             }
             g.setStroke(new BasicStroke(1));
+            g.setColor(Color.BLACK);
         }
 
         g.setTransform(veryoldTransform);

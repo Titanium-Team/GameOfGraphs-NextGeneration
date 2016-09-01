@@ -1,24 +1,25 @@
 package simulation;
 
-import field.Field;
+import de.SweetCode.e.E;
 import game.GameOfGraphs;
 import game.Player;
 import graph.Edge;
 import graph.Graph;
 import graph.List;
 import graph.Vertex;
-import ki.Attack;
+import ki.AttackNotification;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class SimulationController {
 
     private Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
     private Player currentPlayer;
 
-    public SimulationController(){}
+    public SimulationController(Player player){
+        this.currentPlayer = player;
+    }
 
     //TODO: If-Verzweigung überprüfen ob nötig. (If not player vertex)
 
@@ -132,15 +133,15 @@ public class SimulationController {
                     while (path.hasAccess() && path.getNext() != null) {
                         ArrayList<Unit> units = getListOfUnitsToMove(path.getContent(), path.getNext(), end ,amountUnits);
                         assert units != null;
-                        if (path.getNext().getField().getPlayer() != currentPlayer && path.getNext().getField().getUnits().get(0) != null) {
-                            fight(path.getNext(), units);
-                            if (units.get(0) != null) {
+                        if (path.getNext().getField().getPlayer() != currentPlayer && !path.getNext().getField().getUnits().isEmpty()) {
+                            fight(start, path.getNext(), units);
+                            /*if (units.get(0) != null) {
                                 JOptionPane.showMessageDialog(null, "Deine Truppen haben gewonnen!");
                             } else if (path.getNext().getField().getUnits().get(0) != null) {
                                 JOptionPane.showMessageDialog(null, "Die Truppen des Gegners haben gewonnen!");
                             } else {
                                 JOptionPane.showMessageDialog(null, "Keine der beiden Truppen hat gewonnen!");
-                            }
+                            }*/
                         } else {
                             path.getNext().getField().setPlayer(currentPlayer);
                         }
@@ -191,6 +192,7 @@ public class SimulationController {
         double weight = 0.0;
         vertexList.toFirst();
         while (vertexList.hasAccess() && vertexList.getNext() != null){
+            // @TODO Keine Ahung was, aber anscheinend gibt getEdge unter bestimmten Umständen null zurück.
             weight += graph.getEdge(vertexList.getContent(), vertexList.getNext()).getWeight();
             if (weight > 50){
                 return false;
@@ -227,7 +229,7 @@ public class SimulationController {
         for (Vertex vertex: unvisitedArrayList) {
             unvisited.append(vertex);
         }
-
+        path.append(start);
         /**
          * Eine Liste wird erstellt, die die unbesuchten Knoten darstellt.
          * Die Entfernungen der unbesuchten Knoten wird auf unendlich gesetzt.
@@ -266,15 +268,14 @@ public class SimulationController {
 
                 do {
                     assert v != null;
-                    path.toFirst();
-                    path.insert(v);
+                    //path.toFirst();
+                    path.append(v);
 
                     /*
                     Der letzte Vertex des path könnte ein Vertex des Gegners sein, damit dieser angepeilt
                     werden kann für einen Angriff.
                     Danach wird der path zurückgegeben damit die nicht einfach überlaufen werden.
                      */
-
                     if (v.getField().getPlayer() != currentPlayer){
                         return path;
                     }
@@ -328,14 +329,15 @@ public class SimulationController {
      */
 
     //TODO: Verbesserung des Kampf-Systems
-    public void fight(Vertex vertex, ArrayList<Unit> attackingUnits){
+    public void fight(Vertex origin, Vertex vertex, ArrayList<Unit> attackingUnits){
         ArrayList<Unit> defendingUnits = vertex.getField().getUnits();
 
+        boolean attackWin = false;
         int aU, dU;
         aU = attackingUnits.size();
         dU = defendingUnits.size();
 
-        while(aU != 0 && dU != 0){
+        /*while(aU != 0 && dU != 0){
             Random rn = new Random();
 
             int aURoll = rn.nextInt(aU) + 1;
@@ -345,16 +347,35 @@ public class SimulationController {
             }else{
                 aU--;
             }
+        }*/
+
+        if(dU == 0) {
+            attackWin = true;
+        } else {
+            attackWin = E.getE().getRandom(false).nextInt(aU) > E.getE().getRandom(false).nextInt(dU);
         }
 
-        if (dU == 0){
-            vertex.getField().setPlayer(attackingUnits.get(0).getPlayer());
-            vertex.getField().getPlayer().getNotifications().add(new Attack(defendingUnits.get(0).getPlayer(),vertex,false,true));
-	        defendingUnits.get(0).getPlayer().getNotifications().add(new Attack(vertex.getField().getPlayer(),vertex,true,false));
+        Player defender = vertex.getField().getPlayer();
+        Player attacker = attackingUnits.get(0).getPlayer();
+
+        if (attackWin){
+
+            vertex.getField().getUnits().clear();
+            vertex.getField().setPlayer(attacker);
+
+            attacker.getNotifications().add(new AttackNotification(defender, vertex, false, true));
+            defender.getNotifications().add(new AttackNotification(attacker, vertex, true, false));
+            //vertex.getField().getPlayer().getNotifications().add(new AttackNotification(defendingUnits.get(0).getPlayer(),vertex,false,true));
+	        //defendingUnits.get(0).getPlayer().getNotifications().add(new AttackNotification(vertex.getField().getPlayer(),vertex,true,false));
         }else{
-            vertex.getField().setPlayer(defendingUnits.get(0).getPlayer());
-	        vertex.getField().getPlayer().getNotifications().add(new Attack(defendingUnits.get(0).getPlayer(),vertex,false,false));
-	        defendingUnits.get(0).getPlayer().getNotifications().add(new Attack(vertex.getField().getPlayer(),vertex,true,true));
+            if(!(origin == null)) {
+                origin.getField().getUnits().removeAll(attackingUnits);
+            }
+
+            defender.getNotifications().add(new AttackNotification(attacker, vertex, true, true));
+            attacker.getNotifications().add(new AttackNotification(defender, vertex, false, false));
+	        //vertex.getField().getPlayer().getNotifications().add(new AttackNotification(defendingUnits.get(0).getPlayer(),vertex,false,false));
+	        //defendingUnits.get(0).getPlayer().getNotifications().add(new AttackNotification(vertex.getField().getPlayer(),vertex,true,true));
         }
 
     }

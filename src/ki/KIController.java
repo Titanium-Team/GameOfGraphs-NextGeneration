@@ -34,36 +34,66 @@ public class KIController {
 	 * Dabei werden die Abläufe auf diesen Feldern anhand diverser Eigenschaften gesteuert und sowohl Benachrichtigungen als auch Anfragen bearbeitet;
 	 */
 	public void run(){
+
+		// @TODO: Frage an Tim: Der Code in dieser Methode soll nur durchlaufen werden wenn der aktuelle Spieler eine KIFraction
+		// ist, oder?
+		if(!(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction)) {
+			return;
+		}
+
 		allFields=getGame().getGraphController().getGraph().getVertices();
 		KIFraction current;
 		ArrayList<Vertex> fields;
-		for(Vertex v1:allFields){
-			//Rebellion
+
+		Iterator<Vertex> iterator = allFields.iterator();
+
+		boolean deleteAll = false;
+
+		while(iterator.hasNext()){
+			Vertex v1 = iterator.next();
+
+			if(deleteAll) {
+				iterator.remove();
+				continue;
+			}
+
+			//RebellionNotification
 			if(v1.getField().getResources().get(Resources.FOOD)<v1.getField().getResources().get(POPULATION) && r.nextInt(100)<50){
 				Player p = v1.getField().getPlayer();
 				ArrayList<Unit> rebels = new ArrayList<>();
 				KIFraction rebelPlayer=new KIFraction("independent");
 				for(int i = 0; i<v1.getField().getResources().get(POPULATION)/2; i++){
-					rebels.add(new simulation.Unit(rebelPlayer));
+					rebels.add(new Unit(rebelPlayer));
 				}
 				v1.getField().getResources().put(POPULATION,v1.getField().getResources().get(POPULATION)-rebels.size());
-				getGame().getSimulationController().fight(v1,rebels);
-				p.getNotifications().add(new Rebellion(!p.equals(v1.getField().getPlayer()),v1));
+				getGame().getSimulationController().fight(null, v1,rebels);
+				p.getNotifications().add(new RebellionNotification(!p.equals(v1.getField().getPlayer()),v1));
 				for(Notification n:p.getNotifications() ){
-					if(n instanceof Attack){
-						if(((Attack) n).getOpponent().equals(rebelPlayer)){
+					if(n instanceof AttackNotification){
+						if(((AttackNotification) n).getOpponent().equals(rebelPlayer)){
 							p.getNotifications().remove(n);
 						}
 					}
 				}
 			}
+
 			if(v1.getField().getPlayer() instanceof KIFraction ){
 				current = ((KIFraction) v1.getField().getPlayer());
 				if(current.getGoals().containsKey(v1)) {
-					for (Map.Entry<Resource, Integer> e : current.getGoals().get(v1).entrySet()) {
+					/*for (Map.Entry<Resource, Integer> e : current.getGoals().get(v1).entrySet()) {
 						if(v1.getField().getResources().get(e.getKey())>=e.getValue()){
 							current.getGoals().get(v1).remove(e.getKey());
 						}
+					}*/
+					Iterator<Map.Entry<Resource, Integer>> aIterator = current.getGoals().get(v1).entrySet().iterator();
+					while(aIterator.hasNext()) {
+
+						Map.Entry<Resource, Integer> entry = aIterator.next();
+
+						if(v1.getField().getResources().get(entry.getKey()) >= entry.getValue()) {
+							aIterator.remove();
+						}
+
 					}
 				}else{
 					current.getGoals().put(v1,new HashMap<Resource, Integer>());
@@ -206,7 +236,8 @@ public class KIController {
 							}
 						}
 					}
-					allFields.removeAll(fields);
+					deleteAll = true;
+					//allFields.removeAll(fields);
 					while(!current.getRequests().isEmpty()){
 						Request req = current.getRequests().front();
 						if(req instanceof AllianceRequest){
@@ -274,12 +305,13 @@ public class KIController {
 
 					for(Notification i:current.getNotifications()){
 						if(current!=null) {
-							if (i instanceof Attack) {
-								Vertex place = ((Attack) i).getPlace();
-								Player opponent = ((Attack) i).getOpponent();
-								if (((Attack) i).isDefense()) {
+							if (i instanceof AttackNotification) {
+								AttackNotification attackNotification = (AttackNotification) i;
+								Vertex place = attackNotification.getPlace();
+								Player opponent = attackNotification.getOpponent();
+								if (attackNotification.isDefense()) {
 									current.getTrust().put(opponent, 0);
-									if (i.isFightWon()) {
+									if (attackNotification.isFightWon()) {
 										if (!current.getAlliances().isEmpty()) {
 											Vertex root = this.getClosestVertex(place, opponent);
 											if (root != null) {
@@ -304,7 +336,7 @@ public class KIController {
 										}
 									}
 								} else {
-									if (!current.isFraction() && i.isFightWon()) {
+									if (!current.isFraction() && attackNotification.isFightWon()) {
 										int x = 0;
 										current.setName("Player " + Arrays.toString(Character.toChars(65 + x + getGame().getPlayers().size())));
 										for (Player p : getGame().getPlayers()) {
@@ -320,9 +352,9 @@ public class KIController {
 									this.buildIfBuildable(Buildings.UNIT, place);
 								}
 
-							} else if (i instanceof Rebellion) {
-								Vertex place = ((Rebellion) i).getPlace();
-								if (((Rebellion) i).isSuccessful()) {
+							} else if (i instanceof RebellionNotification) {
+								Vertex place = ((RebellionNotification) i).getPlace();
+								if (((RebellionNotification) i).isSuccessful()) {
 									if (current.getFields().size() == 1) {
 										getGame().getPlayers().remove(current);
 										current.setName("independent");
@@ -341,6 +373,8 @@ public class KIController {
 				}
 			}
 		}
+
+		GameOfGraphs.getGame().nextTurn();
 	}
 
 	private void deletePlayer(Player current){
@@ -350,9 +384,9 @@ public class KIController {
 					((KIFraction) p).getTrust().remove(current);
 				}
 				for(Notification n:p.getNotifications()){
-					if(n instanceof Attack){
-						if(((Attack) n).getOpponent().equals(current)){
-							((Attack) n).setOpponent(null);
+					if(n instanceof AttackNotification){
+						if(((AttackNotification) n).getOpponent().equals(current)){
+							((AttackNotification) n).setOpponent(null);
 						}
 					}
 				}

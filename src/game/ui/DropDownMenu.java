@@ -5,7 +5,6 @@ import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
-import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
