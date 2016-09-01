@@ -25,6 +25,7 @@ public class KIController {
 	private Random r;
 	private ArrayList<Vertex> allFields;
 
+
 	public KIController() {
 		this.r = new Random();
 	}
@@ -39,20 +40,22 @@ public class KIController {
 		ArrayList<Vertex> fields;
 		for(Vertex v1:allFields){
 			//Rebellion
-			if(v1.getField().getResources().get(Resources.FOOD)<v1.getField().getResources().get(POPULATION) && r.nextInt(100)<50){
-				Player p = v1.getField().getPlayer();
-				ArrayList<Unit> rebels = new ArrayList<>();
-				KIFraction rebelPlayer=new KIFraction("independent");
-				for(int i = 0; i<v1.getField().getResources().get(POPULATION)/2; i++){
-					rebels.add(new simulation.Unit(rebelPlayer));
-				}
-				v1.getField().getResources().put(POPULATION,v1.getField().getResources().get(POPULATION)-rebels.size());
-				getGame().getSimulationController().fight(v1,rebels);
-				p.getNotifications().add(new Rebellion(!p.equals(v1.getField().getPlayer()),v1));
-				for(Notification n:p.getNotifications() ){
-					if(n instanceof Attack){
-						if(((Attack) n).getOpponent().equals(rebelPlayer)){
-							p.getNotifications().remove(n);
+			if(!(v1.getField().getPlayer() instanceof KIFraction) || ((KIFraction) v1.getField().getPlayer()).isFraction()) {
+				if (v1.getField().getResources().get(Resources.FOOD) < v1.getField().getResources().get(POPULATION) && r.nextInt(100) < 50) {
+					Player p = v1.getField().getPlayer();
+					ArrayList<Unit> rebels = new ArrayList<>();
+					KIFraction rebelPlayer = new KIFraction("independent");
+					for (int i = 0; i < v1.getField().getResources().get(POPULATION) / 2; i++) {
+						rebels.add(new simulation.Unit(rebelPlayer));
+					}
+					v1.getField().getResources().put(POPULATION, v1.getField().getResources().get(POPULATION) - rebels.size());
+					getGame().getSimulationController().fight(v1, rebels);
+					p.getNotifications().add(new Rebellion(!p.equals(v1.getField().getPlayer()), v1));
+					for (Notification n : p.getNotifications()) {
+						if (n instanceof Attack) {
+							if (((Attack) n).getOpponent().equals(rebelPlayer)) {
+								p.getNotifications().remove(n);
+							}
 						}
 					}
 				}
@@ -166,9 +169,11 @@ public class KIController {
 							int max = 0;
 							Player partner = null;
 							for (Player p : GameOfGraphs.getGame().getPlayers()) {
-								if (p.getFields().size() > max) {
-									partner = p;
-									max = partner.getFields().size();
+								if(!(partner instanceof KIFraction) || ((KIFraction)partner).isFraction()) {
+									if (p.getFields().size() > max) {
+										partner = p;
+										max = partner.getFields().size();
+									}
 								}
 							}
 
@@ -181,8 +186,10 @@ public class KIController {
 							int maxTrust=-1;
 							for(Vertex vertex:getGame().getGraphController().getGraph().getNeighbours(v)){
 								if(!vertex.getField().getPlayer().equals(current) && current.getTrust().get(vertex.getField().getPlayer())>maxTrust){
-									partner=vertex.getField().getPlayer();
-									maxTrust=current.getTrust().get(vertex.getField().getPlayer());
+									if(!(partner instanceof KIFraction) || ((KIFraction)partner).isFraction()) {
+										partner = vertex.getField().getPlayer();
+										maxTrust = current.getTrust().get(vertex.getField().getPlayer());
+									}
 								}
 							}
 							if(partner!=null) {
@@ -278,7 +285,9 @@ public class KIController {
 								Vertex place = ((Attack) i).getPlace();
 								Player opponent = ((Attack) i).getOpponent();
 								if (((Attack) i).isDefense()) {
-									current.getTrust().put(opponent, 0);
+									if(!(opponent instanceof KIFraction) || ((KIFraction)opponent).isFraction()) {
+										current.getTrust().put(opponent, 0);
+									}
 									if (i.isFightWon()) {
 										if (!current.getAlliances().isEmpty()) {
 											Vertex root = this.getClosestVertex(place, opponent);
@@ -319,7 +328,6 @@ public class KIController {
 								if (current!=null && current.equals(place.getField().getPlayer())) {
 									this.buildIfBuildable(Buildings.UNIT, place);
 								}
-
 							} else if (i instanceof Rebellion) {
 								Vertex place = ((Rebellion) i).getPlace();
 								if (((Rebellion) i).isSuccessful()) {
