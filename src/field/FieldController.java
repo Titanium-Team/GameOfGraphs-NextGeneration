@@ -25,7 +25,7 @@ public class FieldController {
             fertility = random.nextInt(5)+1;
             mountains = random.nextInt(5)+1;
         }
-        int forestType = random.nextInt(5)+1;
+        int forestType = random.nextInt(3)+1;
 
         Resource[] resources = Resources.getSpecialResources();
 
@@ -46,11 +46,6 @@ public class FieldController {
         List<Vertex> vertices = player.getFields();
         for(Vertex vertex : vertices) {
 
-            if(vertex.getField().getResources().get(Resources.POPULATION) <= 0){
-                vertex.getField().setPlayer(null);
-                break;
-            }
-
             Map<Building, Integer> buildings = vertex.getField().getBuildings();
 
             for(Map.Entry<Building, Integer> entry : buildings.entrySet()){
@@ -60,11 +55,13 @@ public class FieldController {
                 }
             }
 
-            vertex.getField().getResources().put(Resources.FOOD,vertex.getField().getResources().get(Resources.FOOD)- random.nextInt(vertex.getField().getResources().get(Resources.POPULATION)));
-            if(vertex.getField().getResources().get(Resources.FOOD) > 9){
+            if(vertex.getField().getResources().get(Resources.POPULATION) > 1) {
+                vertex.getField().getResources().put(Resources.FOOD, vertex.getField().getResources().get(Resources.FOOD) + 1 - vertex.getField().getResources().get(Resources.POPULATION ));
+            }
+            if (vertex.getField().getResources().get(Resources.FOOD) > 9) {
                 vertex.getField().getResources().put(Resources.POPULATION, vertex.getField().getResources().get(Resources.POPULATION) + 1);
                 vertex.getField().getResources().put(Resources.FOOD, 0);
-            }else if (vertex.getField().getResources().get(Resources.FOOD) < -9){
+            } else if (vertex.getField().getResources().get(Resources.FOOD) < -9) {
                 vertex.getField().getResources().put(Resources.POPULATION, vertex.getField().getResources().get(Resources.POPULATION) - 1);
                 vertex.getField().getResources().put(Resources.FOOD, 0);
             }

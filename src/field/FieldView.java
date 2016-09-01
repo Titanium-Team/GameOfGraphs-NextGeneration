@@ -10,6 +10,7 @@ import field.buildings.Building;
 import field.buildings.Buildings;
 import field.recipe.RecipeResource;
 import field.resource.Resource;
+import field.resource.Resources;
 import game.GameOfGraphs;
 import game.GraphDrawer;
 import game.Player;
@@ -21,6 +22,7 @@ import graph.Vertex;
 import ki.KIFraction;
 import org.omg.CORBA.INTERNAL;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +53,11 @@ public class FieldView extends GameScene{
     private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(value -> {
 
         if( Buildings.isBuildable(buildingDropDownMenu.getOption(), currentField)){
-
-            Buildings.build(buildingDropDownMenu.getOption(), currentField);
+            if(this.currentField.getResources().get(Resources.POPULATION) > 1) {
+                Buildings.build(buildingDropDownMenu.getOption(), currentField);
+            } else {
+                JOptionPane.showMessageDialog(null, "You can't have 0 People.");
+            }
         }
 
     }));
@@ -94,7 +99,7 @@ public class FieldView extends GameScene{
         g.setBackground(Color.WHITE);
 
         if(currentField == null) {
-            g.drawString("Kein Field ausgewählt", 620, 600);
+            g.drawString("No field selected.", 620, 600);
         }else{
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
