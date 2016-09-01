@@ -157,6 +157,11 @@ public class GraphDrawer {
 
         ArrayList<Vertex> vertexList = graph.getVertices();
         for (Vertex vertex:vertexList) {
+            if(vertex.getField().getPlayer() == GameOfGraphs.getGame().getPlayers().get(0)){
+                g.setColor(Color.RED);
+            } else if (vertex.getField().getPlayer() == GameOfGraphs.getGame().getPlayers().get(1)){
+                g.setColor(Color.CYAN);
+            }
             Ellipse2D ellipse2D = new Ellipse2D.Double(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius() * 2, graph.getRadius() * 2);
             g.setClip(ellipse2D);
 
@@ -166,7 +171,8 @@ public class GraphDrawer {
             } else if (graph.getVertexImage() != null) {
                 BufferedImage image = graph.getVertexImage();
                 if (image.getWidth() == 1 && image.getHeight() == 1 || !graph.isVertexImageTextured()) {
-                    g.drawImage(image, 0, 0, graph.getWidth(), graph.getHeight(), null);
+                    g.fill(ellipse2D);
+                    //g.drawImage(image, 0, 0, graph.getWidth(), graph.getHeight(), null);
                 } else if (graph.isVertexImageTextured()) {
                     for (int i = 0; i < (Math.ceil((double) 1280 / (double) image.getWidth()) > 1 ? Math.ceil((double) 1280 / (double) image.getWidth()) : 1); i++) {
                         for (int j = 0; j < (Math.ceil(((double) 500) / ((double) image.getHeight())) > 1 ? Math.ceil(((double) 500) / ((double) image.getHeight())) : 1); j++) {
@@ -175,10 +181,11 @@ public class GraphDrawer {
                     }
                 }
             }
+            g.setColor(Color.BLACK);
 
             g.setStroke(new BasicStroke(5));
             if (vertex.isMarkStart()){
-                g.setColor(Color.BLACK);
+                g.setColor(Color.ORANGE);
                 g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
             }else if (vertex.isMarkTarget()){
                 g.setColor(Color.GREEN);
@@ -320,7 +327,7 @@ public class GraphDrawer {
         }
 
         public void update(InputEntry inputEntry, long l){
-            System.out.println(value + "  " + end + "   " + zoom);
+            //System.out.println(value + "  " + end + "   " + zoom);
 
             inputEntry.getMouseEntries().forEach(mouseEntry -> {
                 if (vertical){

@@ -7,6 +7,7 @@ import field.resource.Resource;
 import field.resource.Resources;
 import simulation.Unit;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -46,7 +47,7 @@ public enum Buildings implements Building {
             int m = field.getMountains();
             Random random = new Random();
 
-            int stone = n <= m ? random.nextInt(n*m) : random.nextInt(m^2) + (n-m)*random.nextInt(2);
+            int stone = n <= m ? random.nextInt(n*m)+1 : random.nextInt(m^2) + (n-m)*random.nextInt(2);
             productionResource(field,Resources.STONE,this,1,stone);
 
             int iron = n <= m ? n : m;
@@ -80,7 +81,7 @@ public enum Buildings implements Building {
             int m = field.getFertility();
             Random random = new Random();
 
-            int food = n <= m ? random.nextInt(n*m) : random.nextInt(m^2) + (n-m)*random.nextInt(2);
+            int food = n <= m ? random.nextInt(n*m)+1 : random.nextInt(m^2) + (n-m)*random.nextInt(2);
             productionResource(field,Resources.FOOD,this,1,food);
 
             int wheat = random.nextInt(n <= m ? n : m);
@@ -206,8 +207,15 @@ public enum Buildings implements Building {
 
     public static void productionResource(Field field, Resources resource, Building building, int condition, int amount){
 
-        if(field.getLocalResource() == resource && field.getBuildings().get(building) >= condition){
-            field.getResources().put(resource,field.getResources().get(resource) + amount);
+        if(field.getBuildings().get(building) >= condition){
+            if(Arrays.asList(Resources.getSpecialResources()).contains(resource)){
+                if(field.getLocalResource() == resource) {
+                    field.getResources().put(resource, field.getResources().get(resource) + amount);
+                }
+            } else {
+                field.getResources().put(resource,field.getResources().get(resource) + amount);
+            }
+
         }
 
     }

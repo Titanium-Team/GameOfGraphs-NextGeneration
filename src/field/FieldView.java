@@ -79,7 +79,10 @@ public class FieldView extends GameScene{
 
         Graphics2D g = layers.first().getGraphics2D();
 
+
         GraphDrawer.drawer(g,graph,"Field");
+
+        g.drawString("Player: " + GameOfGraphs.getGame().getCurrentPlayer().getName(), 50, 50);
 
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0,500,1280,220);
@@ -102,6 +105,7 @@ public class FieldView extends GameScene{
             g.setColor(Color.GREEN);
             g.drawString(String.valueOf("FOREST: ") + currentField.getForestType(), 320, 540);
             g.setColor(Color.BLACK);
+            g.drawString("OWNER: " + this.currentField.getPlayer().getName(), 20, 700);
 
             g.setColor(Color.LIGHT_GRAY);
             this.buildingDropDownMenu.handleDraw(layers.first());
@@ -160,7 +164,11 @@ public class FieldView extends GameScene{
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
                 Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if (vertex != null) {
+                    if(currentVertex != null) {
+                        this.currentVertex.setMarkTarget(false);
+                    }
                     this.currentVertex = vertex;
+                    this.currentVertex.setMarkStart(true);
                     this.currentField = this.currentVertex.getField();
                     this.unitDropDownMenu.setOptions(new LinkedList<Integer>() {{
 
@@ -170,6 +178,9 @@ public class FieldView extends GameScene{
 
                     }});
                 } else {
+                    if(currentVertex != null) {
+                        this.currentVertex.setMarkTarget(false);
+                    }
                     this.currentVertex = null;
                     this.currentField = null;
                 }
