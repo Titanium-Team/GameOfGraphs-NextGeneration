@@ -90,6 +90,11 @@ public class FieldView extends GameScene{
 
         if(currentField == null) {
             g.drawString("Kein Field ausgewählt", 620, 600);
+
+            this.buildingDropDownMenu.setEnabled(false);
+            this.buildButton.setEnabled(false);
+            this.unitDropDownMenu.setEnabled(false);
+            this.nextTurnButton.setEnabled(false);
         }else{
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
@@ -106,12 +111,11 @@ public class FieldView extends GameScene{
 
             g.setColor(Color.LIGHT_GRAY);
 
-            if(GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer()) {
-                this.buildingDropDownMenu.handleDraw(layers.first());
-                this.buildButton.handleDraw(layers.first());
-                this.unitDropDownMenu.handleDraw(layers.first());
-                this.nextTurnButton.handleDraw(layers.first());
-            }
+            boolean active = GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer();
+            this.buildingDropDownMenu.setEnabled(active);
+            this.buildButton.setEnabled(active);
+            this.unitDropDownMenu.setEnabled(active);
+            this.nextTurnButton.setEnabled(active);
 
             g.setColor(Color.BLACK);
 

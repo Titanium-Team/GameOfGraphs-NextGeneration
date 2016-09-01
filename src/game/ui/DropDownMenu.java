@@ -4,8 +4,7 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
-import de.SweetCode.e.rendering.layers.Layer;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import de.SweetCode.e.rendering.layers.Layers;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -17,11 +16,9 @@ import java.util.Map;
 /**
  * Created by 204g02 on 29.08.2016.
  */
-public class DropDownMenu<T> implements UIComponent {
+public class DropDownMenu<T> extends UIComponent<T> {
 
-    private final GameScene gameScene;
     private final ILocation location;
-    private final Trigger<T> callable;
     private IBoundingBox openBoxBoundings;
 
     private final Map<T, IBoundingBox> boundingBoxes = new HashMap<>();
@@ -30,11 +27,10 @@ public class DropDownMenu<T> implements UIComponent {
     private int selectedIndex = 0;
     private boolean open = false;
 
-    public DropDownMenu(GameScene gameScene, ILocation location, LinkedList<T> options, Trigger<T> callable) {
-        this.gameScene = gameScene;
+    public DropDownMenu(GameScene gameScene, ILocation location, LinkedList<T> options, Trigger<T> trigger) {
+        super(gameScene, trigger);
         this.location = location;
         this.options = options;
-        this.callable = callable;
     }
 
     public void setOptions(LinkedList<T> options) {
@@ -73,7 +69,7 @@ public class DropDownMenu<T> implements UIComponent {
                             for (int i = 0; i < this.options.size(); i++) {
 
                                 if (this.boundingBoxes.get(this.options.get(i)).contains(new ILocation(entry.getPoint()))) {
-                                    this.callable.call(this, this.options.get(i));
+                                    this.getTrigger().call(this, this.options.get(i));
                                     this.selectedIndex = i;
                                     this.open = false;
                                 }
@@ -104,9 +100,9 @@ public class DropDownMenu<T> implements UIComponent {
     }
 
     @Override
-    public void handleDraw(Layer layer) {
+    public void render(Layers layers) {
 
-        Graphics2D g = layer.g();
+        Graphics2D g = layers.first().g();
         FontMetrics fontMetrics = g.getFontMetrics();
 
         // max width
@@ -139,33 +135,22 @@ public class DropDownMenu<T> implements UIComponent {
             int y = location.getY();
             for(T entry : this.options) {
 
-                g.drawString(String.valueOf(entry), location.getX() + 2, y + height + 2);
+                g.drawString(String.valueOf(entry), location.getX() + 2, y + height + 1);
                 y += height;
 
             }
 
-        } else {
+        } else if(!(this.options.isEmpty())) {
 
             g.drawRect(location.getX(), location.getY(), maxWidth + 4, height + 4);
             g.drawString(String.valueOf(this.options.get(selectedIndex)), location.getX() + 2, (location.getY() + height));
 
         }
-
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        throw new NotImplementedException();
     }
 
     @Override
     public boolean isActive() {
-        return this.gameScene.isActive();
+        return this.getGameScene().isActive() && this.isEnabled();
     }
 
 }
