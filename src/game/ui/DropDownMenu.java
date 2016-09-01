@@ -1,10 +1,11 @@
 package game.ui;
 
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.math.BoundingBox;
+import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -21,9 +22,9 @@ public class DropDownMenu<T> implements UIComponent {
     private final GameScene gameScene;
     private final ILocation location;
     private final Trigger<T> callable;
-    private BoundingBox openBoxBoundings;
+    private IBoundingBox openBoxBoundings;
 
-    private final Map<T, BoundingBox> boundingBoxes = new HashMap<>();
+    private final Map<T, IBoundingBox> boundingBoxes = new HashMap<>();
     private List<T> options;
 
     private int selectedIndex = 0;
@@ -89,8 +90,9 @@ public class DropDownMenu<T> implements UIComponent {
                 } else {
 
                     if (entry.getButton() == MouseEvent.BUTTON1) {
-                        BoundingBox box = this.boundingBoxes.get(this.options.get(0));
-
+                        IBoundingBox box = this.boundingBoxes.get(this.options.get(0));
+                        System.out.println(box);
+                        System.out.println(entry);
                         if (box.contains(new ILocation(entry.getPoint()))) {
                             this.open = true;
                         }
@@ -123,31 +125,31 @@ public class DropDownMenu<T> implements UIComponent {
 
             for (int i = 0; i < this.options.size(); i++) {
 
-                this.boundingBoxes.put(this.options.get(i), new BoundingBox(new ILocation(location.getX(), location.getY() + height * i), new ILocation(location.getX() + maxWidth, location.getY() + height * i + height)));
+                this.boundingBoxes.put(this.options.get(i), new IBoundingBox(new ILocation(location.getX(), location.getY() + height * i), new ILocation(location.getX() + maxWidth + 4, location.getY() + (height + 2) * (i + 1))));
 
             }
 
-            this.openBoxBoundings = new BoundingBox(new ILocation(location.getX(), location.getY()), new ILocation(location.getX() + maxWidth, location.getY() + totalHeight));
+            this.openBoxBoundings = new IBoundingBox(new ILocation(location.getX(), location.getY()), new ILocation(location.getX() + maxWidth + 4, location.getY() + totalHeight + this.options.size()));
 
         }
 
 
         if(this.open) {
 
-            g.drawRect(location.getX(), location.getY(), maxWidth, totalHeight);
+            g.drawRect(location.getX(), location.getY(), this.openBoxBoundings.getWidth(), this.openBoxBoundings.getHeight());
 
             int y = location.getY();
             for(T entry : this.options) {
 
-                g.drawString(String.valueOf(entry), location.getX(), y + height);
+                g.drawString(String.valueOf(entry), location.getX() + 2, y + height + 2);
                 y += height;
 
             }
 
         } else {
 
-            g.drawRect(location.getX(), location.getY(), maxWidth, height);
-            g.drawString(String.valueOf(this.options.get(selectedIndex)), location.getX(), (location.getY() + height));
+            g.drawRect(location.getX(), location.getY(), maxWidth + 4, height + 4);
+            g.drawString(String.valueOf(this.options.get(selectedIndex)), location.getX() + 2, (location.getY() + height));
 
         }
 
