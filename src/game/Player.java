@@ -93,4 +93,8 @@ public class Player {
         this.requests = requests;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

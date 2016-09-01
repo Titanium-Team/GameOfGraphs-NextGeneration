@@ -39,7 +39,6 @@ public class EditText{
     public void drawer(Graphics2D g){
 	    g.setColor(Color.black);
         g.drawRect(x, y, width, height);
-
         g.setClip(new Rectangle(x, y, width, height));
 		if(!text.isEmpty() || hint==null) {
 			String s1 = text.substring(0, cursor);

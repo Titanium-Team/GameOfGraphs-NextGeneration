@@ -28,7 +28,7 @@ public class Button {
 
         g.setColor(foreground);
         g.drawRect(x, y, width, height);
-        g.drawString(text, x + 5, y + (height / 2 - 10));
+        g.drawString(text, x + 5, y + (height / 2 + 5));
     }
 
     public boolean isPushed(Point p) {

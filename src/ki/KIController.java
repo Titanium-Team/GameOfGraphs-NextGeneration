@@ -13,6 +13,8 @@ import graph.List;
 import graph.Vertex;
 import simulation.Unit;
 import java.util.*;
+
+import static field.resource.Resources.FOOD;
 import static field.resource.Resources.POPULATION;
 import static game.GameOfGraphs.*;
 
@@ -132,12 +134,12 @@ public class KIController {
 					}
 					fields = current.getFields();
 					for (Vertex v : fields) {
-						if (v1.getField().getResources().get(Resources.FOOD) < v1.getField().getResources().get(POPULATION)) {
-							if (v1.getField().getBuildings().get(Buildings.FARM) > 0) {
-								this.buildIfBuildable(Buildings.BUTCHER, v1);
-								this.buildIfBuildable(Buildings.WINDMILL, v1);
+						if (v.getField().getResources().get(Resources.FOOD) < v.getField().getResources().get(POPULATION) || current.getGoals().containsKey(v) && current.getGoals().get(v).containsKey(FOOD)) {
+							if (v.getField().getBuildings().get(Buildings.FARM) > 0) {
+								this.buildIfBuildable(Buildings.BUTCHER, v);
+								this.buildIfBuildable(Buildings.WINDMILL, v);
 							} else {
-								this.buildIfBuildable(Buildings.FARM, v1);
+								this.buildIfBuildable(Buildings.FARM, v);
 							}
 						}
 						if (current.getProperties().contains(Property.AGGRESSIVE)) {
@@ -151,7 +153,7 @@ public class KIController {
 										}
 									}
 									if (attackedVertex != null) {
-										getGame().getSimulationController().moveUnits(v1, attackedVertex, v1.getField().getUnits().size());
+										getGame().getSimulationController().moveUnits(v, attackedVertex, v.getField().getUnits().size());
 									}
 								} else {
 									this.buildIfBuildable(Buildings.UNIT, v);
@@ -189,7 +191,7 @@ public class KIController {
 								int greed = r.nextInt(goals.entrySet().size() + 1);
 								for (Map.Entry<Resource, Integer> e : goals.entrySet()) {
 									if (greed > 0) {
-										wanted.put(e.getKey(),e.getValue() - v1.getField().getResources().get(e.getKey()));
+										wanted.put(e.getKey(),e.getValue() - v.getField().getResources().get(e.getKey()));
 										greed--;
 									}
 								}
