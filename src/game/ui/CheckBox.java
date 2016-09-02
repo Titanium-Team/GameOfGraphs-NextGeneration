@@ -5,26 +5,21 @@ import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.rendering.GameScene;
-import de.SweetCode.e.rendering.layers.Layer;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import de.SweetCode.e.rendering.layers.Layers;
 
 import java.awt.*;
 
-public class CheckBox implements UIComponent {
-
-    private final GameScene gameScene;
+public class CheckBox extends UIComponent<Boolean> {
 
     private final ILocation location;
     private final IBoundingBox boundingBox;
-    private final Trigger<Boolean> trigger;
 
     private boolean checked = false;
 
     public CheckBox(GameScene gameScene, ILocation location, int width, int height, Trigger<Boolean> trigger) {
-        this.gameScene = gameScene;
+        super(gameScene, trigger);
         this.location = location;
         this.boundingBox = new IBoundingBox(this.location, new ILocation(this.location.getX() + width, this.location.getY() + height));
-        this.trigger = trigger;
     }
 
     public boolean isChecked() {
@@ -39,7 +34,7 @@ public class CheckBox implements UIComponent {
             if(this.boundingBox.contains(new Location(entry.getPoint()))) {
 
                 this.checked = !checked;
-                this.trigger.call(this, this.checked);
+                this.getTrigger().call(this, this.checked);
 
             }
 
@@ -48,29 +43,18 @@ public class CheckBox implements UIComponent {
     }
 
     @Override
-    public void handleDraw(Layer layer) {
+    public void render(Layers layers) {
 
-        layer.g().setColor(this.checked ? Color.GREEN : Color.RED);
-        layer.g().fillRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
-        layer.g().setColor(Color.BLACK);
-        layer.g().drawRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
+        layers.first().g().setColor(this.checked ? Color.GREEN : Color.RED);
+        layers.first().g().fillRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
+        layers.first().g().setColor(Color.BLACK);
+        layers.first().g().drawRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
 
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        throw new NotImplementedException();
     }
 
     @Override
     public boolean isActive() {
-        return this.gameScene.isActive();
+        return this.getGameScene().isActive() && this.isEnabled();
     }
-
 
 }

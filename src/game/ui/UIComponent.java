@@ -1,14 +1,33 @@
 package game.ui;
 
-import de.SweetCode.e.GameComponent;
-import de.SweetCode.e.rendering.layers.Layer;
+import de.SweetCode.e.rendering.GameScene;
 
-public interface UIComponent extends GameComponent {
+public abstract class UIComponent<T> extends GameScene {
 
-    void handleDraw(Layer layer);
+    private final GameScene gameScene;
+    private final Trigger<T> trigger;
 
-    boolean isEnabled();
+    private boolean isEnabled = true;
 
-    void setEnabled(boolean enabled);
+    public UIComponent(GameScene gameScene, Trigger<T> trigger) {
+        this.gameScene = gameScene;
+        this.trigger = trigger;
+    }
+
+    public boolean isEnabled() {
+        return this.isEnabled;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    public Trigger<T> getTrigger() {
+        return trigger;
+    }
+
+    public GameScene getGameScene() {
+        return gameScene;
+    }
 
 }

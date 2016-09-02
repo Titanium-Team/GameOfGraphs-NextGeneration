@@ -17,9 +17,8 @@ import game.ui.DropDownMenu;
 import graph.Graph;
 import graph.Vertex;
 import ki.KIFraction;
-import org.omg.CORBA.INTERNAL;
-import javax.swing.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -150,7 +149,18 @@ public class FieldView extends GameScene{
         g.setBackground(Color.WHITE);
 
         if(currentField == null) {
+
             g.drawString("No field selected.", 520, 600);
+
+            this.buildingDropDownMenu.setEnabled(false);
+            this.buildButton.setEnabled(false);
+            this.unitDropDownMenu.setEnabled(false);
+            this.nextTurnButton.setEnabled(false);
+            this.marketPlaceButton.setEnabled(false);
+            this.resourceDropDownMenu.setEnabled(false);
+            this.slaveMarketButton.setEnabled(false);
+            this.freeBuildButton.setEnabled(false);
+
         }else{
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
@@ -167,23 +177,22 @@ public class FieldView extends GameScene{
 
             g.setColor(Color.LIGHT_GRAY);
 
-            if(GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer()) {
-                this.unitDropDownMenu.handleDraw(layers.first());
-                this.buildingDropDownMenu.handleDraw(layers.first());
-                this.buildButton.handleDraw(layers.first());
-                this.freeBuildButton.handleDraw(layers.first());
+            boolean active = GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer();
+            this.buildingDropDownMenu.setEnabled(active);
+            this.buildButton.setEnabled(active);
+            this.unitDropDownMenu.setEnabled(active);
+            this.nextTurnButton.setEnabled(active);
+            this.freeBuildButton.setEnabled(active);
 
-                if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
-                    this.slaveMarketButton.handleDraw(layers.first());
-                    g.drawString("2x Iron -> 1 Person", 760, 525);
-                }
+            if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
+                this.slaveMarketButton.setEnabled(true);
+                g.drawString("2x Iron -> 1 Person", 760, 525);
+            }
 
-                if(this.currentField.getBuildings().get(Buildings.MARKETPLACE) > 0) {
-                    this.marketPlaceButton.handleDraw(layers.first());
-                    this.resourceDropDownMenu.handleDraw(layers.first());
-                    g.drawString("1x Gold -> ", 760, 555);
-                }
-                this.nextTurnButton.handleDraw(layers.first());
+            if(this.currentField.getBuildings().get(Buildings.MARKETPLACE) > 0) {
+                this.marketPlaceButton.setEnabled(true);
+                this.resourceDropDownMenu.setEnabled(true);
+                g.drawString("1x Gold -> ", 760, 555);
             }
 
             g.setColor(Color.BLACK);

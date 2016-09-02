@@ -3,10 +3,10 @@ package ki;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.ILocation;
+import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
 import field.resource.Resource;
 import field.resource.Resources;
-import game.MenuView;
 import game.Player;
 import game.ui.DropDownMenu;
 import graph.Vertex;
@@ -34,7 +34,7 @@ public class TradeView  {
 	private static Button pressed;
 	private static DropDownMenu<Player> players;
 
-	public static void drawer(int x, int y, Graphics2D g, Player currentPlayer, Vertex currentVertex, Layer layer){
+	public static void drawer(GameScene gameScene, int x, int y, Graphics2D g, Player currentPlayer, Vertex currentVertex, Layer layer){
 		g.setColor(Color.WHITE);
 		int width = 200;
 		g.fillRoundRect(x,y, width,height,10,10);
@@ -47,12 +47,12 @@ public class TradeView  {
 		if(cancel!=null)cancel.draw(g);
 		if (submit != null)submit.draw(g);
 		if(players!=null && players.getOption()!=null){
-			players.handleDraw(layer);
+			//players.handleDraw(layer);
 		}
 		if(firstTime) {
 			cancel=new Button(x+55,y+height-20,45,15,Color.white,Color.black,"Cancel");
 			submit=new Button(x+105,y+height-20,45,15,Color.white,Color.black,"Submit");
-			players= new DropDownMenu<Player>(new MenuView(),new ILocation(x+75,y+height-40),new LinkedList<Player>(){{
+			players= new DropDownMenu<Player>(gameScene,new ILocation(x+75,y+height-40),new LinkedList<Player>(){{
 				for(Vertex v:getGame().getGraphController().getGraph().getNeighbours(currentVertex)){
 					if(!v.getField().getPlayer().equals(currentPlayer)){
 						if(v.getField().getPlayer() instanceof KIFraction){
