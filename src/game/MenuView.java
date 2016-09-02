@@ -66,7 +66,6 @@ public class MenuView extends GameScene {
             x++;
 
         }
-	    TradeView.drawer(this, 600,200,g,null,null,layers.first());
     }
 
     @Override
