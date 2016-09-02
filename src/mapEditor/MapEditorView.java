@@ -15,6 +15,7 @@ import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
 import game.GraphDrawer;
+import game.Player;
 import game.sprite.Textures;
 import game.ui.*;
 import graph.Edge;
@@ -45,6 +46,7 @@ public class MapEditorView extends GameScene{
     private ArrayList<game.ui.EditText<String>> editTexts;
     private DropDownMenu<Resources> specialResources;
     private DropDownMenu<Integer> forest;
+    private DropDownMenu<Player> owner;
 
     public MapEditorView() {
         graph = GameOfGraphs.getGame().getGraphController().getGraph();
@@ -159,6 +161,17 @@ public class MapEditorView extends GameScene{
         forest.setBackground(Color.DARK_GRAY);
         forest.setForeground(Color.GREEN);
         E.getE().addComponent(forest);
+
+        owner = new DropDownMenu<Player>(this, new ILocation(375, 545), new LinkedList<Player>(){{
+            for (Player player:GameOfGraphs.getGame().getPlayers()){
+                add(player);
+            }
+        }}, (component, value) -> {
+            currentField.setPlayer(value);
+        });
+        owner.setBackground(Color.DARK_GRAY);
+        owner.setForeground(Color.BLACK);
+        E.getE().addComponent(owner);
     }
 
     private game.ui.Button<String> questionButton = new game.ui.Button<>(this, "?", new ILocation(1235, 10), (ui, value) -> {
@@ -180,7 +193,7 @@ public class MapEditorView extends GameScene{
         g.fillRect(0,500,1280,220);
         g.setColor(Color.BLACK);
         g.drawLine(0,500,1280,500);
-        g.drawLine(420, 500, 420, 720);
+        //g.drawLine(420, 500, 420, 720);
         g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
 
@@ -192,6 +205,7 @@ public class MapEditorView extends GameScene{
             }
             specialResources.setEnabled(false);
             forest.setEnabled(false);
+            owner.setEnabled(false);
 
         }else{
             //Zeichnen der Statistiken
@@ -206,13 +220,14 @@ public class MapEditorView extends GameScene{
             g.setColor(Color.GREEN);
             g.drawString(String.valueOf("FOREST: "), 320, 540);
             g.setColor(Color.BLACK);
-            g.drawString("OWNER: " + this.currentField.getPlayer().getName(), 20, 700);
+            g.drawString("OWNER: ", 320, 560);
 
             for (game.ui.EditText<String> text : editTexts){
                 text.setEnabled(true);
             }
             specialResources.setEnabled(true);
             forest.setEnabled(true);
+            owner.setEnabled(true);
 
             g.setColor(Color.LIGHT_GRAY);
 
@@ -274,6 +289,12 @@ public class MapEditorView extends GameScene{
                             leftMouse = true;
                             if (vertex != null) {
                                 currentField = vertex.getField();
+
+                                for(int i = 0; i < owner.getOptions().size(); i++){
+                                    if (currentField.getPlayer().getName().equals(owner.getOptions().get(i).getName())){
+                                        owner.setSelectedIndex(i);
+                                    }
+                                }
 
                                 forest.setSelectedIndex(currentField.getForestType()-1);
 

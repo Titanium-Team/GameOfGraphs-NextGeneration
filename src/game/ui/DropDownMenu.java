@@ -180,4 +180,8 @@ public class DropDownMenu<T> extends UIComponent<T> {
     public void setForeground(Color foreground) {
         this.foreground = foreground;
     }
+
+    public List<T> getOptions() {
+        return options;
+    }
 }
