@@ -126,7 +126,7 @@ public class SimulationController {
         if (currentPlayer == start.getField().getPlayer()) {
             List<Vertex> path = giveListOfVerticesToFollow(start, end);
             if (!isMovementPossible(path)) {
-                JOptionPane.showMessageDialog(null, "Das Zielfeld ist zuweit weg! Bitte wähle einen nähres Feld (unter 50 km)");
+                JOptionPane.showMessageDialog(null, "Das Zielfeld ist zuweit weg oder ungültig! Bitte wähle einen nähres Feld (unter 50 km)");
             } else {
                 if (path != null) {
                     path.toFirst();
@@ -192,8 +192,12 @@ public class SimulationController {
         double weight = 0.0;
         vertexList.toFirst();
         while (vertexList.hasAccess() && vertexList.getNext() != null){
-            // @TODO Keine Ahung was, aber anscheinend gibt getEdge unter bestimmten Umständen null zurück.
-            weight += graph.getEdge(vertexList.getContent(), vertexList.getNext()).getWeight();
+            Edge e = graph.getEdge(vertexList.getContent(), vertexList.getNext());
+            if (e != null){
+                weight += e.getWeight();
+            }else {
+                return false;
+            }
             if (weight > 50){
                 return false;
             }

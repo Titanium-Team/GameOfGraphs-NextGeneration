@@ -4,6 +4,7 @@ import field.resource.Resource;
 import game.Player;
 import graph.Vertex;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -23,7 +24,7 @@ public class KIFraction extends Player{
 
     public KIFraction(String name) {
         //super(name);
-        super(name, true);
+        super(name, true, Color.BLACK);
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
     }

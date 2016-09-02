@@ -8,12 +8,17 @@ public class EditText{
     private int width, height;
     private int x, y;
 
-    private String text,hint;
+    private String text, hint;
     private boolean onlyNumbers;
     private boolean dot;
 
     private double cursorBlink;
     private int cursor = 0;
+
+    private int number = -1;
+
+    private Color lineColor = Color.BLACK;
+    private Color textColor = Color.WHITE;
 
     public EditText(int width, int height, int x, int y, String text, boolean onlyNumbers, boolean dot) {
         this.width = width;
@@ -36,8 +41,19 @@ public class EditText{
 		this.hint=hint;
 	}
 
+    public EditText(int width, int height, int x, int y,String text, boolean onlyNumbers, boolean dot, int number) {
+        this.width = width;
+        this.height = height;
+        this.x = x;
+        this.y = y;
+        this.text = text;
+        this.onlyNumbers = onlyNumbers;
+        this.dot = dot;
+        this.number = number;
+    }
+
     public void drawer(Graphics2D g){
-	    g.setColor(Color.black);
+	    g.setColor(lineColor);
         g.drawRect(x, y, width, height);
         g.setClip(new Rectangle(x, y, width, height));
 		if(!text.isEmpty() || hint==null) {
@@ -51,11 +67,13 @@ public class EditText{
 				textWCursor = s1 + " " + s2;
 			}
 
+            g.setColor(textColor);
 			g.drawString(textWCursor, x + 5, y + 15);
 		}else{
 			g.setColor(Color.GRAY);
 			g.drawString(hint,x+5,y+15);
 		}
+        g.setClip(null);
     }
 
     public void update(InputEntry inputEntry, long l){
@@ -65,30 +83,32 @@ public class EditText{
             cursorBlink = 0;
         }
         inputEntry.getKeyEntries().forEach(keyEntry -> {
-            if (onlyNumbers){
-                if (Character.isDigit(keyEntry.getCharacter())){
-                    String s1 = text.substring(0, cursor);
-                    String s2 = text.substring(cursor, text.length());
-                    text = s1 + keyEntry.getCharacter() + s2;
+            if (number == -1 || text.length() < number) {
+                if (onlyNumbers) {
+                    if (Character.isDigit(keyEntry.getCharacter())) {
+                        String s1 = text.substring(0, cursor);
+                        String s2 = text.substring(cursor, text.length());
+                        text = s1 + keyEntry.getCharacter() + s2;
 
-                    cursor++;
+                        cursor++;
+                    }
+                } else {
+                    if (Character.isLetterOrDigit(keyEntry.getCharacter())) {
+                        String s1 = text.substring(0, cursor);
+                        String s2 = text.substring(cursor, text.length());
+                        text = s1 + keyEntry.getCharacter() + s2;
+
+                        cursor++;
+                    }
                 }
-            }else {
-                if (Character.isLetterOrDigit(keyEntry.getCharacter())) {
-                    String s1 = text.substring(0, cursor);
-                    String s2 = text.substring(cursor, text.length());
-                    text = s1 + keyEntry.getCharacter() + s2;
+                if (dot && !text.contains(".")) {
+                    if (keyEntry.getCharacter() == '.') {
+                        String s1 = text.substring(0, cursor);
+                        String s2 = text.substring(cursor, text.length());
+                        text = s1 + keyEntry.getCharacter() + s2;
 
-                    cursor++;
-                }
-            }
-            if (dot && !text.contains(".")){
-                if (keyEntry.getCharacter() == '.'){
-                    String s1 = text.substring(0, cursor);
-                    String s2 = text.substring(cursor, text.length());
-                    text = s1 + keyEntry.getCharacter() + s2;
-
-                    cursor++;
+                        cursor++;
+                    }
                 }
             }
 
@@ -142,4 +162,12 @@ public class EditText{
 	public void setText(String text) {
 		this.text = text;
 	}
+
+    public void setTextColor(Color textColor) {
+        this.textColor = textColor;
+    }
+
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
+    }
 }
