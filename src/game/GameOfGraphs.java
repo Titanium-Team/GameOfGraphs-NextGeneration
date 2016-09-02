@@ -23,6 +23,8 @@ public class GameOfGraphs {
     private TextBuilder textBuilder = new TextBuilder();
     private LoadingManager loadingManager = new LoadingManager();
 
+    private boolean isFirstTurn = true;
+
     private EventManager eventManager;
     private FieldController fieldController;
     private GraphController graphController;
@@ -65,6 +67,7 @@ public class GameOfGraphs {
 
         if(this.currentPlayer >= this.players.size()) {
             this.currentPlayer = 0;
+            this.isFirstTurn = false;
         }
 
         while(!(this.getCurrentPlayer().isActive())) {
@@ -119,5 +122,7 @@ public class GameOfGraphs {
         return this.players;
     }
 
-
+    public boolean isFirstTurn() {
+        return isFirstTurn;
+    }
 }

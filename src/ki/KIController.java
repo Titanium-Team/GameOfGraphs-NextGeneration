@@ -170,7 +170,7 @@ public class KIController {
 					for (Vertex v : fields) {
 						if (v.getField().getResources().get(Resources.FOOD) < v.getField().getResources().get(POPULATION) || current.getGoals().containsKey(v) && current.getGoals().get(v).containsKey(FOOD)) {
 							if (v.getField().getBuildings().get(Buildings.FARM) > 0) {
-								this.buildIfBuildable(Buildings.BUTCHER, v);
+								this.buildIfBuildable(Buildings.WOODCUTTER, v);
 								this.buildIfBuildable(Buildings.WINDMILL, v);
 							} else {
 								this.buildIfBuildable(Buildings.FARM, v);
@@ -416,7 +416,7 @@ public class KIController {
 
 	private void buildIfBuildable(Buildings b,Vertex v){
 		if(Buildings.isBuildable(b,v.getField())){
-			Buildings.build(b,v.getField());
+			Buildings.build(b,v.getField(), false);
 		}else{
 			Recipe recipe=b.getRecipe();
 			for(RecipeResource rRes:recipe.getItemIngredients()){

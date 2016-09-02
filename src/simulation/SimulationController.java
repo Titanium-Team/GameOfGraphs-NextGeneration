@@ -332,7 +332,8 @@ public class SimulationController {
     public void fight(Vertex origin, Vertex vertex, ArrayList<Unit> attackingUnits){
 
         if(attackingUnits.isEmpty()) {
-            throw new IllegalArgumentException("WHY DO YOU ATTACK WITH NO UNITS AT ALL. THAT IS NOT HOW IT WORKS. DAMIT IT A-ARON.");
+            //throw new IllegalArgumentException("WHY DO YOU ATTACK WITH NO UNITS AT ALL. THAT IS NOT HOW IT WORKS. DAMIT IT A-ARON.");
+            return;
         }
 
         ArrayList<Unit> defendingUnits = vertex.getField().getUnits();

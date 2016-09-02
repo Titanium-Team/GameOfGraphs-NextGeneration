@@ -9,6 +9,7 @@ import field.buildings.Building;
 import field.buildings.Buildings;
 import field.recipe.RecipeResource;
 import field.resource.Resource;
+import field.resource.Resources;
 import game.GameOfGraphs;
 import game.GraphDrawer;
 import game.ui.Button;
@@ -16,6 +17,8 @@ import game.ui.DropDownMenu;
 import graph.Graph;
 import graph.Vertex;
 import ki.KIFraction;
+
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -45,18 +48,67 @@ public class FieldView extends GameScene{
 
     private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(t, value) -> {
 
-        if( Buildings.isBuildable(buildingDropDownMenu.getOption(), currentField)){
+        if( Buildings.isBuildable(buildingDropDownMenu.getOption(), this.currentField)){
+            Buildings.build(buildingDropDownMenu.getOption(), this.currentField, false);
+        }else {
+            JOptionPane.showMessageDialog(null, "You can't build this, because: \n" +
+                    "-you need at least 1 citizen, or \n" +
+                    "-you don't have enough resources, or \n" +
+                    "-you have reached the maxmium amount of this type of buildings.");
+        }
+    });
 
-            Buildings.build(buildingDropDownMenu.getOption(), currentField);
+    private Button<String> freeBuildButton = new Button<String>(this, "FreeBuild", new ILocation(580, 510),(t, value) -> {
+
+        Buildings.build(buildingDropDownMenu.getOption(), this.currentField, true);
+        t.setEnabled(false);
+
+    });
+
+    private Button<String> slaveMarketButton = new Button<String>(this, "Trade", new ILocation(720, 510),(t, value) -> {
+
+        if(this.currentField.getResources().get(Resources.IRON) > 1){
+            this.currentField.getResources().put(Resources.IRON, this.currentField.getResources().get(Resources.IRON) -2);
+            this.currentField.getResources().put(Resources.POPULATION, this.currentField.getResources().get(Resources.POPULATION) +1);
+        } else {
+            JOptionPane.showMessageDialog(null, "Trade not possible.");
+
         }
 
     });
 
-    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(t, value) -> {
+    private DropDownMenu<Resource> resourceDropDownMenu = new DropDownMenu<Resource>(this, new ILocation(820, 540), new LinkedList<Resource>() {{
+        for( Resource resource : Resources.values()){
+            if(resource != Resources.POPULATION && resource != Resources.GOLD) {
+                this.add(resource);
+            }
+        }
+    }}, (t, value) -> {});
 
+    private Button<String> marketPlaceButton = new Button<String>(this, "Trade", new ILocation(720, 540),(t, value) -> {
+
+        if(this.currentField.getResources().get(Resources.GOLD) > 0){
+            this.currentField.getResources().put(Resources.IRON, this.currentField.getResources().get(Resources.IRON) -1);
+            this.currentField.getResources().put(resourceDropDownMenu.getOption(),this.currentField.getResources().get(resourceDropDownMenu.getOption()) +1);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Trade not possible.");
+
+        }
+
+    });
+
+
+
+    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(t, value) -> {
         this.currentField = null;
         this.currentVertex = null;
         GameOfGraphs.getGame().nextTurn();
+        if (GameOfGraphs.getGame().isFirstTurn()) {
+            this.freeBuildButton.setEnabled(true);
+        }else {
+            this.freeBuildButton.setEnabled(false);
+        }
 
     });
 
@@ -64,9 +116,16 @@ public class FieldView extends GameScene{
 
         this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
+        E.getE().addComponent(unitDropDownMenu);
+
         E.getE().addComponent(buildingDropDownMenu);
         E.getE().addComponent(buildButton);
-        E.getE().addComponent(unitDropDownMenu);
+        E.getE().addComponent(freeBuildButton);
+
+        E.getE().addComponent(slaveMarketButton);
+        E.getE().addComponent(marketPlaceButton);
+        E.getE().addComponent(resourceDropDownMenu);
+
         E.getE().addComponent(nextTurnButton);
 
     }
@@ -86,15 +145,22 @@ public class FieldView extends GameScene{
         g.setColor(Color.BLACK);
         g.drawLine(0,500,1280,500);
         g.drawLine(420, 500, 420, 720);
+        g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
 
         if(currentField == null) {
-            g.drawString("Kein Field ausgewählt", 620, 600);
+
+            g.drawString("No field selected.", 520, 600);
 
             this.buildingDropDownMenu.setEnabled(false);
             this.buildButton.setEnabled(false);
             this.unitDropDownMenu.setEnabled(false);
             this.nextTurnButton.setEnabled(false);
+            this.marketPlaceButton.setEnabled(false);
+            this.resourceDropDownMenu.setEnabled(false);
+            this.slaveMarketButton.setEnabled(false);
+            this.freeBuildButton.setEnabled(false);
+
         }else{
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
@@ -116,6 +182,18 @@ public class FieldView extends GameScene{
             this.buildButton.setEnabled(active);
             this.unitDropDownMenu.setEnabled(active);
             this.nextTurnButton.setEnabled(active);
+            this.freeBuildButton.setEnabled(active);
+
+            if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
+                this.slaveMarketButton.setEnabled(true);
+                g.drawString("2x Iron -> 1 Person", 760, 525);
+            }
+
+            if(this.currentField.getBuildings().get(Buildings.MARKETPLACE) > 0) {
+                this.marketPlaceButton.setEnabled(true);
+                this.resourceDropDownMenu.setEnabled(true);
+                g.drawString("1x Gold -> ", 760, 555);
+            }
 
             g.setColor(Color.BLACK);
 

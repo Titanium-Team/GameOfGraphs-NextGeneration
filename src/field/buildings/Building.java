@@ -8,9 +8,11 @@ import field.recipe.Recipe;
  */
 public interface Building {
 
+    /**
+     * Sorgt für die Produktion jedes Gebäudes
+     * @param field
+     */
     void production(Field field);
-
-    boolean isMoveable();
 
     Recipe getRecipe();
 
