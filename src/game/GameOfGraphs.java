@@ -78,8 +78,7 @@ public class GameOfGraphs {
         if(this.currentPlayer >= this.players.size()) {
             this.currentPlayer = 0;
         }
-
-        kiController.run();
+	    kiController.run();
         simulationController.run(this.getCurrentPlayer());
 
     }

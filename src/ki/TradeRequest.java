@@ -6,6 +6,7 @@ import graph.Vertex;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static game.GameOfGraphs.getGame;
 
@@ -97,5 +98,29 @@ public class TradeRequest extends Request {
 		}
 		dep=new Depot(result,temp);
 		return dep;
+	}
+
+	@Override
+	public String toString() {
+		String result =getParent().toString() + " wants to trade with you. He offers you ";
+		Set<Map.Entry<Resource,Integer>> set=offeredResources.entrySet();
+		for (Map.Entry<Resource, Integer>e:set){
+			result+=e.getValue() + e.getKey().toString();
+			result+=",";
+		}
+		if(result.lastIndexOf(',')==result.length()-1){
+			result=result.substring(0,result.length()-2) +" ";
+		}
+		result+="and wants ";
+		set=requestedResources.entrySet();
+		for (Map.Entry<Resource, Integer>e:set){
+			result+=e.getValue() + e.getKey().toString();
+			result+=",";
+		}
+		if(result.lastIndexOf(',')==result.length()-1){
+			result=result.substring(0,result.length()-2) +" ";
+		}
+		result+="in return.";
+		return result;
 	}
 }

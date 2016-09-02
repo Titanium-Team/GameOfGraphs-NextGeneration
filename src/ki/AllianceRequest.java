@@ -26,4 +26,8 @@ public class AllianceRequest extends Request {
 
 	}
 
+	@Override
+	public String toString() {
+		return getParent().toString() + " wants to be your Ally.";
+	}
 }

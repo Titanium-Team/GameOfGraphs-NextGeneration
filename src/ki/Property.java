@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public enum Property {
 
-    PEACEFUL,AGGRESSIVE,ECONOMIC,GREEDY,DIPLOMATIC,STRATEGIC,DISTRUSTFUL;
+    PEACEFUL,AGGRESSIVE,ECONOMIC,DIPLOMATIC,STRATEGIC,DISTRUSTFUL;
 
 	/**
      * gibt die Liste der noch hinfufügbaren eigenschaften zurück
