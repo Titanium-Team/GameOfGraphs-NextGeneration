@@ -221,35 +221,35 @@ public class GraphDrawer {
         vertical.update(inputEntry, l);
 
         inputEntry.getMouseWheelEntries().forEach(mouseWheelEntry -> {
-            double zoomFactor = - SCALE_STEP*mouseWheelEntry.getPreciseWheelRotation()*zoom;
+
+            double zoomFactor = -SCALE_STEP * mouseWheelEntry.getPreciseWheelRotation() * zoom;
             zoom = Math.abs(zoom + zoomFactor);
 
-            Dimension d = new Dimension((int)(graph.getWidth()*zoom), (int)(graph.getHeight()*zoom));
+            Dimension d = new Dimension((int) (graph.getWidth() * zoom), (int) (graph.getHeight() * zoom));
 
-
-            if (d.getWidth() <= 1280-25) {
-                d.setSize(1280-25, d.getHeight());
-                zoom = d.getWidth()/graph.getWidth();
+            if (d.getWidth() <= 1280 - 25) {
+                d.setSize(1280 - 25, d.getHeight());
+                zoom = d.getWidth() / graph.getWidth();
             }
 
-            if (d.getHeight() <= 500-25) {
-                d.setSize(d.getWidth(), 500-25);
-                zoom = d.getHeight()/graph.getHeight();
+            if (d.getHeight() <= 500 - 25) {
+                d.setSize(d.getWidth(), 500 - 25);
+                zoom = d.getHeight() / graph.getHeight();
             }
 
-
-
-            scrollX = (mouseWheelEntry.getPoint().getX() - horizontal.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getX() - horizontal.getValue()*2);
-            scrollY = (mouseWheelEntry.getPoint().getY() - vertical.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getY() - vertical.getValue()*2);
-
+            // scroll
+            scrollX = (mouseWheelEntry.getPoint().getX() - horizontal.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getX() - horizontal.getValue() * 2);
+            scrollY = (mouseWheelEntry.getPoint().getY() - vertical.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getY() - vertical.getValue() * 2);
            // horizontal.setEnd((int) (horizontal.getEnd() * SCALE_STEP));
           //  vertical.setEnd((int) (vertical.getEnd()/previousZoom*zoom));
 
+            // zoom
             horizontal.setEnd((int) (d.getWidth()));
             vertical.setEnd(3000);
 
             previousZoom = zoom;
 
+            // scroll
             horizontal.setValue((int) scrollX);
             vertical.setValue((int) scrollY);
 

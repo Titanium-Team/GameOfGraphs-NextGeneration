@@ -846,6 +846,26 @@ public enum Textures implements Texture {
             return this.image;
         }
 
+    },
+    HELP_POPUP {
+
+        private BufferedImage image;
+
+        @Override
+        public String getName() {
+            return "Help Pop-Up";
+        }
+
+        @Override
+        public void load() {
+            this.image = Textures.loadImage("gfx/help.jpg");
+        }
+
+        @Override
+        public BufferedImage getImage() {
+            return this.image;
+        }
+
     };
 
     private static BufferedImage loadImage(String path) {
