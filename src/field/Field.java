@@ -20,18 +20,23 @@ public class Field {
 
     private ArrayList<Unit> units;
 
+    //Vorfaktoren
     private int fertility;
     private int mountains;
+    //Specialresource
     private Resource localResource;
 
     private  int forestType;
 
+    //Alle Resouorcen eines Fields werden in einer Map gemanaged
     @JsonIgnore
     private Map<Resource, Integer> resources;
 
+    //Alle Buildings eines Fields werden in einer Map gemanaged
     @JsonIgnore
     private Map<Building, Integer> buildings;
 
+    //Der Player dem das Field gehört
     private Player player;
 
     @JsonCreator
@@ -77,10 +82,18 @@ public class Field {
 
     }
 
+    /**
+     * Gibt die Untis zurück, die auf dem Feld stehen.
+     * @return
+     */
     public ArrayList<Unit> getUnits() {
         return units;
     }
 
+    /**
+     * Gibt die Untis zurück, die auf dem Feld stehen und sich noch nicht bewegt haben.
+     * @return
+     */
     public ArrayList<Unit> getUnmovedUnits(){
 
         ArrayList<Unit> unmovedUnits = new ArrayList<>();

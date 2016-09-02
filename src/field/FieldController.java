@@ -17,6 +17,12 @@ public class FieldController {
 
     private final static Random random = new Random();
 
+    /**
+     * Erstellt ein Field, nach gewünschten Eigenschaften
+     * @param player Spieler dem das Feld gehört.
+     * @param start Entscheidet ob Starttruppen sich auf dem Feld befinden.
+     * @return
+     */
     public Field createField(Player player, boolean start){
 
         int fertility = random.nextInt(5)+1;

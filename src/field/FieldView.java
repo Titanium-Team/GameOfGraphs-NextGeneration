@@ -30,23 +30,28 @@ import java.util.Map;
  */
 public class FieldView extends GameScene{
 
+    //Aktueller Vertex und Field
     private Vertex currentVertex = null;
     private Field currentField = null;
+
     private Graph graph;
+    //Boolean zum Überprüfen, ob gerade Truppen bewegt werden
     private boolean move = false;
+    //Boolean bei FreeBuild
     private boolean free = true;
     private List<Vertex> marked = new ArrayList<>();
+    //Ein Menu mit Auswahl aller Buildings
     private DropDownMenu<Building> buildingDropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
         for( Building building : Buildings.values()){
             this.add(building);
         }
     }}, (t, value) -> {});
 
+    //Ein Menu zur Auswahl der Anzahl an Truppen
     private DropDownMenu<Integer> unitDropDownMenu = new DropDownMenu<Integer>(this, new ILocation(220, 530), new LinkedList<Integer>() {{
     }}, (t, value) -> {});
 
-
-
+    //Button zum bauen von Gebäuden
     private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(t, value) -> {
 
         if( Buildings.isBuildable(buildingDropDownMenu.getOption(), this.currentField)){
@@ -59,6 +64,7 @@ public class FieldView extends GameScene{
         }
     });
 
+    //Button zum einmaligen "frei" bauen im ersten Zug
     private Button<String> freeBuildButton = new Button<String>(this, "FreeBuild", new ILocation(580, 510),(t, value) -> {
 
         Buildings.build(buildingDropDownMenu.getOption(), this.currentField, true);
@@ -66,6 +72,7 @@ public class FieldView extends GameScene{
 
     });
 
+    //Handelsbutton, welche freigeschaltet werden, nachdem man das zugehörige Gebäude gebaut hat.
     private Button<String> slaveMarketButton = new Button<String>(this, "Trade", new ILocation(830, 510),(t, value) -> {
 
         if(this.currentField.getResources().get(Resources.IRON) > 1){
@@ -77,7 +84,6 @@ public class FieldView extends GameScene{
         }
 
     });
-
     private DropDownMenu<Resource> resourceDropDownMenu = new DropDownMenu<Resource>(this, new ILocation(780, 540), new LinkedList<Resource>() {{
         for( Resource resource : Resources.values()){
             if(resource != Resources.POPULATION && resource != Resources.GOLD) {
@@ -85,7 +91,6 @@ public class FieldView extends GameScene{
             }
         }
     }}, (t, value) -> {});
-
     private Button<String> marketPlaceButton = new Button<String>(this, "Trade", new ILocation(830, 540),(t, value) -> {
 
         if(this.currentField.getResources().get(Resources.GOLD) > 0){
@@ -98,7 +103,6 @@ public class FieldView extends GameScene{
         }
 
     });
-
     private Button<String> bazaarButton1 = new Button<String>(this, "Trade", new ILocation(830, 570),(t, value) -> {
 
         if(this.currentField.getResources().get(Resources.FOOD) > 1){
@@ -111,7 +115,6 @@ public class FieldView extends GameScene{
         }
 
     });
-
     private Button<String> bazaarButton2 = new Button<String>(this, "Trade", new ILocation(830, 600),(t, value) -> {
 
         if(this.currentField.getResources().get(Resources.FOOD) > 3){
@@ -126,7 +129,7 @@ public class FieldView extends GameScene{
     });
 
 
-
+    //Button zum einleiten des nächsten Zuges
     private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1200, 700),(t, value) -> {
         this.currentField = null;
         this.currentVertex = null;
@@ -137,16 +140,17 @@ public class FieldView extends GameScene{
 
     });
 
+    /
     public FieldView(){
 
         this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
         E.getE().addComponent(unitDropDownMenu);
-
+        //Build
         E.getE().addComponent(buildingDropDownMenu);
         E.getE().addComponent(buildButton);
         E.getE().addComponent(freeBuildButton);
-
+        //Trade
         E.getE().addComponent(slaveMarketButton);
         E.getE().addComponent(marketPlaceButton);
         E.getE().addComponent(resourceDropDownMenu);
@@ -162,7 +166,7 @@ public class FieldView extends GameScene{
 
         Graphics2D g = layers.first().getGraphics2D();
 
-
+        //Zeichnen des Graphen
         GraphDrawer.drawer(g,graph,"Field");
 
         g.drawString("Player: " + GameOfGraphs.getGame().getCurrentPlayer().getName(), 50, 50);
@@ -191,6 +195,7 @@ public class FieldView extends GameScene{
             this.bazaarButton2.setEnabled(false);
 
         }else{
+            //Zeichnen der Statistiken
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
             g.setColor(Color.LIGHT_GRAY);
@@ -206,6 +211,7 @@ public class FieldView extends GameScene{
 
             g.setColor(Color.LIGHT_GRAY);
 
+            //Zeichnen der UIComponents
             boolean active = GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer();
             this.buildingDropDownMenu.setEnabled(active);
             this.buildButton.setEnabled(active);
@@ -218,7 +224,7 @@ public class FieldView extends GameScene{
             this.bazaarButton2.setEnabled(false);
             this.freeBuildButton.setEnabled(active && GameOfGraphs.getGame().isFirstTurn() && this.free);
 
-
+            //Zeichnen der Trade-Button
             if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
                 this.slaveMarketButton.setEnabled(true);
                 g.drawString("2x Iron -> 1 Person", 720, 525);
@@ -239,6 +245,7 @@ public class FieldView extends GameScene{
 
             g.setColor(Color.BLACK);
 
+            //Zeichnen der Resourcen und Gebäude
             Map<Resource, Integer> resources = currentField.getResources();
             Map<Building, Integer> buildings = currentField.getBuildings();
             List<RecipeResource> recipeList = buildingDropDownMenu.getOption().getRecipe().getItemIngredients();
@@ -282,8 +289,9 @@ public class FieldView extends GameScene{
 
         GraphDrawer.update(inputEntry,l);
 
+        //MouseListener
         inputEntry.getMouseEntries().forEach(entry -> {
-
+            
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
                 Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if (vertex != null && (vertex.getField().getPlayer()instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer() == vertex.getField().getPlayer())) {

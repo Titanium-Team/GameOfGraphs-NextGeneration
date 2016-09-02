@@ -194,6 +194,12 @@ public enum Buildings implements Building {
         }
     };
 
+    /**
+     * Die Methode überprüft, ob das Gebäude auf dem angegebenen Feld gebaut werden kann.
+     * @param building
+     * @param field
+     * @return
+     */
     public static boolean isBuildable(Building building, Field field){
 
         Recipe recipe = building.getRecipe();
@@ -222,6 +228,15 @@ public enum Buildings implements Building {
         return true;
     }
 
+    /**
+     * Die Methode kümmert sich darum, dass die expliziten Resourcen von den Gebäuden produziert werden.
+     * @param field
+     * @param resource
+     * @param building
+     * @param condition
+     * @param amount
+     */
+
     public static void productionResource(Field field, Resources resource, Building building, int condition, int amount){
 
         if(field.getBuildings().get(building) >= condition){
@@ -237,6 +252,12 @@ public enum Buildings implements Building {
 
     }
 
+    /**
+     * Gebäude werden auf dem Feld gebaut.
+     * @param building
+     * @param field
+     * @param freebuild
+     */
     public static void build(Building building, Field field, boolean freebuild){
 
         if(freebuild){

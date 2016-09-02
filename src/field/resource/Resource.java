@@ -5,8 +5,16 @@ package field.resource;
  */
 public interface Resource {
 
+    /**
+     * Gibt zurück, ob die Resource ein Mineral ist oder nicht.
+     * @return
+     */
     boolean isMineral();
 
+    /**
+     * Gibt den Namen zurück.
+     * @return
+     */
     String getName();
 
 }
