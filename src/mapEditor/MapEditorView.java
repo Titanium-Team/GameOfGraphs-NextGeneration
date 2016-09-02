@@ -43,6 +43,8 @@ public class MapEditorView extends GameScene{
     private boolean question = false;
 
     private ArrayList<game.ui.EditText<String>> editTexts;
+    private DropDownMenu<Resources> specialResources;
+    private DropDownMenu<Integer> forest;
 
     public MapEditorView() {
         graph = GameOfGraphs.getGame().getGraphController().getGraph();
@@ -122,15 +124,41 @@ public class MapEditorView extends GameScene{
         for (int i = 0; i < editTexts.size(); i++){
             if (i == 0){
                 editTexts.get(i).setTextColor(Color.ORANGE);
+                editTexts.get(i).setLineColor(Color.ORANGE);
             }else if (i == 2){
                 editTexts.get(i).setTextColor(Color.RED);
+                editTexts.get(i).setLineColor(Color.RED);
             }else {
                 editTexts.get(i).setTextColor(Color.LIGHT_GRAY);
+                editTexts.get(i).setLineColor(Color.LIGHT_GRAY);
             }
 
-            editTexts.get(i).setLineColor(Color.DARK_GRAY);
             E.getE().addComponent(editTexts.get(i));
         }
+
+        specialResources = new DropDownMenu<Resources>(this, new ILocation(375, 505), new LinkedList<Resources>(){{
+            for(Resources resources : Resources.values()){
+                if (resources.getName().equals("Iron") || resources.getName().equals("Gold") || resources.getName().equals("Wheat") || resources.getName().equals("Tree")) {
+                    this.add(resources);
+                }
+            }
+        }}, (component, value) -> {
+            currentField.setLocalResource(value);
+        });
+        specialResources.setBackground(Color.DARK_GRAY);
+        specialResources.setForeground(Color.BLUE);
+        E.getE().addComponent(specialResources);
+
+        forest = new DropDownMenu<Integer>(this, new ILocation(375, 525), new LinkedList<Integer>(){{
+            add(1);
+            add(2);
+            add(3);
+        }}, (component, value) -> {
+            currentField.setForestType(value);
+        });
+        forest.setBackground(Color.DARK_GRAY);
+        forest.setForeground(Color.GREEN);
+        E.getE().addComponent(forest);
     }
 
     private game.ui.Button<String> questionButton = new game.ui.Button<>(this, "?", new ILocation(1235, 10), (ui, value) -> {
@@ -162,6 +190,9 @@ public class MapEditorView extends GameScene{
             for (game.ui.EditText<String> text : editTexts){
                 text.setEnabled(false);
             }
+            specialResources.setEnabled(false);
+            forest.setEnabled(false);
+
         }else{
             //Zeichnen der Statistiken
             g.setColor(Color.ORANGE);
@@ -171,15 +202,17 @@ public class MapEditorView extends GameScene{
             g.setColor(Color.RED);
             g.drawString("UNITS: ", 220, 520);
             g.setColor(Color.BLUE);
-            g.drawString(String.valueOf("SPECIAL: ") + currentField.getLocalResource().getName(), 320, 520);
+            g.drawString(String.valueOf("SPECIAL: "), 320, 520);
             g.setColor(Color.GREEN);
-            g.drawString(String.valueOf("FOREST: ") + currentField.getForestType(), 320, 540);
+            g.drawString(String.valueOf("FOREST: "), 320, 540);
             g.setColor(Color.BLACK);
             g.drawString("OWNER: " + this.currentField.getPlayer().getName(), 20, 700);
 
             for (game.ui.EditText<String> text : editTexts){
                 text.setEnabled(true);
             }
+            specialResources.setEnabled(true);
+            forest.setEnabled(true);
 
             g.setColor(Color.LIGHT_GRAY);
 
@@ -241,6 +274,23 @@ public class MapEditorView extends GameScene{
                             leftMouse = true;
                             if (vertex != null) {
                                 currentField = vertex.getField();
+
+                                forest.setSelectedIndex(currentField.getForestType()-1);
+
+                                switch (currentField.getLocalResource().getName()){
+                                    case "Wheat":
+                                        specialResources.setSelectedIndex(0);
+                                        break;
+                                    case "Tree":
+                                        specialResources.setSelectedIndex(1);
+                                        break;
+                                    case "Iron":
+                                        specialResources.setSelectedIndex(2);
+                                        break;
+                                    case "Gold":
+                                        specialResources.setSelectedIndex(3);
+                                        break;
+                                }
 
                                 for (int i = 0; i < editTexts.size(); i++){
                                     switch (i){

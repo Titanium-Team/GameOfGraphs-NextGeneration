@@ -27,6 +27,9 @@ public class DropDownMenu<T> extends UIComponent<T> {
     private int selectedIndex = 0;
     private boolean open = false;
 
+    private Color background = null;
+    private Color foreground = null;
+
     public DropDownMenu(GameScene gameScene, ILocation location, LinkedList<T> options, Trigger<T> trigger) {
         super(gameScene, trigger);
         this.location = location;
@@ -127,8 +130,16 @@ public class DropDownMenu<T> extends UIComponent<T> {
 
         }
 
-
         if(this.open) {
+
+            if (background != null){
+                g.setColor(background);
+                g.fillRect(location.getX(), location.getY(), openBoxBoundings.getWidth(), openBoxBoundings.getHeight());
+            }
+
+            if (foreground != null){
+                g.setColor(foreground);
+            }
 
             g.drawRect(location.getX(), location.getY(), this.openBoxBoundings.getWidth(), this.openBoxBoundings.getHeight());
 
@@ -142,6 +153,15 @@ public class DropDownMenu<T> extends UIComponent<T> {
 
         } else if(!(this.options.isEmpty())) {
 
+            if (background != null){
+                g.setColor(background);
+                g.fillRect(location.getX(), location.getY(), maxWidth + 4, height + 4);
+            }
+
+            if (foreground != null){
+                g.setColor(foreground);
+            }
+
             g.drawRect(location.getX(), location.getY(), maxWidth + 4, height + 4);
             g.drawString(String.valueOf(this.options.get(selectedIndex)), location.getX() + 2, (location.getY() + height));
 
@@ -153,4 +173,11 @@ public class DropDownMenu<T> extends UIComponent<T> {
         return this.getGameScene().isActive() && this.isEnabled();
     }
 
+    public void setBackground(Color background) {
+        this.background = background;
+    }
+
+    public void setForeground(Color foreground) {
+        this.foreground = foreground;
+    }
 }
