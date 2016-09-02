@@ -17,6 +17,7 @@ import game.ui.Button;
 import game.ui.DropDownMenu;
 import graph.Graph;
 import graph.Vertex;
+import ki.AllianceRequest;
 import ki.KIFraction;
 
 import javax.swing.*;
@@ -111,6 +112,10 @@ public class FieldView extends GameScene{
 
     });
 
+    private Button<String> allianceButton = new Button<String>(this,"Request Alliance",new ILocation(900,570),(t,value)->{
+        this.currentField.getPlayer().addRequest(new AllianceRequest(GameOfGraphs.getGame().getCurrentPlayer(),currentField.getPlayer()));
+    });
+
     private Button<String> bazaarButton1 = new Button<String>(this, "Trade", new ILocation(830, 570),(t, value) -> {
 
         if(this.currentField.getResources().get(Resources.FOOD) > 1){
@@ -163,6 +168,8 @@ public class FieldView extends GameScene{
         E.getE().addComponent(resourceDropDownMenu);
         E.getE().addComponent(bazaarButton1);
         E.getE().addComponent(bazaarButton2);
+	    //Alliance
+	    E.getE().addComponent(allianceButton);
 
         E.getE().addComponent(nextTurnButton);
 
@@ -203,6 +210,7 @@ public class FieldView extends GameScene{
             this.freeBuildButton.setEnabled(false);
             this.bazaarButton1.setEnabled(false);
             this.bazaarButton2.setEnabled(false);
+	        this.allianceButton.setEnabled(false);
 
         }else{
             //Zeichnen der Statistiken
@@ -233,6 +241,7 @@ public class FieldView extends GameScene{
             this.bazaarButton1.setEnabled(false);
             this.bazaarButton2.setEnabled(false);
             this.freeBuildButton.setEnabled(active && GameOfGraphs.getGame().isFirstTurn() && this.free);
+	        this.allianceButton.setEnabled(!active);
 
             //Zeichnen der Trade-Button
             if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {

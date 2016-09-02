@@ -5,6 +5,7 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
+import de.SweetCode.e.rendering.layers.Layers;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.Player;
@@ -33,8 +34,12 @@ public class TradeView  {
 	private static Button cancel,submit;
 	private static Button pressed;
 	private static DropDownMenu<Player> players;
+	private static Player currentPlayer;
+	private static Vertex currentVertex;
 
-	public static void drawer(GameScene gameScene, int x, int y, Graphics2D g, Player currentPlayer, Vertex currentVertex, Layer layer){
+	public static void drawer(GameScene gameScene, int x, int y, Graphics2D g, Player currentPlayer, Vertex currentVertex, Layers layers){
+		TradeView.currentPlayer=currentPlayer;
+		TradeView.currentVertex=currentVertex;
 		g.setColor(Color.WHITE);
 		int width = 200;
 		g.fillRoundRect(x,y, width,height,10,10);
@@ -47,11 +52,8 @@ public class TradeView  {
 		if(cancel!=null)cancel.draw(g);
 		if (submit != null)submit.draw(g);
 		if(players!=null && players.getOption()!=null){
-			//players.handleDraw(layer);
-		}
-		if(firstTime) {
-			cancel=new Button(x+55,y+height-20,45,15,Color.white,Color.black,"Cancel");
-			submit=new Button(x+105,y+height-20,45,15,Color.white,Color.black,"Submit");
+			players.render(layers);
+		}else{
 			players= new DropDownMenu<Player>(gameScene,new ILocation(x+75,y+height-40),new LinkedList<Player>(){{
 				for(Vertex v:getGame().getGraphController().getGraph().getNeighbours(currentVertex)){
 					if(!v.getField().getPlayer().equals(currentPlayer)){
@@ -66,6 +68,10 @@ public class TradeView  {
 				}
 			}},(t, value)->{});
 			E.getE().addComponent(players);
+		}
+		if(firstTime) {
+			cancel=new Button(x+55,y+height-20,45,15,Color.white,Color.black,"Cancel");
+			submit=new Button(x+105,y+height-20,45,15,Color.white,Color.black,"Submit");
 			for (int i = 0; i < Resources.values().length; i++) {
 				g.setColor(Color.BLACK);
 				g.drawString(Resources.values()[i].getName() + ":", x + 10, y + 50 * i + 60);
@@ -149,7 +155,10 @@ public class TradeView  {
 					t1.setText("");
 					t2.setText("");
 				}
-
+				Player p= players.getOption();
+				TradeRequest tr=new TradeRequest(currentPlayer,offered,wanted,currentVertex,p);
+				p.addRequest(tr);
+				System.out.println(tr);
 			}catch(NumberFormatException n){
 				System.out.println("WTF?!");
 			}

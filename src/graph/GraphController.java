@@ -25,20 +25,25 @@ public class GraphController {
         Vertex a = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true));
         Vertex c = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(1),true));
 
-        KIFraction fraction1 = new KIFraction("KI 1");
+        KIFraction fraction1 = new KIFraction("independent");
         Vertex b = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction1 ,true));
-        KIFraction fraction2 = new KIFraction("KI 1");
+        KIFraction fraction2 = new KIFraction("KIplayer 1");
         Vertex d = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
+        Vertex e = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
 
         graph.addVertex(a);
         graph.addVertex(b);
         graph.addVertex(c);
         graph.addVertex(d);
+        graph.addVertex(e);
 
         graph.addEdge(new Edge(new String[] { a.getID(), b.getID() }, 50));
         graph.addEdge(new Edge(new String[] { b.getID(), c.getID() }, 50));
         graph.addEdge(new Edge(new String[] { c.getID(), d.getID() }, 50));
         graph.addEdge(new Edge(new String[] { d.getID(), a.getID() }, 50));
+        graph.addEdge(new Edge(new String[]{e.getID(),a.getID()},38));
+        graph.addEdge(new Edge(new String[]{e.getID(),c.getID()},38));
+
 
         GameOfGraphs.getGame().getPlayers().add(fraction1);
         GameOfGraphs.getGame().getPlayers().add(fraction2);

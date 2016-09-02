@@ -371,17 +371,12 @@ public class SimulationController {
 
             attacker.getNotifications().add(new AttackNotification(defender, vertex, false, true));
             defender.getNotifications().add(new AttackNotification(attacker, vertex, true, false));
-            //vertex.getField().getPlayer().getNotifications().add(new AttackNotification(defendingUnits.get(0).getPlayer(),vertex,false,true));
-	        //defendingUnits.get(0).getPlayer().getNotifications().add(new AttackNotification(vertex.getField().getPlayer(),vertex,true,false));
         }else{
             if(!(origin == null)) {
                 origin.getField().getUnits().removeAll(attackingUnits);
             }
-
             defender.getNotifications().add(new AttackNotification(attacker, vertex, true, true));
             attacker.getNotifications().add(new AttackNotification(defender, vertex, false, false));
-	        //vertex.getField().getPlayer().getNotifications().add(new AttackNotification(defendingUnits.get(0).getPlayer(),vertex,false,false));
-	        //defendingUnits.get(0).getPlayer().getNotifications().add(new AttackNotification(vertex.getField().getPlayer(),vertex,true,true));
         }
 
     }
