@@ -147,7 +147,7 @@ public class FieldView extends GameScene{
         }
     });
 
-    /
+    
     public FieldView(){
 
         this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
