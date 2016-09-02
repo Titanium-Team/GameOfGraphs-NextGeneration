@@ -71,13 +71,25 @@ public class KIController {
 				// Fehler in der fight-Methode, da mit keinen Leuten angegriffen wird.
 				v1.getField().getResources().put(POPULATION,v1.getField().getResources().get(POPULATION)-rebels.size());
 				getGame().getSimulationController().fight(null, v1,rebels);
-				p.getNotifications().add(new RebellionNotification(!p.equals(v1.getField().getPlayer()),v1));
+				/*p.getNotifications().add(new RebellionNotification(!p.equals(v1.getField().getPlayer()),v1));
 				for(Notification n:p.getNotifications() ){
 					if(n instanceof AttackNotification){
 						if(((AttackNotification) n).getOpponent().equals(rebelPlayer)){
 							p.getNotifications().remove(n);
 						}
 					}
+				}*/
+				Iterator<Notification> bIterator = p.getNotifications().iterator();
+				while (bIterator.hasNext()) {
+					Notification n = bIterator.next();
+
+					if(n instanceof AttackNotification) {
+
+						AttackNotification a = (AttackNotification) n;
+
+
+					}
+
 				}
 			}
 
@@ -214,8 +226,7 @@ public class KIController {
 						}
 						current.getProperties().add(Property.ECONOMIC);
 						if (current.getProperties().contains(Property.ECONOMIC)) {
-							Player partner= GameOfGraphs.getGame().getPlayers().get(0);
-							/*
+							Player partner= null;
 							int maxTrust= -1;
 							for(Vertex vertex:getGame().getGraphController().getGraph().getNeighbours(v)){
 								if(!vertex.getField().getPlayer().equals(current) && current.getTrust().containsKey(vertex.getField().getPlayer()) && current.getTrust().get(vertex.getField().getPlayer())>maxTrust){
@@ -224,7 +235,7 @@ public class KIController {
 										maxTrust = current.getTrust().get(vertex.getField().getPlayer());
 									}
 								}
-							}*/
+							}
 							if(partner!=null) {
 								HashMap<Resource, Integer> goals, wanted = new HashMap<>(), offered = new HashMap<>(), res;
 								goals = current.getGoals().get(v);
@@ -238,7 +249,7 @@ public class KIController {
 								res = ((HashMap<Resource, Integer>) v.getField().getResources());
 								int generosity = r.nextInt(res.entrySet().size() - goals.entrySet().size()) + 1;
 								for (Map.Entry<Resource, Integer> e : res.entrySet()) {
-									// @TODO: Ich habe e.getValue() > 2 hinzugefügt, weil wenn das nicht groeßer als 0 ist, dann gitb es einen Fehler
+									// @TODO: Ich habe e.getValue() > 1 hinzugefügt, weil wenn das nicht groeßer als 1 ist, dann gitb es einen Fehler
 									if (generosity > 0 && (!goals.containsKey(e.getKey()) || goals.get(e.getKey()) > 0) && e.getValue() > 1) {
 										offered.put(e.getKey(), r.nextInt(2 / 2));
 									}

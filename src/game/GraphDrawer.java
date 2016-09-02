@@ -255,6 +255,7 @@ public class GraphDrawer {
 
 
         });
+
     }
 
     public static Scrollbar getHorizontal() {

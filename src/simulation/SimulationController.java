@@ -37,10 +37,9 @@ public class SimulationController {
         Units des currentPlayer werden auf "nicht bewegt" gesetzt, damit
         sie in der Runde vom Spieler überhaupt bewegt werden können.
          */
-
         ArrayList<Vertex> allVertices = graph.getVertices();
         ArrayList<Vertex> vertices = new ArrayList<>();
-        for (Vertex vertex: allVertices) {
+        for (Vertex vertex : allVertices) {
             if (vertex.getField().getPlayer() == currentPlayer){
                 vertices.add(vertex);
             }
@@ -55,7 +54,6 @@ public class SimulationController {
 
 
     //TODO: Klären ob die Methode benötigt wird.
-
     /*
     public void createUnit(Vertex vertex) {
         if (currentPlayer == vertex.getField().getPlayer()){
@@ -248,7 +246,6 @@ public class SimulationController {
             }
             unvisited.next();
         }
-
 
         while(!unvisited.isEmpty()){
             Vertex v0 = null;
