@@ -34,6 +34,7 @@ public class FieldView extends GameScene{
     private Field currentField = null;
     private Graph graph;
     private boolean move = false;
+    private boolean free = true;
     private List<Vertex> marked = new ArrayList<>();
     private DropDownMenu<Building> buildingDropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
         for( Building building : Buildings.values()){
@@ -61,11 +62,11 @@ public class FieldView extends GameScene{
     private Button<String> freeBuildButton = new Button<String>(this, "FreeBuild", new ILocation(580, 510),(t, value) -> {
 
         Buildings.build(buildingDropDownMenu.getOption(), this.currentField, true);
-        t.setEnabled(false);
+        this.free = false;
 
     });
 
-    private Button<String> slaveMarketButton = new Button<String>(this, "Trade", new ILocation(720, 510),(t, value) -> {
+    private Button<String> slaveMarketButton = new Button<String>(this, "Trade", new ILocation(830, 510),(t, value) -> {
 
         if(this.currentField.getResources().get(Resources.IRON) > 1){
             this.currentField.getResources().put(Resources.IRON, this.currentField.getResources().get(Resources.IRON) -2);
@@ -77,7 +78,7 @@ public class FieldView extends GameScene{
 
     });
 
-    private DropDownMenu<Resource> resourceDropDownMenu = new DropDownMenu<Resource>(this, new ILocation(820, 540), new LinkedList<Resource>() {{
+    private DropDownMenu<Resource> resourceDropDownMenu = new DropDownMenu<Resource>(this, new ILocation(780, 540), new LinkedList<Resource>() {{
         for( Resource resource : Resources.values()){
             if(resource != Resources.POPULATION && resource != Resources.GOLD) {
                 this.add(resource);
@@ -85,7 +86,7 @@ public class FieldView extends GameScene{
         }
     }}, (t, value) -> {});
 
-    private Button<String> marketPlaceButton = new Button<String>(this, "Trade", new ILocation(720, 540),(t, value) -> {
+    private Button<String> marketPlaceButton = new Button<String>(this, "Trade", new ILocation(830, 540),(t, value) -> {
 
         if(this.currentField.getResources().get(Resources.GOLD) > 0){
             this.currentField.getResources().put(Resources.IRON, this.currentField.getResources().get(Resources.IRON) -1);
@@ -98,16 +99,40 @@ public class FieldView extends GameScene{
 
     });
 
+    private Button<String> bazaarButton1 = new Button<String>(this, "Trade", new ILocation(830, 570),(t, value) -> {
+
+        if(this.currentField.getResources().get(Resources.FOOD) > 1){
+            this.currentField.getResources().put(Resources.FOOD, this.currentField.getResources().get(Resources.FOOD) -2);
+            this.currentField.getResources().put(Resources.STONE,this.currentField.getResources().get(Resources.STONE) +1);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Trade not possible.");
+
+        }
+
+    });
+
+    private Button<String> bazaarButton2 = new Button<String>(this, "Trade", new ILocation(830, 600),(t, value) -> {
+
+        if(this.currentField.getResources().get(Resources.FOOD) > 3){
+            this.currentField.getResources().put(Resources.FOOD, this.currentField.getResources().get(Resources.FOOD) -4);
+            this.currentField.getResources().put(Resources.IRON,this.currentField.getResources().get(Resources.IRON) +1);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Trade not possible.");
+
+        }
+
+    });
 
 
-    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(t, value) -> {
+
+    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1200, 700),(t, value) -> {
         this.currentField = null;
         this.currentVertex = null;
         GameOfGraphs.getGame().nextTurn();
         if (GameOfGraphs.getGame().isFirstTurn()) {
-            this.freeBuildButton.setEnabled(true);
-        }else {
-            this.freeBuildButton.setEnabled(false);
+            this.free = true;
         }
 
     });
@@ -125,6 +150,8 @@ public class FieldView extends GameScene{
         E.getE().addComponent(slaveMarketButton);
         E.getE().addComponent(marketPlaceButton);
         E.getE().addComponent(resourceDropDownMenu);
+        E.getE().addComponent(bazaarButton1);
+        E.getE().addComponent(bazaarButton2);
 
         E.getE().addComponent(nextTurnButton);
 
@@ -160,6 +187,8 @@ public class FieldView extends GameScene{
             this.resourceDropDownMenu.setEnabled(false);
             this.slaveMarketButton.setEnabled(false);
             this.freeBuildButton.setEnabled(false);
+            this.bazaarButton1.setEnabled(false);
+            this.bazaarButton2.setEnabled(false);
 
         }else{
             g.setColor(Color.ORANGE);
@@ -182,17 +211,30 @@ public class FieldView extends GameScene{
             this.buildButton.setEnabled(active);
             this.unitDropDownMenu.setEnabled(active);
             this.nextTurnButton.setEnabled(active);
-            this.freeBuildButton.setEnabled(active);
+            this.marketPlaceButton.setEnabled(false);
+            this.resourceDropDownMenu.setEnabled(false);
+            this.slaveMarketButton.setEnabled(false);
+            this.bazaarButton1.setEnabled(false);
+            this.bazaarButton2.setEnabled(false);
+            this.freeBuildButton.setEnabled(active && GameOfGraphs.getGame().isFirstTurn() && this.free);
+
 
             if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
                 this.slaveMarketButton.setEnabled(true);
-                g.drawString("2x Iron -> 1 Person", 760, 525);
+                g.drawString("2x Iron -> 1 Person", 720, 525);
             }
 
             if(this.currentField.getBuildings().get(Buildings.MARKETPLACE) > 0) {
                 this.marketPlaceButton.setEnabled(true);
                 this.resourceDropDownMenu.setEnabled(true);
-                g.drawString("1x Gold -> ", 760, 555);
+                g.drawString("1x Gold -> ", 720, 555);
+            }
+
+            if(this.currentField.getBuildings().get(Buildings.BAZAAR) > 0) {
+                this.bazaarButton1.setEnabled(true);
+                this.bazaarButton2.setEnabled(true);
+                g.drawString("2x Food -> 1 Stone", 720, 585);
+                g.drawString("4x Food -> 1 Iron ", 720, 615);
             }
 
             g.setColor(Color.BLACK);
