@@ -43,8 +43,8 @@ public class FieldView extends GameScene{
     private boolean free = true;
     private List<Vertex> marked = new ArrayList<>();
     //Ein Menu mit Auswahl aller Buildings
-    private DropDownMenu<Building> buildingDropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
-        for( Building building : Buildings.values()){
+    private DropDownMenu<Buildings> buildingDropDownMenu = new DropDownMenu<Buildings>(this, new ILocation(440, 510), new LinkedList<Buildings>() {{
+        for( Buildings building : Buildings.values()){
             this.add(building);
         }
     }}, (t, value) -> {});
@@ -85,8 +85,8 @@ public class FieldView extends GameScene{
         }
 
     });
-    private DropDownMenu<Resource> resourceDropDownMenu = new DropDownMenu<Resource>(this, new ILocation(780, 540), new LinkedList<Resource>() {{
-        for( Resource resource : Resources.values()){
+    private DropDownMenu<Resources> resourceDropDownMenu = new DropDownMenu<Resources>(this, new ILocation(780, 540), new LinkedList<Resources>() {{
+        for( Resources resource : Resources.values()){
             if(resource != Resources.POPULATION && resource != Resources.GOLD) {
                 this.add(resource);
             }
@@ -265,8 +265,8 @@ public class FieldView extends GameScene{
             g.setColor(Color.BLACK);
 
             //Zeichnen der Resourcen und Gebäude
-            Map<Resource, Integer> resources = currentField.getResources();
-            Map<Building, Integer> buildings = currentField.getBuildings();
+            Map<Resources, Integer> resources = currentField.getResources();
+            Map<Buildings, Integer> buildings = currentField.getBuildings();
             List<RecipeResource> recipeList = buildingDropDownMenu.getOption().getRecipe().getItemIngredients();
 
             final int[] y = {0};

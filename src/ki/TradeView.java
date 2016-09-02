@@ -131,7 +131,7 @@ public class TradeView  {
 			//TODO: hide
 		}else{
 			try {
-				HashMap<Resource, Integer> offered = new HashMap<>(), wanted = new HashMap<>();
+				HashMap<Resources, Integer> offered = new HashMap<>(), wanted = new HashMap<>();
 				EditText t1, t2;
 				Resources res;
 				for (int i = 0; i < textFields.size(); i = i + 2) {

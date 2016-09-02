@@ -39,8 +39,8 @@ public class GameOfGraphs {
         this.loadingManager.load();
 
         //Players
-        this.players.add(new Player("Jan", false, Color.CYAN));
-        this.players.add(new Player("Jonas", false, Color.RED));
+        this.players.add(new Player("Jan", Color.CYAN));
+        this.players.add(new Player("Jonas", Color.RED));
         //this.players.add(new KIFraction("Independent"));
 
         //Controller

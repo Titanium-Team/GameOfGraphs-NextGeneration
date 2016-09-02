@@ -258,7 +258,7 @@ public enum Buildings implements Building {
      * @param field
      * @param freebuild
      */
-    public static void build(Building building, Field field, boolean freebuild){
+    public static void build(Buildings building, Field field, boolean freebuild){
 
         if(freebuild){
             if(building != UNIT){
