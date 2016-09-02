@@ -22,12 +22,12 @@ import java.util.Map;
 public class MenuView extends GameScene {
 
     private int selectedOption = 0;
-    private UIComponent checkBox = new Button<>(this, "Tesdasdasdasddxt", new ILocation(300, 300), (v) -> {
+    private UIComponent checkBox = new Button<>(this, "Tesdasdasdasddxt", new ILocation(300, 300), (t, v) -> {
         System.out.println("pressed");
     });
     private UIComponent dropDownMenu = new DropDownMenu<>(this, new ILocation(300, 350), new LinkedList<Integer>() {{
         for(int i = 0; i < 10; i++) this.add(i);
-    }}, (value) -> {});
+    }}, (t, value) -> {});
 
     private final Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
 

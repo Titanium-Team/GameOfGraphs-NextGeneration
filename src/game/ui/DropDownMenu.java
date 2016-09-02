@@ -5,6 +5,7 @@ import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -72,7 +73,7 @@ public class DropDownMenu<T> implements UIComponent {
                             for (int i = 0; i < this.options.size(); i++) {
 
                                 if (this.boundingBoxes.get(this.options.get(i)).contains(new ILocation(entry.getPoint()))) {
-                                    this.callable.call(this.options.get(i));
+                                    this.callable.call(this, this.options.get(i));
                                     this.selectedIndex = i;
                                     this.open = false;
                                 }
@@ -150,6 +151,16 @@ public class DropDownMenu<T> implements UIComponent {
 
         }
 
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        throw new NotImplementedException();
     }
 
     @Override

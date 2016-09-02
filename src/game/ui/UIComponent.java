@@ -7,4 +7,8 @@ public interface UIComponent extends GameComponent {
 
     void handleDraw(Layer layer);
 
+    boolean isEnabled();
+
+    void setEnabled(boolean enabled);
+
 }

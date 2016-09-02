@@ -40,49 +40,94 @@ public class FieldView extends GameScene{
         for( Building building : Buildings.values()){
             this.add(building);
         }
-    }}, (value) -> {});
+    }}, (t, value) -> {});
 
     private DropDownMenu<Integer> unitDropDownMenu = new DropDownMenu<Integer>(this, new ILocation(220, 530), new LinkedList<Integer>() {{
-    }}, (value) -> {});
+    }}, (t, value) -> {});
 
 
 
-    private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(value -> {
+    private Button<String> buildButton = new Button<String>(this, "Build", new ILocation(540, 510),(t, value) -> {
 
         if( Buildings.isBuildable(buildingDropDownMenu.getOption(), this.currentField)){
-            if(this.currentField.getResources().get(Resources.POPULATION) > 1) {
-                Buildings.build(buildingDropDownMenu.getOption(), this.currentField, false);
-            } else {
-                JOptionPane.showMessageDialog(null, "You need at least 1 citizen.");
-            }
+            Buildings.build(buildingDropDownMenu.getOption(), this.currentField, false);
+        }else {
+            JOptionPane.showMessageDialog(null, "You can't build this, because: \n" +
+                    "-you need at least 1 citizen, or \n" +
+                    "-you don't have enough resources, or \n" +
+                    "-you have reached the maxmium amount of this type of buildings.");
         }
+    });
 
-    }));
-
-    private Button<String> freeBuildButton = new Button<String>(this, "FreeBuild", new ILocation(640, 510),(value -> {
+    private Button<String> freeBuildButton = new Button<String>(this, "FreeBuild", new ILocation(580, 510),(t, value) -> {
 
         Buildings.build(buildingDropDownMenu.getOption(), this.currentField, true);
+        t.setEnabled(false);
+
+    });
+
+    private Button<String> slaveMarketButton = new Button<String>(this, "Trade", new ILocation(720, 510),(t, value) -> {
+
+        if(this.currentField.getResources().get(Resources.IRON) > 1){
+            this.currentField.getResources().put(Resources.IRON, this.currentField.getResources().get(Resources.IRON) -2);
+            this.currentField.getResources().put(Resources.POPULATION, this.currentField.getResources().get(Resources.POPULATION) +1);
+        } else {
+            JOptionPane.showMessageDialog(null, "Trade not possible.");
+
+        }
+
+    });
+
+    private DropDownMenu<Resource> resourceDropDownMenu = new DropDownMenu<Resource>(this, new ILocation(820, 540), new LinkedList<Resource>() {{
+        for( Resource resource : Resources.values()){
+            if(resource != Resources.POPULATION && resource != Resources.GOLD) {
+                this.add(resource);
+            }
+        }
+    }}, (t, value) -> {});
+
+    private Button<String> marketPlaceButton = new Button<String>(this, "Trade", new ILocation(720, 540),(t, value) -> {
+
+        if(this.currentField.getResources().get(Resources.GOLD) > 0){
+            this.currentField.getResources().put(Resources.IRON, this.currentField.getResources().get(Resources.IRON) -1);
+            this.currentField.getResources().put(resourceDropDownMenu.getOption(),this.currentField.getResources().get(resourceDropDownMenu.getOption()) +1);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Trade not possible.");
+
+        }
+
+    });
 
 
-    }));
 
-    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(value -> {
-
+    private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(t, value) -> {
         this.currentField = null;
         this.currentVertex = null;
         GameOfGraphs.getGame().nextTurn();
+        if (GameOfGraphs.getGame().isFirstTurn()) {
+            this.freeBuildButton.setEnabled(true);
+        }else {
+            this.freeBuildButton.setEnabled(false);
+        }
 
-    }));
+    });
 
     public FieldView(){
 
         this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
+        E.getE().addComponent(unitDropDownMenu);
+
         E.getE().addComponent(buildingDropDownMenu);
         E.getE().addComponent(buildButton);
-        E.getE().addComponent(unitDropDownMenu);
-        E.getE().addComponent(nextTurnButton);
         E.getE().addComponent(freeBuildButton);
+
+        E.getE().addComponent(slaveMarketButton);
+        E.getE().addComponent(marketPlaceButton);
+        E.getE().addComponent(resourceDropDownMenu);
+
+        E.getE().addComponent(nextTurnButton);
 
     }
 
@@ -101,10 +146,11 @@ public class FieldView extends GameScene{
         g.setColor(Color.BLACK);
         g.drawLine(0,500,1280,500);
         g.drawLine(420, 500, 420, 720);
+        g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
 
         if(currentField == null) {
-            g.drawString("No field selected.", 620, 600);
+            g.drawString("No field selected.", 520, 600);
         }else{
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: " + currentField.getFertility()), 20, 520);
@@ -122,10 +168,21 @@ public class FieldView extends GameScene{
             g.setColor(Color.LIGHT_GRAY);
 
             if(GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer()) {
+                this.unitDropDownMenu.handleDraw(layers.first());
                 this.buildingDropDownMenu.handleDraw(layers.first());
                 this.buildButton.handleDraw(layers.first());
                 this.freeBuildButton.handleDraw(layers.first());
-                this.unitDropDownMenu.handleDraw(layers.first());
+
+                if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
+                    this.slaveMarketButton.handleDraw(layers.first());
+                    g.drawString("2x Iron -> 1 Person", 760, 525);
+                }
+
+                if(this.currentField.getBuildings().get(Buildings.MARKETPLACE) > 0) {
+                    this.marketPlaceButton.handleDraw(layers.first());
+                    this.resourceDropDownMenu.handleDraw(layers.first());
+                    g.drawString("1x Gold -> ", 760, 555);
+                }
                 this.nextTurnButton.handleDraw(layers.first());
             }
 

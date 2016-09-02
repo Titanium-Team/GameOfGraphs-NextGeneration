@@ -6,6 +6,7 @@ import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layer;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
 
@@ -38,7 +39,7 @@ public class CheckBox implements UIComponent {
             if(this.boundingBox.contains(new Location(entry.getPoint()))) {
 
                 this.checked = !checked;
-                this.trigger.call(this.checked);
+                this.trigger.call(this, this.checked);
 
             }
 
@@ -54,6 +55,16 @@ public class CheckBox implements UIComponent {
         layer.g().setColor(Color.BLACK);
         layer.g().drawRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
 
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        throw new NotImplementedException();
     }
 
     @Override

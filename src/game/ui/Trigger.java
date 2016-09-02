@@ -2,6 +2,6 @@ package game.ui;
 
 public interface Trigger<T> {
 
-    void call(T value);
+    void call(UIComponent component, T value);
 
 }

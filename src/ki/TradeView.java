@@ -64,7 +64,7 @@ public class TradeView  {
 						}
 					}
 				}
-			}},(value)->{});
+			}},(t, value)->{});
 			E.getE().addComponent(players);
 			for (int i = 0; i < Resources.values().length; i++) {
 				g.setColor(Color.BLACK);

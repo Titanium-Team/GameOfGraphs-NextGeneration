@@ -47,11 +47,11 @@ public enum Buildings implements Building {
             int stone = n;
             productionResource(field,Resources.STONE,this,1,stone);
 
-            int iron = n/2;
+            int iron = 1;
             productionResource(field,Resources.IRON,this,2,iron);
 
-            int gold = n - 2;
-            //productionResource(field,Resources.GOLD,this,3,gold);
+            int gold = 1;
+            productionResource(field,Resources.GOLD,this,3,gold);
         }
 
         @Override
@@ -78,11 +78,8 @@ public enum Buildings implements Building {
             int wheat = 1;
             productionResource(field,Resources.WHEAT,this,2,wheat);
 
-            int horses = random.nextInt(2);
-            //productionResource(field, Resources.HORSES,this,2,horses);
-
-            int cattle = 1;
-            productionResource(field, Resources.CATTLE,this,3,cattle);
+            int tree = 1;
+            productionResource(field, Resources.TREE,this,3,tree);
         }
 
         @Override
@@ -101,8 +98,8 @@ public enum Buildings implements Building {
         @Override
         public void production(Field field) {
 
-            if(field.getResources().get(Resources.WHEAT) > 0){
-                field.getResources().put(Resources.WHEAT, field.getResources().get(Resources.WHEAT)-1);
+            if(field.getResources().get(Resources.WHEAT) > 1){
+                field.getResources().put(Resources.WHEAT, field.getResources().get(Resources.WHEAT)-2);
                 productionResource(field,Resources.FOOD,this,1,8);
             }
         }
@@ -120,22 +117,22 @@ public enum Buildings implements Building {
             return "Windmills";
         }
     },
-    BUTCHER {
+    WOODCUTTER {
         @Override
         public void production(Field field) {
 
-            if(field.getResources().get(Resources.CATTLE) > 0){
-                field.getResources().put(Resources.CATTLE, field.getResources().get(Resources.CATTLE)-1);
-                productionResource(field,Resources.FOOD,this,1,18);
+            if(field.getResources().get(Resources.TREE) > 1){
+                field.getResources().put(Resources.TREE, field.getResources().get(Resources.TREE)-2);
+                productionResource(field,Resources.WOOD,this,1,10);
             }
         }
 
         @Override
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.POPULATION,1))
-                    .addIngredient(new RecipeResource(Resources.WOOD,20))
-                    .addIngredient(new RecipeResource(Resources.STONE,15))
-                    .addIngredient(new RecipeResource(Resources.CATTLE,2));
+                    .addIngredient(new RecipeResource(Resources.WOOD,18))
+                    .addIngredient(new RecipeResource(Resources.STONE,12))
+                    .addIngredient(new RecipeResource(Resources.TREE,2));
         }
 
         @Override
@@ -143,22 +140,39 @@ public enum Buildings implements Building {
             return "Butchers";
         }
     },
-    BARRACKS {
+    SLAVE_MARKET {
         @Override
         public void production(Field field) {
 
         }
-        
+
         @Override
         public Recipe getRecipe() {
-            return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD,3))
-                    .addIngredient(new RecipeResource(Resources.STONE,2))
-                    .addIngredient(new RecipeResource(Resources.IRON,1));
+            return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD, 10))
+                    .addIngredient(new RecipeResource(Resources.STONE,16))
+                    .addIngredient(new RecipeResource(Resources.IRON,2));
         }
 
         @Override
         public String getName() {
-            return "Barracks";
+            return "Slave Market";
+        }
+    },
+    MARKETPLACE {
+        @Override
+        public void production(Field field) {
+        }
+
+        @Override
+        public Recipe getRecipe() {
+            return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD, 15))
+                    .addIngredient(new RecipeResource(Resources.STONE,20))
+                    .addIngredient(new RecipeResource(Resources.GOLD,2));
+        }
+
+        @Override
+        public String getName() {
+            return "Marketplace";
         }
     };
 
@@ -173,12 +187,18 @@ public enum Buildings implements Building {
             }
         }
 
-        if(field.getBuildings().get(Buildings.FARM) == field.getFertility() ||
-                field.getBuildings().get(Buildings.MINE) == field.getMountains() ||
-                field.getBuildings().get(Buildings.WINDMILL) == 1 ||
-                field.getBuildings().get(Buildings.BUTCHER) == 1 ||
-                field.getBuildings().get(Buildings.BARRACKS) == 1){
-            return false;
+        if(building == Buildings.FARM){
+            if(field.getBuildings().get(building) == field.getFertility()){
+                return false;
+            }
+        } else if(building == Buildings.MINE){
+            if(field.getBuildings().get(building) == field.getMountains()){
+                return false;
+            }
+        } else if(building == Buildings.WINDMILL || building == Buildings.WOODCUTTER){
+            if(field.getBuildings().get(building) == 1){
+                return false;
+            }
         }
 
         return true;
@@ -202,7 +222,11 @@ public enum Buildings implements Building {
     public static void build(Building building, Field field, boolean freebuild){
 
         if(freebuild){
-            field.getBuildings().put(building, field.getBuildings().get(building)+1);
+            if(building != UNIT){
+                field.getBuildings().put(building, field.getBuildings().get(building)+1);
+            }else{
+                field.getUnits().add(new Unit(field.getPlayer()));
+            }
         } else if (isBuildable(building,field)){
 
             Recipe recipe = building.getRecipe();

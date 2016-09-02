@@ -67,6 +67,7 @@ public class GameOfGraphs {
 
         if(this.currentPlayer >= this.players.size()) {
             this.currentPlayer = 0;
+            this.isFirstTurn = false;
         }
 
         while(!(this.getCurrentPlayer().isActive())) {
@@ -78,7 +79,6 @@ public class GameOfGraphs {
 
         if(this.currentPlayer >= this.players.size()) {
             this.currentPlayer = 0;
-            this.isFirstTurn = false;
         }
 
         kiController.run();
