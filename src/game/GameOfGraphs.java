@@ -6,9 +6,9 @@ import game.loading.LoadingManager;
 import game.sprite.Textures;
 import graph.GraphController;
 import ki.KIController;
-import mapEditor.MapEditorController;
 import simulation.SimulationController;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +29,6 @@ public class GameOfGraphs {
     private FieldController fieldController;
     private GraphController graphController;
     private KIController kiController;
-    private MapEditorController mapEditorController;
     private SimulationController simulationController;
 
     public GameOfGraphs() {
@@ -40,8 +39,8 @@ public class GameOfGraphs {
         this.loadingManager.load();
 
         //Players
-        this.players.add(new Player("Jan", false));
-        this.players.add(new Player("Jonas", false));
+        this.players.add(new Player("Jan", false, Color.CYAN));
+        this.players.add(new Player("Jonas", false, Color.RED));
         //this.players.add(new KIFraction("Independent"));
 
         //Controller
@@ -49,7 +48,6 @@ public class GameOfGraphs {
         fieldController = new FieldController();
         graphController = new GraphController();
         kiController = new KIController();
-        mapEditorController = new MapEditorController();
         simulationController = new SimulationController(this.getCurrentPlayer());
 
 
@@ -80,8 +78,7 @@ public class GameOfGraphs {
         if(this.currentPlayer >= this.players.size()) {
             this.currentPlayer = 0;
         }
-
-        kiController.run();
+	    kiController.run();
         simulationController.run(this.getCurrentPlayer());
 
     }
@@ -104,10 +101,6 @@ public class GameOfGraphs {
 
     public KIController getKiController() {
         return kiController;
-    }
-
-    public MapEditorController getMapEditorController() {
-        return mapEditorController;
     }
 
     public simulation.SimulationController getSimulationController() {

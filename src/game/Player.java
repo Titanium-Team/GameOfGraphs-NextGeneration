@@ -5,6 +5,7 @@ import ki.AllianceRequest;
 import ki.Notification;
 import ki.Request;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -16,11 +17,13 @@ public class Player {
     private ArrayList<Notification> notifications = new ArrayList<>();
     private boolean isKI = false;
     protected Queue<Request> requests = new Queue<>();
+    private Color color;
 
 
-    public Player(String name, boolean isKI) {
+    public Player(String name, boolean isKI, Color color) {
         this.name = name;
         this.isKI = isKI;
+        this.color = color;
     }
 
     public String getName() {
@@ -101,5 +104,9 @@ public class Player {
     @Override
     public String toString() {
         return name;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }

@@ -124,7 +124,7 @@ public class SimulationController {
         if (currentPlayer == start.getField().getPlayer()) {
             List<Vertex> path = giveListOfVerticesToFollow(start, end);
             if (!isMovementPossible(path)) {
-                JOptionPane.showMessageDialog(null, "Das Zielfeld ist zuweit weg! Bitte wähle einen nähres Feld (unter 50 km)");
+                JOptionPane.showMessageDialog(null, "Das Zielfeld ist zuweit weg oder ungültig! Bitte wähle einen nähres Feld (unter 50 km)");
             } else {
                 if (path != null) {
                     path.toFirst();
@@ -190,8 +190,12 @@ public class SimulationController {
         double weight = 0.0;
         vertexList.toFirst();
         while (vertexList.hasAccess() && vertexList.getNext() != null){
-            // @TODO Keine Ahung was, aber anscheinend gibt getEdge unter bestimmten Umständen null zurück.
-            weight += graph.getEdge(vertexList.getContent(), vertexList.getNext()).getWeight();
+            Edge e = graph.getEdge(vertexList.getContent(), vertexList.getNext());
+            if (e != null){
+                weight += e.getWeight();
+            }else {
+                return false;
+            }
             if (weight > 50){
                 return false;
             }
@@ -368,17 +372,12 @@ public class SimulationController {
 
             attacker.getNotifications().add(new AttackNotification(defender, vertex, false, true));
             defender.getNotifications().add(new AttackNotification(attacker, vertex, true, false));
-            //vertex.getField().getPlayer().getNotifications().add(new AttackNotification(defendingUnits.get(0).getPlayer(),vertex,false,true));
-	        //defendingUnits.get(0).getPlayer().getNotifications().add(new AttackNotification(vertex.getField().getPlayer(),vertex,true,false));
         }else{
             if(!(origin == null)) {
                 origin.getField().getUnits().removeAll(attackingUnits);
             }
-
             defender.getNotifications().add(new AttackNotification(attacker, vertex, true, true));
             attacker.getNotifications().add(new AttackNotification(defender, vertex, false, false));
-	        //vertex.getField().getPlayer().getNotifications().add(new AttackNotification(defendingUnits.get(0).getPlayer(),vertex,false,false));
-	        //defendingUnits.get(0).getPlayer().getNotifications().add(new AttackNotification(vertex.getField().getPlayer(),vertex,true,true));
         }
 
     }

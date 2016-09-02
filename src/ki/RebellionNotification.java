@@ -26,7 +26,12 @@ public class RebellionNotification extends Notification {
 
 	@Override
 	public String getDisplayMessage() {
-		return "A RebellionNotification has risen in the city of " + place.getID() + ".\n There are currently "
-				+ place.getField().getUnits().size() + " Units in this city and " + place.getField().getResources().get(Resources.POPULATION)/2 +" rebel troop(s) fighting them.";
+		String result = "A Rebellion has risen in the city of " + place.getID() +".";
+		if(successful){
+			result+="Unfortunately, the rebel troops were too strong and you have lost the city";
+		}else{
+			result+="Fortunately, your troops were able to deflect the riot and defended the city.";
+		}
+		return result;
 	}
 }

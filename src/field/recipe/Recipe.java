@@ -18,12 +18,21 @@ public class Recipe {
         this.result = result;
     }
 
+    /**
+     * Hinzufügen einzeilner Bestandteile des "Gesamtrezeptes"
+     * @param recipeResource
+     * @return
+     */
     public Recipe addIngredient(RecipeResource recipeResource) {
         this.itemIngredients.add(recipeResource);
         return this;
     }
 
 
+    /**
+     * Liste aller Bestandteile
+     * @return
+     */
     public List<RecipeResource> getItemIngredients() {
         return this.itemIngredients;
     }

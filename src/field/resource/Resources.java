@@ -5,6 +5,9 @@ package field.resource;
  */
 public enum Resources implements Resource {
 
+    /**
+     * Eine Auflistung aller Resourcen.
+     */
     POPULATION {
         @Override
         public boolean isMineral() {
@@ -94,6 +97,10 @@ public enum Resources implements Resource {
         }
     };
 
+    /**
+     * Gibt ein Array der Resourcen zurück, die als "Specialresource" in Frage kommen.
+     * @return
+     */
     public static Resource[] getSpecialResources(){
 
         return new Resource[]{WHEAT, TREE, IRON, GOLD};

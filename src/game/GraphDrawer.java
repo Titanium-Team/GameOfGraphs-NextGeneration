@@ -36,11 +36,7 @@ public class GraphDrawer {
         Shape oldClip = g.getClip();
         AffineTransform oldTransform = g.getTransform();
 
-        g.setClip(null);
-
-        if (whoAreYou.equals("MapEditor") && MapEditorView.getPreviewBackground() != null){
-            g.drawImage(MapEditorView.getPreviewBackground(), 0, 0, graph.getWidth(), graph.getHeight(), null);
-        }else if (graph.getBackground() != null){
+        if (graph.getBackground() != null){
             BufferedImage image = graph.getBackground();
 
             if (image.getWidth() == 1 && image.getHeight()==1 || !graph.isBackgroundTextured()){
@@ -98,10 +94,7 @@ public class GraphDrawer {
 
             g.setClip(new Polygon(x, y, 4));
 
-            if (whoAreYou.equals("MapEditor") && MapEditorView.getPreviewEdge() != null) {
-                g.drawImage(MapEditorView.getPreviewEdge(), 0, 0, graph.getWidth(), graph.getHeight(), null);
-
-            } else if (graph.getEdgeImage() != null) {
+            if (graph.getEdgeImage() != null) {
                 BufferedImage image = graph.getEdgeImage();
                 if (image.getWidth() == 1 && image.getHeight() == 1 || !graph.isEdgeImageTextured()) {
                     g.drawImage(image, 0, 0, graph.getWidth(), graph.getHeight(), null);
@@ -157,22 +150,15 @@ public class GraphDrawer {
 
         ArrayList<Vertex> vertexList = graph.getVertices();
         for (Vertex vertex:vertexList) {
-            if(vertex.getField().getPlayer() == GameOfGraphs.getGame().getPlayers().get(0)){
-                g.setColor(Color.RED);
-            } else if (vertex.getField().getPlayer() == GameOfGraphs.getGame().getPlayers().get(1)){
-                g.setColor(Color.CYAN);
-            }
             Ellipse2D ellipse2D = new Ellipse2D.Double(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius() * 2, graph.getRadius() * 2);
             g.setClip(ellipse2D);
 
 
-            if (whoAreYou.equals("MapEditor") && MapEditorView.getPreviewVertex() != null) {
-                g.drawImage(MapEditorView.getPreviewVertex(), 0, 0, graph.getWidth(), graph.getHeight(), null);
-            } else if (graph.getVertexImage() != null) {
-                BufferedImage image = graph.getVertexImage();
+            if (graph.getVertexImage() != null) {
+                BufferedImage image = getImage(vertex.getField().getPlayer().getColor());
                 if (image.getWidth() == 1 && image.getHeight() == 1 || !graph.isVertexImageTextured()) {
                     g.fill(ellipse2D);
-                    //g.drawImage(image, 0, 0, graph.getWidth(), graph.getHeight(), null);
+                    g.drawImage(image, 0, 0, graph.getWidth(), graph.getHeight(), null);
                 } else if (graph.isVertexImageTextured()) {
                     for (int i = 0; i < (Math.ceil((double) 1280 / (double) image.getWidth()) > 1 ? Math.ceil((double) 1280 / (double) image.getWidth()) : 1); i++) {
                         for (int j = 0; j < (Math.ceil(((double) 500) / ((double) image.getHeight())) > 1 ? Math.ceil(((double) 500) / ((double) image.getHeight())) : 1); j++) {
@@ -192,7 +178,6 @@ public class GraphDrawer {
                 g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
             }
             g.setStroke(new BasicStroke(1));
-            g.setColor(Color.BLACK);
         }
 
         g.setTransform(veryoldTransform);
@@ -211,51 +196,60 @@ public class GraphDrawer {
             return;
         }
         if (horizontal == null){
-            horizontal = new Scrollbar(false, 1280-25, 25, 0, 475, 0, graph.getWidth()-1280, 25);
+            // horizontal = new Scrollbar(false, 1280-25, 25, 0, 475, 0, graph.getWidth()-1280+25, 25);
+            horizontal = new Scrollbar(false, 1280-25, 25, 0, 475, 0, graph.getWidth()-1280+25, 25);
         }
         horizontal.update(inputEntry, l);
 
         if (vertical == null){
-            vertical = new Scrollbar(true, 25, 500-25, 1280-25, 0, 0, graph.getHeight()-500, 25);
+            vertical = new Scrollbar(true, 25, 500-25, 1280-25, 0, 0, graph.getHeight()-500+25, 25);
         }
         vertical.update(inputEntry, l);
 
         inputEntry.getMouseWheelEntries().forEach(mouseWheelEntry -> {
-
-            double zoomFactor = -SCALE_STEP * mouseWheelEntry.getPreciseWheelRotation() * zoom;
+            //double zoomFactor = - SCALE_STEP*mouseWheelEntry.getPreciseWheelRotation()*zoom;
+            double zoomFactor = - SCALE_STEP*mouseWheelEntry.getPreciseWheelRotation();
             zoom = Math.abs(zoom + zoomFactor);
 
-            Dimension d = new Dimension((int) (graph.getWidth() * zoom), (int) (graph.getHeight() * zoom));
+            Dimension d = new Dimension((int) (((graph.getWidth())*zoom)-(1255)), (int)(graph.getHeight()*zoom));
 
-            if (d.getWidth() <= 1280 - 25) {
-                d.setSize(1280 - 25, d.getHeight());
-                zoom = d.getWidth() / graph.getWidth();
-            }
 
-            if (d.getHeight() <= 500 - 25) {
-                d.setSize(d.getWidth(), 500 - 25);
-                zoom = d.getHeight() / graph.getHeight();
-            }
+          /*  if (d.getWidth() <= 1280-25) {
+                d.setSize(1280-25, d.getHeight());
+                zoom = d.getWidth()/graph.getWidth();
+            }*/
 
-            // scroll
-            scrollX = (mouseWheelEntry.getPoint().getX() - horizontal.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getX() - horizontal.getValue() * 2);
-            scrollY = (mouseWheelEntry.getPoint().getY() - vertical.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getY() - vertical.getValue() * 2);
-           // horizontal.setEnd((int) (horizontal.getEnd() * SCALE_STEP));
-          //  vertical.setEnd((int) (vertical.getEnd()/previousZoom*zoom));
+            /*if (d.getHeight() <= 500-25) {
+                d.setSize(d.getWidth(), 500-25);
+                zoom = d.getHeight()/graph.getHeight();
+            }*/
 
-            // zoom
-            horizontal.setEnd((int) (d.getWidth()));
-            vertical.setEnd(3000);
+
+
+            scrollX = (mouseWheelEntry.getPoint().getX() - horizontal.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getX() - horizontal.getValue()*2);
+            scrollY = (mouseWheelEntry.getPoint().getY() - vertical.getValue()) / previousZoom * zoom - (mouseWheelEntry.getPoint().getY() - vertical.getValue()*2);
+
+            // horizontal.setEnd((int) (horizontal.getEnd() * SCALE_STEP));
+            //  vertical.setEnd((int) (vertical.getEnd()/previousZoom*zoom));
+
+            horizontal.setEnd((int) d.getWidth());
+            System.out.println(d.getWidth() + "   " + zoom);
+            //vertical.setEnd(3000);
 
             previousZoom = zoom;
 
-            // scroll
             horizontal.setValue((int) scrollX);
             vertical.setValue((int) scrollY);
 
 
         });
 
+    }
+
+    public static BufferedImage getImage(Color color){
+        BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        bufferedImage.setRGB(0, 0, color.getRGB());
+        return bufferedImage;
     }
 
     public static Scrollbar getHorizontal() {
@@ -329,14 +323,14 @@ public class GraphDrawer {
         }
 
         public void update(InputEntry inputEntry, long l){
-            //System.out.println(value + "  " + end + "   " + zoom);
+            //System.out.println(value/zoom + "  " + end/zoom + "   " + graph.getWidth() + "   " + zoom);
 
             inputEntry.getMouseEntries().forEach(mouseEntry -> {
                 if (vertical){
                     if (mouseEntry.getPoint().getX() >= x && mouseEntry.getPoint().getX() <= x + width && mouseEntry.getPoint().getY() >= (int) (value * factor) + width && mouseEntry.getPoint().getY() <= (int) (value * factor) + width + 50) {
                         if (mouseEntry.getButton() == 1) {
                             dragged = true;
-                            distance = (int) (mouseEntry.getPoint().getY() / factor - value - width);
+                            distance = (int) (mouseEntry.getPoint().getY() / factor - value);
                         }
                     }
 
@@ -349,7 +343,7 @@ public class GraphDrawer {
                     if (mouseEntry.getPoint().getX() >= (int) (value * factor) + height && mouseEntry.getPoint().getX() <= (int) (value * factor) + height + 50 && mouseEntry.getPoint().getY() >= y && mouseEntry.getPoint().getY() <= y + height) {
                         if (mouseEntry.getButton() == 1) {
                             dragged = true;
-                            distance = (int) (mouseEntry.getPoint().getX() / factor - value - height);
+                            distance = (int) (mouseEntry.getPoint().getX() / factor - value);
                         }
                     }
 
@@ -367,9 +361,9 @@ public class GraphDrawer {
             inputEntry.getMouseDraggedEntries().forEach(mouseEntry -> {
                 if (dragged){
                     if (vertical){
-                        value = (int) ((mouseEntry.getPoint().getY() / factor - width - distance));
+                        value = (int) ((mouseEntry.getPoint().getY() / factor - distance));
                     }else {
-                        value = (int) ((mouseEntry.getPoint().getX() / factor - height - distance));
+                        value = (int) ((mouseEntry.getPoint().getX() / factor - distance));
                     }
                 }
             });
