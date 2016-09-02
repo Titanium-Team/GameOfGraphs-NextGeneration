@@ -12,6 +12,7 @@ import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
 import game.GraphDrawer;
+import game.sprite.Textures;
 import game.ui.Button;
 import game.ui.DropDownMenu;
 import graph.Graph;
@@ -72,7 +73,6 @@ public class FieldView extends GameScene{
             this.currentField.getResources().put(Resources.POPULATION, this.currentField.getResources().get(Resources.POPULATION) +1);
         } else {
             JOptionPane.showMessageDialog(null, "Trade not possible.");
-
         }
 
     });
@@ -98,6 +98,11 @@ public class FieldView extends GameScene{
 
     });
 
+    private Button<String> questionButton = new Button<>(this, "?", new ILocation(1235, 10), (ui, value) -> {
+
+        JOptionPane.showMessageDialog(null, null, "Help", 0, new ImageIcon(Textures.TEST.getImage()));
+
+    });
 
 
     private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1100, 700),(t, value) -> {
@@ -128,13 +133,14 @@ public class FieldView extends GameScene{
 
         E.getE().addComponent(nextTurnButton);
 
+        E.getE().addComponent(this.questionButton);
+
     }
 
     @Override
     public void render(Layers layers) {
 
         Graphics2D g = layers.first().getGraphics2D();
-
 
         GraphDrawer.drawer(g,graph,"Field");
 

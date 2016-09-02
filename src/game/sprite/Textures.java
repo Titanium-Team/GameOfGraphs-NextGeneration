@@ -846,6 +846,26 @@ public enum Textures implements Texture {
             return this.image;
         }
 
+    },
+    TEST {
+
+        private BufferedImage image;
+
+        @Override
+        public String getName() {
+            return "Test";
+        }
+
+        @Override
+        public void load() {
+            this.image = Textures.loadImage("C:\\Users\\Yonas\\Desktop\\YONAS\\tiger_nebula_by_liadn-d4yuwpo.jpg");
+        }
+
+        @Override
+        public BufferedImage getImage() {
+            return this.image;
+        }
+
     };
 
     private static BufferedImage loadImage(String path) {
