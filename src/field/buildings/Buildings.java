@@ -195,7 +195,7 @@ public enum Buildings implements Building {
             if(field.getBuildings().get(building) == field.getMountains()){
                 return false;
             }
-        } else if(building == Buildings.WINDMILL || building == Buildings.WOODCUTTER){
+        } else if(building == Buildings.WINDMILL || building == Buildings.WOODCUTTER || building == Buildings.SLAVE_MARKET || building == Buildings.MARKETPLACE){
             if(field.getBuildings().get(building) == 1){
                 return false;
             }

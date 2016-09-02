@@ -60,7 +60,7 @@ public class FieldController {
             }
             if (vertex.getField().getResources().get(Resources.FOOD) > 9) {
                 vertex.getField().getResources().put(Resources.POPULATION, vertex.getField().getResources().get(Resources.POPULATION) + 1);
-                vertex.getField().getResources().put(Resources.FOOD, 0);
+                vertex.getField().getResources().put(Resources.FOOD, vertex.getField().getResources().get(Resources.FOOD) - 10);
             } else if (vertex.getField().getResources().get(Resources.FOOD) < -9) {
                 vertex.getField().getResources().put(Resources.POPULATION, vertex.getField().getResources().get(Resources.POPULATION) - 1);
                 vertex.getField().getResources().put(Resources.FOOD, 0);
