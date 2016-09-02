@@ -140,7 +140,7 @@ public enum Buildings implements Building {
             return "Butchers";
         }
     },
-    SLAVE_MARKET {
+    BAZAAR {
         @Override
         public void production(Field field) {
 
@@ -149,7 +149,25 @@ public enum Buildings implements Building {
         @Override
         public Recipe getRecipe() {
             return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD, 10))
-                    .addIngredient(new RecipeResource(Resources.STONE,16))
+                    .addIngredient(new RecipeResource(Resources.STONE,14))
+                    .addIngredient(new RecipeResource(Resources.FOOD,5));
+        }
+
+        @Override
+        public String getName() {
+            return "Bazaar";
+        }
+    },
+    SLAVE_MARKET {
+        @Override
+        public void production(Field field) {
+
+        }
+
+        @Override
+        public Recipe getRecipe() {
+            return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD, 15))
+                    .addIngredient(new RecipeResource(Resources.STONE,20))
                     .addIngredient(new RecipeResource(Resources.IRON,2));
         }
 
@@ -165,8 +183,8 @@ public enum Buildings implements Building {
 
         @Override
         public Recipe getRecipe() {
-            return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD, 15))
-                    .addIngredient(new RecipeResource(Resources.STONE,20))
+            return new Recipe(this).addIngredient(new RecipeResource(Resources.WOOD, 12))
+                    .addIngredient(new RecipeResource(Resources.STONE,18))
                     .addIngredient(new RecipeResource(Resources.GOLD,2));
         }
 
@@ -195,7 +213,7 @@ public enum Buildings implements Building {
             if(field.getBuildings().get(building) == field.getMountains()){
                 return false;
             }
-        } else if(building == Buildings.WINDMILL || building == Buildings.WOODCUTTER){
+        } else if(building == Buildings.WINDMILL || building == Buildings.WOODCUTTER || building == Buildings.SLAVE_MARKET || building == Buildings.MARKETPLACE || building == Buildings.BAZAAR){
             if(field.getBuildings().get(building) == 1){
                 return false;
             }

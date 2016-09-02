@@ -847,18 +847,18 @@ public enum Textures implements Texture {
         }
 
     },
-    TEST {
+    HELP_POPUP {
 
         private BufferedImage image;
 
         @Override
         public String getName() {
-            return "Test";
+            return "Help Pop-Up";
         }
 
         @Override
         public void load() {
-            this.image = Textures.loadImage("C:\\Users\\Yonas\\Desktop\\YONAS\\tiger_nebula_by_liadn-d4yuwpo.jpg");
+            this.image = Textures.loadImage("gfx/help.jpg");
         }
 
         @Override
