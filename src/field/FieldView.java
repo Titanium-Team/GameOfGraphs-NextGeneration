@@ -80,14 +80,21 @@ public class FieldView extends GameScene{
         this.free = false;
 
         // Update selectedable units
-        this.unitDropDownMenu.getOptions().clear();
-        this.unitDropDownMenu.setOptions(new LinkedList<Integer>() {{
+        if(buildingDropDownMenu.getOption() == Buildings.UNIT) {
+            int selectedIndex = this.unitDropDownMenu.getOption() - 1;
+            this.unitDropDownMenu.getOptions().clear();
+            this.unitDropDownMenu.setOptions(new LinkedList<Integer>() {{
 
-            for (int i = 0; i <= currentField.getUnmovedUnits().size(); i++) {
-                this.add(i);
+                for (int i = 0; i <= currentField.getUnmovedUnits().size(); i++) {
+                    this.add(i);
+                }
+
+            }});
+
+            if(selectedIndex < this.unitDropDownMenu.getOptions().size()) {
+                this.unitDropDownMenu.setSelectedIndex(selectedIndex);
             }
-
-        }});
+        }
 
     });
 
