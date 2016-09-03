@@ -7,25 +7,22 @@ import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.math.Location;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
-import field.Field;
 import field.buildings.Buildings;
 import field.resource.Resources;
 import game.GameOfGraphs;
-import graph.GraphDrawer;
 import game.Player;
 import game.sprite.Textures;
-import game.ui.*;
 import game.ui.Button;
-import graph.Edge;
-import graph.Graph;
-import graph.Vector;
-import graph.Vertex;
+import game.ui.*;
+import graph.*;
 import ki.KIFraction;
 import simulation.Unit;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class MapEditor extends GameScene{
     private Graph graph;

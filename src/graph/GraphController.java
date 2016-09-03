@@ -4,6 +4,7 @@ package graph;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import game.GameOfGraphs;
+import game.Player;
 import game.Queue;
 import ki.KIFraction;
 
@@ -13,7 +14,9 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class GraphController {
     private Graph graph;
@@ -68,7 +71,7 @@ public class GraphController {
 
 
     public void save(Graph graph) {
-        if (GameOfGraphs.getGame().getPlayers().size() == 1) {
+        if (GameOfGraphs.getGame().getPlayers().size() < 2) {
             int value = JOptionPane.showConfirmDialog(null, "You need at leat 2 Players, thats why you can't play this map. Do you still want to save it?", "Save?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if (value == JOptionPane.YES_OPTION) {
                 graph.setChecked(false);
@@ -126,6 +129,8 @@ public class GraphController {
         Queue<Vertex> biggestGroup = new Queue<>();
         int biggest = 0;
 
+        Set<Player> players = new HashSet<>();
+
         ArrayList<Vertex> vertexList = graph.getVertices();
         for (Vertex vertex:graph.getVertices()){
             Queue<Vertex> vertexQueue = checkGraph(null, new Queue<Vertex>(), vertex);
@@ -141,6 +146,15 @@ public class GraphController {
                 biggest = temp;
                 biggestGroup = tempGroup;
             }
+
+            if(!(vertex.getField().getPlayer() == null)) {
+                players.add(vertex.getField().getPlayer());
+            }
+
+        }
+
+        if(!(GameOfGraphs.getGame().getPlayers().size() == players.size())) {
+            return false;
         }
 
         graph.setAllVertexTargetMark(true);
@@ -148,11 +162,12 @@ public class GraphController {
             biggestGroup.front().setMarkTarget(false);
             biggestGroup.dequeue();
         }
-        if (graph.allVertexTargetMark(false)){
-            return true;
-        }else {
+
+        if (!(graph.allVertexTargetMark(false))) {
             return false;
         }
+
+        return true;
     }
 
     private Queue<Vertex> checkGraph(Queue<Vertex> q, Queue<Vertex> queue, Vertex start) {
