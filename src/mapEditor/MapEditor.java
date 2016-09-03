@@ -45,10 +45,27 @@ public class MapEditor extends GameScene{
     private EditText<String> weight;
     private EditText<String> name;
 
+    private Button<String> randomizeButton = new Button<>(this, "Randomize", new ILocation(631, 698), (c, v) -> {
+
+        currentVertex.setField(GameOfGraphs.getGame().getFieldController().createField(this.currentVertex.getField().getPlayer(), false));
+        this.updateView();
+
+    });
+    private Button<String> randomizeAllButton = new Button<>(this, "Randomize", new ILocation(1000, 700), (c, v) -> {
+
+        this.graph.getVertices().forEach(e -> e.setField(GameOfGraphs.getGame().getFieldController().createField(e.getField().getPlayer(), false)));
+        this.updateView();
+
+    });
+
     private PlayerChooser playerChooser;
 
     public MapEditor() {
         graph = GameOfGraphs.getGame().getGraphController().getGraph();
+
+        E.getE().addComponent(this.randomizeAllButton);
+        this.randomizeButton.setEnabled(false);
+        E.getE().addComponent(randomizeButton);
 
         playerChooser = new PlayerChooser(this, new ILocation(500, 500), (component, value) -> {
             GameOfGraphs.getGame().getPlayers().add((Player) value);
@@ -74,9 +91,9 @@ public class MapEditor extends GameScene{
             GameOfGraphs.getGame().getGraphController().save(graph);
         }));
         buttons.add(new game.ui.Button<>(this, "Load", new ILocation(1000, 580), (component, value) -> {
-            Graph g = GameOfGraphs.getGame().getGraphController().load();
+            Object[] g = GameOfGraphs.getGame().getGraphController().load();
             if (g != null){
-                graph = g;
+                graph = (Graph) g[0];
             }
         }));
         buttons.add(new game.ui.Button<>(this, "Move", new ILocation(1000, 605), (component, value) -> {
@@ -257,6 +274,8 @@ public class MapEditor extends GameScene{
         g.setColor(Color.BLACK);
         g.fillRect(0, 500, 1280, 220);
 
+        g.setStroke(new BasicStroke(1));
+
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0,500,1280,220);
         g.setColor(Color.BLACK);
@@ -274,6 +293,7 @@ public class MapEditor extends GameScene{
             forest.setEnabled(false);
             owner.setEnabled(false);
             name.setEnabled(false);
+            randomizeButton.setEnabled(false);
 
             weight.setEnabled(false);
 
@@ -303,6 +323,7 @@ public class MapEditor extends GameScene{
             forest.setEnabled(true);
             owner.setEnabled(true);
             name.setEnabled(true);
+            randomizeButton.setEnabled(true);
 
             g.setColor(Color.LIGHT_GRAY);
 
@@ -334,6 +355,7 @@ public class MapEditor extends GameScene{
             forest.setEnabled(false);
             owner.setEnabled(false);
             name.setEnabled(false);
+            randomizeButton.setEnabled(false);
 
             weight.setEnabled(true);
 
@@ -359,89 +381,7 @@ public class MapEditor extends GameScene{
                             leftMouse = true;
                             if (vertex != null) {
                                 currentVertex = vertex;
-
-                                for(int i = 0; i < owner.getOptions().size(); i++){
-                                    if (currentVertex.getField().getPlayer().getName().equals(owner.getOptions().get(i).getName())){
-                                        owner.setSelectedIndex(i);
-                                    }
-                                }
-
-                                name.setText(currentVertex.getID());
-                                forest.setSelectedIndex(currentVertex.getField().getForestType()-1);
-
-                                switch (currentVertex.getField().getLocalResource().getName()){
-                                    case "Wheat":
-                                        specialResources.setSelectedIndex(0);
-                                        break;
-                                    case "Tree":
-                                        specialResources.setSelectedIndex(1);
-                                        break;
-                                    case "Iron":
-                                        specialResources.setSelectedIndex(2);
-                                        break;
-                                    case "Gold":
-                                        specialResources.setSelectedIndex(3);
-                                        break;
-                                }
-
-                                for (int i = 0; i < editTexts.size(); i++){
-                                    switch (i){
-                                        case 0:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getFertility()));
-                                            break;
-                                        case 1:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getMountains()));
-                                            break;
-                                        case 2:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getUnits().size()));
-                                            break;
-                                        case 3:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.POPULATION)));
-                                            break;
-                                        case 4:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.FOOD)));
-                                            break;
-                                        case 5:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.STONE)));
-                                            break;
-                                        case 6:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.WOOD)));
-                                            break;
-                                        case 7:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.WHEAT)));
-                                            break;
-                                        case 8:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.TREE)));
-                                            break;
-                                        case 9:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.IRON)));
-                                            break;
-                                        case 10:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.GOLD)));
-                                            break;
-                                        case 11:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.MINE)));
-                                            break;
-                                        case 12:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.FARM)));
-                                            break;
-                                        case 13:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.WINDMILL)));
-                                            break;
-                                        case 14:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.LUMBERJACK)));
-                                            break;
-                                        case 15:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.BAZAAR)));
-                                            break;
-                                        case 16:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.SLAVE_MARKET)));
-                                            break;
-                                        case 17:
-                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.MARKETPLACE)));
-                                            break;
-                                    }
-                                }
+                                this.updateView();
                             }else {
                                 Edge edge = graph.getEdge(((int) mouseEntry.getPoint().getX()), ((int) mouseEntry.getPoint().getY()), 5);
 
@@ -566,6 +506,91 @@ public class MapEditor extends GameScene{
     @Override
     public boolean isActive() {
         return E.getE().getScreen().getCurrent() == this;
+    }
+
+    public void updateView() {
+        for(int i = 0; i < owner.getOptions().size(); i++){
+            if (currentVertex.getField().getPlayer().getName().equals(owner.getOptions().get(i).getName())){
+                owner.setSelectedIndex(i);
+            }
+        }
+
+        name.setText(currentVertex.getID());
+        forest.setSelectedIndex(currentVertex.getField().getForestType()-1);
+
+        switch (currentVertex.getField().getLocalResource().getName()){
+            case "Wheat":
+                specialResources.setSelectedIndex(0);
+                break;
+            case "Tree":
+                specialResources.setSelectedIndex(1);
+                break;
+            case "Iron":
+                specialResources.setSelectedIndex(2);
+                break;
+            case "Gold":
+                specialResources.setSelectedIndex(3);
+                break;
+        }
+
+        for (int i = 0; i < editTexts.size(); i++){
+            switch (i){
+                case 0:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getFertility()));
+                    break;
+                case 1:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getMountains()));
+                    break;
+                case 2:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getUnits().size()));
+                    break;
+                case 3:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.POPULATION)));
+                    break;
+                case 4:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.FOOD)));
+                    break;
+                case 5:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.STONE)));
+                    break;
+                case 6:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.WOOD)));
+                    break;
+                case 7:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.WHEAT)));
+                    break;
+                case 8:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.TREE)));
+                    break;
+                case 9:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.IRON)));
+                    break;
+                case 10:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.GOLD)));
+                    break;
+                case 11:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.MINE)));
+                    break;
+                case 12:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.FARM)));
+                    break;
+                case 13:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.WINDMILL)));
+                    break;
+                case 14:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.LUMBERJACK)));
+                    break;
+                case 15:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.BAZAAR)));
+                    break;
+                case 16:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.SLAVE_MARKET)));
+                    break;
+                case 17:
+                    editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.MARKETPLACE)));
+                    break;
+            }
+        }
     }
 
     public static Vertex[] getDragEdge() {

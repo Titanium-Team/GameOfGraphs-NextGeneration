@@ -68,7 +68,9 @@ public class GraphController {
         return graph;
     }
 
-
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
 
     public void save(Graph graph) {
         if (GameOfGraphs.getGame().getPlayers().size() < 2) {
@@ -195,7 +197,7 @@ public class GraphController {
         return queue;
     }
 
-    public Graph load() {
+    public Object[] load() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
@@ -228,7 +230,10 @@ public class GraphController {
                 vertexChooser.setTextured(graph.isVertexImageTextured());
                 edgeChooser.setTextured(graph.isEdgeImageTextured());*/
 
-                return graphTemp;
+                return new Object[] {
+                    graph,
+                    file.getName()
+                };
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

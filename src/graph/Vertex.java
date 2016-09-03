@@ -1,7 +1,6 @@
 package graph;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import field.Field;
 
@@ -113,6 +112,10 @@ public class Vertex{
 
   public void setDist(double dist) {
     this.dist = dist;
+  }
+
+  public void setField(Field field) {
+    this.field = field;
   }
 
 }
