@@ -14,8 +14,8 @@ import game.GameOfGraphs;
 import game.GraphDrawer;
 import game.Player;
 import game.sprite.Textures;
-import game.ui.*;
 import game.ui.Button;
+import game.ui.*;
 import graph.Edge;
 import graph.Graph;
 import graph.Vector;
@@ -28,7 +28,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class MapEditorView extends GameScene{
+public class MapEditorView extends GameScene {
+
     private Graph graph;
     private static Vertex[] dragEdge;
 
@@ -599,11 +600,6 @@ public class MapEditorView extends GameScene{
                 setEnabled(false);
             });
 
-            E.getE().addComponent(colorMenu);
-            E.getE().addComponent(name);
-            E.getE().addComponent(cancel);
-            E.getE().addComponent(submit);
-
             colorMenu.setEnabled(false);
             name.setEnabled(false);
             cancel.setEnabled(false);
@@ -630,5 +626,6 @@ public class MapEditorView extends GameScene{
         public boolean isActive() {
             return this.getGameScene().isActive() && this.isEnabled();
         }
+
     }
 }
