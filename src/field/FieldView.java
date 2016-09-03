@@ -79,6 +79,16 @@ public class FieldView extends GameScene{
         Buildings.build(buildingDropDownMenu.getOption(), this.currentField, true);
         this.free = false;
 
+        // Update selectedable units
+        this.unitDropDownMenu.getOptions().clear();
+        this.unitDropDownMenu.setOptions(new LinkedList<Integer>() {{
+
+            for (int i = 0; i <= currentField.getUnmovedUnits().size(); i++) {
+                this.add(i);
+            }
+
+        }});
+
     });
 
     //Handelsbutton, welche freigeschaltet werden, nachdem man das zugehörige Gebäude gebaut hat.
