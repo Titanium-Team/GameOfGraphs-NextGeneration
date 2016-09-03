@@ -12,11 +12,9 @@ import game.Player;
 import game.ui.DropDownMenu;
 import game.ui.UIComponent;
 import graph.Vertex;
-import mapEditor.Button;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.LinkedList;
 

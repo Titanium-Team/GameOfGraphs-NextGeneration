@@ -77,6 +77,9 @@ public class GraphController {
         }
 
         String name = JOptionPane.showInputDialog(null, "How should the map be called?", "Name", JOptionPane.QUESTION_MESSAGE);
+        if (name == null){
+            return;
+        }
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

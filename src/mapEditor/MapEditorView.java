@@ -14,7 +14,8 @@ import game.GameOfGraphs;
 import game.GraphDrawer;
 import game.Player;
 import game.sprite.Textures;
-import game.ui.DropDownMenu;
+import game.ui.*;
+import game.ui.Button;
 import graph.Edge;
 import graph.Graph;
 import graph.Vector;
@@ -37,7 +38,6 @@ public class MapEditorView extends GameScene{
 
     private boolean leftMouse = false;
 
-    private Button addVertex, addEdge, save, load, move, check;
     private Field currentField;
     private boolean question = false;
 
@@ -45,16 +45,38 @@ public class MapEditorView extends GameScene{
     private DropDownMenu<Resources> specialResources;
     private DropDownMenu<Integer> forest;
     private DropDownMenu<Player> owner;
+    private Button<String> remove;
 
     public MapEditorView() {
         graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
-        addVertex = new Button(5, 505, 310, 100, Color.WHITE, Color.BLACK, "Add Vertex");
-        addEdge = new Button(320, 505, 310, 100, Color.WHITE, Color.BLACK, "Add Edge");
-        save = new Button(950, 505, 310, 48, Color.WHITE, Color.BLACK, "Save");
-        load = new Button(950, 557, 310, 48, Color.WHITE, Color.BLACK, "Load");
-        move = new Button(950, 615, 310, 48, Color.WHITE, Color.BLACK, "Move");
-        check = new Button(950, 667, 310, 48, Color.WHITE, Color.BLACK, "Check");
+        ArrayList<game.ui.Button<String>> buttons = new ArrayList<>();
+
+        buttons.add(new game.ui.Button<>(this, "Add Vertex", new ILocation(1000, 505), (component, value) -> {
+            chooser = 0;
+        }));
+        buttons.add(new game.ui.Button<>(this, "Add Edge", new ILocation(1000, 530), (component, value) -> {
+            chooser = 1;
+        }));
+        buttons.add(new game.ui.Button<>(this, "Save", new ILocation(1000, 555), (component, value) -> {
+            GameOfGraphs.getGame().getGraphController().save(graph);
+        }));
+        buttons.add(new game.ui.Button<>(this, "Load", new ILocation(1000, 580), (component, value) -> {
+            Graph g = GameOfGraphs.getGame().getGraphController().load();
+            if (g != null){
+                graph = g;
+            }
+        }));
+        buttons.add(new game.ui.Button<>(this, "Move", new ILocation(1000, 605), (component, value) -> {
+            GameOfGraphs.getGame().getGraphController().checkGraph();
+        }));
+        buttons.add(new game.ui.Button<>(this, "Check", new ILocation(1000, 630), (component, value) -> {
+            chooser = 2;
+        }));
+
+        for (game.ui.Button<String> b : buttons){
+            E.getE().addComponent(b);
+        }
 
         E.getE().addComponent(this.questionButton);
 
@@ -108,7 +130,7 @@ public class MapEditorView extends GameScene{
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(180, 565), new Location(195, 585)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.WINDMILL, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(170, 585), new Location(185, 605)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 585), new Location(205, 605)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.LUMBERJACK, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(165, 605), new Location(180, 625)), true, false, 1, (component, value) -> {
@@ -136,6 +158,30 @@ public class MapEditorView extends GameScene{
             E.getE().addComponent(editTexts.get(i));
         }
 
+
+
+        owner = new DropDownMenu<Player>(this, new ILocation(375, 545), new LinkedList<Player>(){{
+            for (Player player:GameOfGraphs.getGame().getPlayers()){
+                add(player);
+            }
+        }}, (component, value) -> {
+            currentField.setPlayer(value);
+        });
+        owner.setBackground(Color.DARK_GRAY);
+        owner.setForeground(Color.BLACK);
+        E.getE().addComponent(owner);
+
+        forest = new DropDownMenu<Integer>(this, new ILocation(375, 525), new LinkedList<Integer>(){{
+            add(1);
+            add(2);
+            add(3);
+        }}, (component, value) -> {
+            currentField.setForestType(value);
+        });
+        forest.setBackground(Color.DARK_GRAY);
+        forest.setForeground(Color.GREEN);
+        E.getE().addComponent(forest);
+
         specialResources = new DropDownMenu<Resources>(this, new ILocation(375, 505), new LinkedList<Resources>(){{
             for(Resources resources : Resources.values()){
                 if (resources.getName().equals("Iron") || resources.getName().equals("Gold") || resources.getName().equals("Wheat") || resources.getName().equals("Tree")) {
@@ -149,27 +195,9 @@ public class MapEditorView extends GameScene{
         specialResources.setForeground(Color.BLUE);
         E.getE().addComponent(specialResources);
 
-        forest = new DropDownMenu<Integer>(this, new ILocation(375, 525), new LinkedList<Integer>(){{
-            add(1);
-            add(2);
-            add(3);
-        }}, (component, value) -> {
-            currentField.setForestType(value);
-        });
-        forest.setBackground(Color.DARK_GRAY);
-        forest.setForeground(Color.GREEN);
-        E.getE().addComponent(forest);
+        remove = new Button<>(this, "Remove", new ILocation(375, 645), (component, value) -> {
 
-        owner = new DropDownMenu<Player>(this, new ILocation(375, 545), new LinkedList<Player>(){{
-            for (Player player:GameOfGraphs.getGame().getPlayers()){
-                add(player);
-            }
-        }}, (component, value) -> {
-            currentField.setPlayer(value);
         });
-        owner.setBackground(Color.DARK_GRAY);
-        owner.setForeground(Color.BLACK);
-        E.getE().addComponent(owner);
     }
 
     private game.ui.Button<String> questionButton = new game.ui.Button<>(this, "?", new ILocation(1235, 10), (ui, value) -> {
@@ -191,7 +219,6 @@ public class MapEditorView extends GameScene{
         g.fillRect(0,500,1280,220);
         g.setColor(Color.BLACK);
         g.drawLine(0,500,1280,500);
-        //g.drawLine(420, 500, 420, 720);
         g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
 
@@ -250,13 +277,6 @@ public class MapEditorView extends GameScene{
             });
 
         }
-
-        /*addVertex.draw(g);
-        addEdge.draw(g);*/
-        save.draw(g);
-        load.draw(g);
-        move.draw(g);
-        check.draw(g);
     }
 
     @Override
@@ -265,22 +285,7 @@ public class MapEditorView extends GameScene{
 
         inputEntry.getMouseEntries().forEach(mouseEntry -> {
             if (!(mouseEntry.getPoint().getX() >= 1280-25 && mouseEntry.getPoint().getX() <= 1280 || mouseEntry.getPoint().getY() >= 500-25 && mouseEntry.getPoint().getY() <= 500)) {
-                if (mouseEntry.getPoint().getX() >= 0 && mouseEntry.getPoint().getX() <= 1280 && mouseEntry.getPoint().getY() >= 500 && mouseEntry.getPoint().getY() <= 720) {
-                    if (addVertex.isPushed(mouseEntry.getPoint())) {
-                        chooser = 0;
-                    } else if (addEdge.isPushed(mouseEntry.getPoint())) {
-                        chooser = 1;
-                    } else if (save.isPushed(mouseEntry.getPoint())) {
-                        GameOfGraphs.getGame().getGraphController().save(graph);
-                    } else if (load.isPushed(mouseEntry.getPoint())) {
-                        graph = GameOfGraphs.getGame().getGraphController().load();
-                    } else if (check.isPushed(mouseEntry.getPoint())) {
-                        GameOfGraphs.getGame().getGraphController().checkGraph();
-                    } else if (move.isPushed(mouseEntry.getPoint())) {
-                        chooser = 2;
-                    }
-
-                } else {
+                if (!(mouseEntry.getPoint().getX() >= 0 && mouseEntry.getPoint().getX() <= 1280 && mouseEntry.getPoint().getY() >= 500 && mouseEntry.getPoint().getY() <= 720)) {
                     if (!question) {
                         final Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
                         if (mouseEntry.getButton() == 1) {
