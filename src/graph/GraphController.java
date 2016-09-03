@@ -22,10 +22,12 @@ public class GraphController {
 
         graph = new Graph();
 
-        Vertex a = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true));
+        KIFraction fraction1 = new KIFraction("Independent");
+        GameOfGraphs.getGame().getPlayers().add(fraction1);
+
+        /*Vertex a = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true));
         Vertex c = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(1),true));
 
-        KIFraction fraction1 = new KIFraction("independent");
         Vertex b = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction1 ,true));
         KIFraction fraction2 = new KIFraction("KIplayer 1");
         Vertex d = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
@@ -45,7 +47,7 @@ public class GraphController {
         graph.addEdge(new Edge(new String[]{e.getID(),c.getID()},38));
 
 
-        GameOfGraphs.getGame().getPlayers().add(fraction1);
+
         GameOfGraphs.getGame().getPlayers().add(fraction2);
         /*for (int i = 0; i < 15; i++){
             graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(2),false)));

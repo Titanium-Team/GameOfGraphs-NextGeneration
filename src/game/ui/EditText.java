@@ -75,6 +75,10 @@ public class EditText<T> extends UIComponent<T>{
                 textWCursor = s1 + " " + s2;
             }
 
+            if (!clicked){
+                textWCursor = (String) text;
+            }
+
             g.setColor(textColor);
             g.drawString(textWCursor, boundingBox.getMin().getX() + 5, boundingBox.getMin().getY() + 15);
         }else{

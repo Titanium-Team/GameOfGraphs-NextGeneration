@@ -39,16 +39,33 @@ public class MapEditorView extends GameScene{
     private boolean leftMouse = false;
 
     private Field currentField;
+    private Edge currentEdge;
     private boolean question = false;
 
     private ArrayList<game.ui.EditText<String>> editTexts;
     private DropDownMenu<Resources> specialResources;
     private DropDownMenu<Integer> forest;
     private DropDownMenu<Player> owner;
-    private Button<String> remove;
+    private EditText<String> weight;
+
+    private PlayerChooser playerChooser;
 
     public MapEditorView() {
         graph = GameOfGraphs.getGame().getGraphController().getGraph();
+
+        playerChooser = new PlayerChooser(this, new ILocation(500, 500), (component, value) -> {
+            GameOfGraphs.getGame().getPlayers().add((Player) value);
+
+            LinkedList<Player> list = new LinkedList<>();
+            for (Player player:GameOfGraphs.getGame().getPlayers()){
+                list.add(player);
+            }
+            list.add(new Player("add New Player", null));
+
+            owner.setOptions(list);
+        });
+        E.getE().addComponent(playerChooser);
+        playerChooser.setEnabled(false);
 
         ArrayList<game.ui.Button<String>> buttons = new ArrayList<>();
 
@@ -72,6 +89,14 @@ public class MapEditorView extends GameScene{
         }));
         buttons.add(new game.ui.Button<>(this, "Check", new ILocation(1000, 630), (component, value) -> {
             chooser = 2;
+        }));
+        buttons.add(new Button<>(this, "Remove All", new ILocation(1000, 655), (component, value) -> {
+            for (Vertex v : graph.getVertices()){
+                graph.removeVertex(v);
+            }
+        }));
+        buttons.add(new Button<>(this, "Remove", new ILocation(1000, 680), (component, value) -> {
+            chooser = 3;
         }));
 
         for (game.ui.Button<String> b : buttons){
@@ -98,25 +123,25 @@ public class MapEditorView extends GameScene{
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(65, 525), new Location(80, 545)), true, false, 1, (component, value) -> {
             currentField.getResources().put(Resources.POPULATION, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 545), new Location(70, 565)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 550), new Location(70, 570)), true, false, 1, (component, value) -> {
             currentField.getResources().put(Resources.FOOD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(60, 565), new Location(75, 585)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(60, 575), new Location(75, 595)), true, false, 1, (component, value) -> {
             currentField.getResources().put(Resources.STONE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(60, 585), new Location(75, 605)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(60, 600), new Location(75, 620)), true, false, 1, (component, value) -> {
             currentField.getResources().put(Resources.WOOD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(65, 605), new Location(80, 625)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(65, 625), new Location(80, 645)), true, false, 1, (component, value) -> {
             currentField.getResources().put(Resources.WHEAT, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 625), new Location(70, 645)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 650), new Location(70, 670)), true, false, 1, (component, value) -> {
             currentField.getResources().put(Resources.TREE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(50, 645), new Location(65, 665)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(50, 675), new Location(65, 695)), true, false, 1, (component, value) -> {
             currentField.getResources().put(Resources.IRON, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 665), new Location(70, 685)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 700), new Location(70, 720)), true, false, 1, (component, value) -> {
             currentField.getResources().put(Resources.GOLD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
 
@@ -124,22 +149,22 @@ public class MapEditorView extends GameScene{
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(160, 525), new Location(175, 545)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.MINE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(160, 545), new Location(175, 565)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(160, 550), new Location(175, 570)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.FARM, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(180, 565), new Location(195, 585)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(180, 575), new Location(195, 595)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.WINDMILL, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 585), new Location(205, 605)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 600), new Location(205, 620)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.LUMBERJACK, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(165, 605), new Location(180, 625)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(165, 625), new Location(180, 645)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.BAZAAR, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 625), new Location(205, 645)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 650), new Location(205, 670)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.SLAVE_MARKET, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 645), new Location(205, 665)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 675), new Location(205, 695)), true, false, 1, (component, value) -> {
             currentField.getBuildings().put(Buildings.MARKETPLACE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
 
@@ -160,18 +185,23 @@ public class MapEditorView extends GameScene{
 
 
 
-        owner = new DropDownMenu<Player>(this, new ILocation(375, 545), new LinkedList<Player>(){{
+        owner = new DropDownMenu<Player>(this, new ILocation(375, 555), new LinkedList<Player>(){{
             for (Player player:GameOfGraphs.getGame().getPlayers()){
                 add(player);
             }
+            add(new Player("add New Player", null));
         }}, (component, value) -> {
-            currentField.setPlayer(value);
+            if (value.getName().equals("add New Player")){
+                playerChooser.setEnabled(true);
+            }else {
+                currentField.setPlayer(value);
+            }
         });
         owner.setBackground(Color.DARK_GRAY);
         owner.setForeground(Color.BLACK);
         E.getE().addComponent(owner);
 
-        forest = new DropDownMenu<Integer>(this, new ILocation(375, 525), new LinkedList<Integer>(){{
+        forest = new DropDownMenu<Integer>(this, new ILocation(375, 530), new LinkedList<Integer>(){{
             add(1);
             add(2);
             add(3);
@@ -195,9 +225,12 @@ public class MapEditorView extends GameScene{
         specialResources.setForeground(Color.BLUE);
         E.getE().addComponent(specialResources);
 
-        remove = new Button<>(this, "Remove", new ILocation(375, 645), (component, value) -> {
-
+        weight = new EditText<String>(this, "", new IBoundingBox(new Location(65, 505), new Location(105, 525)), true, true, (component, value) -> {
+            currentEdge.setWeight(Double.parseDouble(value));
         });
+        weight.setLineColor(Color.ORANGE);
+        weight.setTextColor(Color.ORANGE);
+        E.getE().addComponent(weight);
     }
 
     private game.ui.Button<String> questionButton = new game.ui.Button<>(this, "?", new ILocation(1235, 10), (ui, value) -> {
@@ -222,8 +255,8 @@ public class MapEditorView extends GameScene{
         g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
 
-        if(currentField == null) {
-            g.drawString("No field selected.", 520, 600);
+        if(currentField == null && currentEdge == null) {
+            g.drawString("No field or edge selected.", 520, 600);
 
             for (game.ui.EditText<String> text : editTexts){
                 text.setEnabled(false);
@@ -232,7 +265,11 @@ public class MapEditorView extends GameScene{
             forest.setEnabled(false);
             owner.setEnabled(false);
 
-        }else{
+            weight.setEnabled(false);
+
+        }else if (currentEdge == null){
+            weight.setEnabled(false);
+
             //Zeichnen der Statistiken
             g.setColor(Color.ORANGE);
             g.drawString(String.valueOf("FERTILITY: "), 20, 520);
@@ -243,9 +280,9 @@ public class MapEditorView extends GameScene{
             g.setColor(Color.BLUE);
             g.drawString(String.valueOf("SPECIAL: "), 320, 520);
             g.setColor(Color.GREEN);
-            g.drawString(String.valueOf("FOREST: "), 320, 540);
+            g.drawString(String.valueOf("FOREST: "), 320, 545);
             g.setColor(Color.BLACK);
-            g.drawString("OWNER: ", 320, 560);
+            g.drawString("OWNER: ", 320, 570);
 
             for (game.ui.EditText<String> text : editTexts){
                 text.setEnabled(true);
@@ -263,7 +300,7 @@ public class MapEditorView extends GameScene{
             final int[] y = {0};
             resources.forEach((resource, amount) -> {
 
-                g.drawString(resource.getName() + ": ", 20, 540 + y[0] * 20);
+                g.drawString(resource.getName() + ": ", 20, 540 + y[0] * 25);
 
                 y[0]++;
             });
@@ -272,10 +309,23 @@ public class MapEditorView extends GameScene{
             y[0] = 0;
             buildings.forEach((building, amount) -> {
 
-                g.drawString(building.getName() + ": ", 120, 540 + y[0] * 20);
+                g.drawString(building.getName() + ": ", 120, 540 + y[0] * 25);
                 y[0]++;
             });
 
+        }else {
+            for (game.ui.EditText<String> text : editTexts){
+                text.setEnabled(false);
+            }
+            specialResources.setEnabled(false);
+            forest.setEnabled(false);
+            owner.setEnabled(false);
+
+            weight.setEnabled(true);
+
+            //Zeichnen der Statistiken
+            g.setColor(Color.ORANGE);
+            g.drawString(String.valueOf("Weight: "), 20, 520);
         }
     }
 
@@ -287,6 +337,9 @@ public class MapEditorView extends GameScene{
             if (!(mouseEntry.getPoint().getX() >= 1280-25 && mouseEntry.getPoint().getX() <= 1280 || mouseEntry.getPoint().getY() >= 500-25 && mouseEntry.getPoint().getY() <= 500)) {
                 if (!(mouseEntry.getPoint().getX() >= 0 && mouseEntry.getPoint().getX() <= 1280 && mouseEntry.getPoint().getY() >= 500 && mouseEntry.getPoint().getY() <= 720)) {
                     if (!question) {
+                        currentEdge = null;
+                        currentField = null;
+
                         final Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
                         if (mouseEntry.getButton() == 1) {
                             leftMouse = true;
@@ -374,12 +427,22 @@ public class MapEditorView extends GameScene{
                                             break;
                                     }
                                 }
+                            }else {
+                                Edge edge = graph.getEdge(((int) mouseEntry.getPoint().getX()), ((int) mouseEntry.getPoint().getY()), 5);
+
+                                if (edge != null){
+                                    currentEdge = edge;
+
+                                    weight.setText(String.valueOf(edge.getWeight()));
+                                }else {
+
+                                }
                             }
                             switch (chooser) {
                                 case 0:
                                     if (vertex != null) {
                                         temp = vertex;
-                                    } else {
+                                    } else if (currentEdge == null){
                                         ArrayList<Vertex> vertexList = graph.getVertices();
                                         graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0), true)));
                                     }
@@ -390,6 +453,17 @@ public class MapEditorView extends GameScene{
                                         dragEdge = new Vertex[]{new Vertex("equals", vertex.getX(), vertex.getY(), null), new Vertex("equals", vertex.getX(), vertex.getY(), null)};
                                     }
                                     break;
+                                case 3:
+                                    if (vertex != null && currentEdge == null){
+                                        graph.removeVertex(vertex);
+                                        currentField = null;
+                                    }else {
+                                        Edge edge = graph.getEdge(((int) mouseEntry.getPoint().getX()), ((int) mouseEntry.getPoint().getY()), 5);
+                                        if (edge != null){
+                                            graph.removeEdge(edge);
+                                            currentEdge = null;
+                                        }
+                                    }
                             }
                         }
                     }
@@ -483,5 +557,78 @@ public class MapEditorView extends GameScene{
 
     public static Vertex[] getDragEdge() {
         return dragEdge;
+    }
+
+    private class PlayerChooser extends UIComponent{
+
+        private ArrayList<Color> colorList;
+        private ILocation location;
+
+        private DropDownMenu<Color> colorMenu;
+        private EditText<String> name;
+
+        private Button<String> cancel, submit;
+
+        public PlayerChooser(GameScene gameScene, ILocation location, Trigger trigger) {
+            super(gameScene, trigger);
+            this.location = location;
+
+            colorList = new ArrayList<>();
+            colorList.add(Color.CYAN);
+            colorList.add(Color.BLACK);
+            colorList.add(Color.BLUE);
+            colorList.add(Color.RED);
+            colorList.add(Color.MAGENTA);
+            colorList.add(Color.YELLOW);
+            colorList.add(Color.GRAY);
+
+            colorMenu = new DropDownMenu(gameScene, new ILocation(location.getX()+50, location.getY()+10), new LinkedList<String>(){{
+                for(Color c : colorList){
+                    add(c.toString());
+                }
+            }}, (component, value) -> {});
+
+            name = new EditText<String>(gameScene, "", new IBoundingBox(new ILocation(location.getX()+50, location.getY()+20), new ILocation(location.getX()+100, location.getY()+30)), false, false, (component, value) -> {});
+
+            cancel = new Button<>(gameScene, "Cancel", new ILocation(location.getX()+50, location.getY()+40), (component, value) -> {
+                setEnabled(false);
+            });
+            submit = new Button<>(gameScene, "Submit", new ILocation(location.getX()+75, location.getY()+40), (component, value) -> {
+                getTrigger().call(this, new Player(name.getText(), colorMenu.getOption()));
+
+                setEnabled(false);
+            });
+
+            E.getE().addComponent(colorMenu);
+            E.getE().addComponent(name);
+            E.getE().addComponent(cancel);
+            E.getE().addComponent(submit);
+
+            colorMenu.setEnabled(false);
+            name.setEnabled(false);
+            cancel.setEnabled(false);
+            submit.setEnabled(false);
+        }
+
+        @Override
+        public void render(Layers layers) {
+            Graphics2D g = layers.first().getGraphics2D();
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(location.getX(), location.getY(), 175, 100);
+        }
+
+        @Override
+        public void update(InputEntry inputEntry, long l) {
+            colorMenu.setEnabled(isEnabled());
+            name.setEnabled(isEnabled());
+            cancel.setEnabled(isEnabled());
+            submit.setEnabled(isEnabled());
+        }
+
+        @Override
+        public boolean isActive() {
+            return this.getGameScene().isActive() && this.isEnabled();
+        }
     }
 }
