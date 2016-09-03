@@ -141,45 +141,45 @@ public class MapEditor extends GameScene{
             currentVertex.getField().setUnits(units);
         }));
 
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(65, 525), new Location(80, 545)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 525), new Location(99, 545)), true, false, 1, (component, value) -> {
             currentVertex.getField().getResources().put(Resources.POPULATION, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 550), new Location(70, 570)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 550), new Location(99, 570)), true, false, 1, (component, value) -> {
             currentVertex.getField().getResources().put(Resources.FOOD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(60, 575), new Location(75, 595)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 575), new Location(99, 595)), true, false, 1, (component, value) -> {
             currentVertex.getField().getResources().put(Resources.STONE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(60, 600), new Location(75, 620)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 600), new Location(99, 620)), true, false, 1, (component, value) -> {
             currentVertex.getField().getResources().put(Resources.WOOD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(65, 625), new Location(80, 645)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 625), new Location(99, 645)), true, false, 1, (component, value) -> {
             currentVertex.getField().getResources().put(Resources.WHEAT, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 650), new Location(70, 670)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 650), new Location(99, 670)), true, false, 1, (component, value) -> {
             currentVertex.getField().getResources().put(Resources.TREE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(50, 675), new Location(65, 695)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 675), new Location(99, 695)), true, false, 1, (component, value) -> {
             currentVertex.getField().getResources().put(Resources.IRON, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 700), new Location(70, 720)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 700), new Location(99, 720)), true, false, 1, (component, value) -> {
             currentVertex.getField().getResources().put(Resources.GOLD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
 
 
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(160, 525), new Location(175, 545)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 525), new Location(205, 545)), true, false, 1, (component, value) -> {
             currentVertex.getField().getBuildings().put(Buildings.MINE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(160, 550), new Location(175, 570)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 550), new Location(205, 570)), true, false, 1, (component, value) -> {
             currentVertex.getField().getBuildings().put(Buildings.FARM, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(180, 575), new Location(195, 595)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 575), new Location(205, 595)), true, false, 1, (component, value) -> {
             currentVertex.getField().getBuildings().put(Buildings.WINDMILL, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 600), new Location(205, 620)), true, false, 1, (component, value) -> {
             currentVertex.getField().getBuildings().put(Buildings.LUMBERJACK, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
-        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(165, 625), new Location(180, 645)), true, false, 1, (component, value) -> {
+        editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 625), new Location(205, 645)), true, false, 1, (component, value) -> {
             currentVertex.getField().getBuildings().put(Buildings.BAZAAR, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 650), new Location(205, 670)), true, false, 1, (component, value) -> {
