@@ -1,6 +1,8 @@
 package ki;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import field.resource.Resource;
+import field.resource.Resources;
 import game.Player;
 import graph.Vertex;
 
@@ -16,15 +18,20 @@ import static game.GameOfGraphs.getGame;
  */
 public class KIFraction extends Player{
 
+    @JsonIgnore
     private ArrayList<Property> properties = new ArrayList<Property>();
+    @JsonIgnore
     private Random r = new Random();
+    @JsonIgnore
     private int developingChance = r.nextInt(10);
+    @JsonIgnore
     private HashMap<Player,Integer> trust=new HashMap<Player,Integer>();
-    private HashMap<Vertex,HashMap<Resource,Integer>> goals = new HashMap<>();
+    @JsonIgnore
+    private HashMap<Vertex,HashMap<Resources,Integer>> goals = new HashMap<>();
 
     public KIFraction(String name) {
         //super(name);
-        super(name, true, Color.BLACK);
+        super(name, Color.BLACK);
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
     }
@@ -41,6 +48,7 @@ public class KIFraction extends Player{
         return properties;
     }
 
+    @JsonIgnore
     public boolean isFraction(){
         return !name.equals( "independent");
     }
@@ -78,7 +86,7 @@ public class KIFraction extends Player{
         this.name = name;
     }
 
-    public HashMap<Vertex,HashMap<Resource,Integer>> getGoals() {
+    public HashMap<Vertex,HashMap<Resources,Integer>> getGoals() {
         return goals;
     }
 }

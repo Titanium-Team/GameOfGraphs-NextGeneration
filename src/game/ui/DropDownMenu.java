@@ -27,6 +27,9 @@ public class DropDownMenu<T> extends UIComponent<T> {
     private int selectedIndex = 0;
     private boolean open = false;
 
+    private Color background = null;
+    private Color foreground = null;
+
     public DropDownMenu(GameScene gameScene, ILocation location, LinkedList<T> options, Trigger<T> trigger) {
         super(gameScene, trigger);
         this.location = location;
@@ -110,6 +113,7 @@ public class DropDownMenu<T> extends UIComponent<T> {
         for(T entry : this.options) {
             maxWidth = Math.max(maxWidth, fontMetrics.stringWidth(String.valueOf(entry)));
         }
+
         // height
         int height = fontMetrics.getHeight();
         int totalHeight = this.options.size() * height;
@@ -123,27 +127,52 @@ public class DropDownMenu<T> extends UIComponent<T> {
 
             }
 
-            this.openBoxBoundings = new IBoundingBox(new ILocation(location.getX(), location.getY()), new ILocation(location.getX() + maxWidth + 4, location.getY() + totalHeight + this.options.size()));
+            this.openBoxBoundings = new IBoundingBox(new ILocation(location.getX(), location.getY()), new ILocation(location.getX() + maxWidth + 4, location.getY() + totalHeight + 2));
 
         }
 
-
         if(this.open) {
 
-            g.drawRect(location.getX(), location.getY(), this.openBoxBoundings.getWidth(), this.openBoxBoundings.getHeight());
+            if (this.background != null){
+                g.setColor(this.background);
+                g.fillRect(this.location.getX(), this.location.getY(), this.openBoxBoundings.getWidth(), this.openBoxBoundings.getHeight());
+            }
+
+            if (this.foreground != null){
+                g.setColor(this.foreground);
+            }
+
+            g.drawRect(this.location.getX(), this.location.getY(), this.openBoxBoundings.getWidth(), this.openBoxBoundings.getHeight());
 
             int y = location.getY();
             for(T entry : this.options) {
 
-                g.drawString(String.valueOf(entry), location.getX() + 2, y + height + 1);
+                Font defaultFont = g.getFont();
+
+                if(this.options.get(this.selectedIndex).equals(entry)) {
+                    g.setFont(new Font("default", Font.BOLD, defaultFont.getSize()));
+                }
+
+                g.drawString(String.valueOf(entry), location.getX() + 2, y + height - 1);
                 y += height;
+
+                g.setFont(defaultFont);
 
             }
 
         } else if(!(this.options.isEmpty())) {
 
-            g.drawRect(location.getX(), location.getY(), maxWidth + 4, height + 4);
-            g.drawString(String.valueOf(this.options.get(selectedIndex)), location.getX() + 2, (location.getY() + height));
+            if (this.background != null){
+                g.setColor(this.background);
+                g.fillRect(this.location.getX(), this.location.getY(), maxWidth + 4, height + 4);
+            }
+
+            if (this.foreground != null){
+                g.setColor(this.foreground);
+            }
+
+            g.drawRect(this.location.getX(), this.location.getY(), maxWidth + 4, height + 4);
+            g.drawString(String.valueOf(this.options.get(this.selectedIndex)), location.getX() + 2, (location.getY() + height - 1));
 
         }
     }
@@ -153,4 +182,15 @@ public class DropDownMenu<T> extends UIComponent<T> {
         return this.getGameScene().isActive() && this.isEnabled();
     }
 
+    public void setBackground(Color background) {
+        this.background = background;
+    }
+
+    public void setForeground(Color foreground) {
+        this.foreground = foreground;
+    }
+
+    public List<T> getOptions() {
+        return options;
+    }
 }

@@ -100,7 +100,7 @@ public class Main {
         e.addScene(new FieldView());
         e.addScene(new MapEditorView());
 
-        e.show(FieldView.class);
+        e.show(MenuView.class);
 
         E.getE().addComponent(new GameComponent() {
             @Override

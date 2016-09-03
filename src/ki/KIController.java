@@ -65,10 +65,10 @@ public class KIController {
 					current = (KIFraction)p1;
 					getGame().getSimulationController().run(current);
 					if (current.getGoals().containsKey(v1)) {
-						Iterator<Map.Entry<Resource, Integer>> aIterator = current.getGoals().get(v1).entrySet().iterator();
+						Iterator<Map.Entry<Resources, Integer>> aIterator = current.getGoals().get(v1).entrySet().iterator();
 						while (aIterator.hasNext()) {
 
-							Map.Entry<Resource, Integer> entry = aIterator.next();
+							Map.Entry<Resources, Integer> entry = aIterator.next();
 
 							if (v1.getField().getResources().get(entry.getKey()) >= entry.getValue()) {
 								aIterator.remove();
@@ -76,7 +76,7 @@ public class KIController {
 
 						}
 					} else {
-						current.getGoals().put(v1, new HashMap<Resource, Integer>());
+						current.getGoals().put(v1, new HashMap<Resources, Integer>());
 					}
 					if (!current.isFraction()) {
 						if (!current.getProperties().contains(Property.PEACEFUL)) {
@@ -198,18 +198,18 @@ public class KIController {
 								}
 							}
 							if (partner != null) {
-								HashMap<Resource, Integer> goals, wanted = new HashMap<>(), offered = new HashMap<>(), res;
+								HashMap<Resources, Integer> goals, wanted = new HashMap<>(), offered = new HashMap<>(), res;
 								goals = current.getGoals().get(v1);
 								int greed = r.nextInt(goals.entrySet().size() + 1);
-								for (Map.Entry<Resource, Integer> e : goals.entrySet()) {
+								for (Map.Entry<Resources, Integer> e : goals.entrySet()) {
 									if (greed > 0) {
 										wanted.put(e.getKey(), e.getValue() - v1.getField().getResources().get(e.getKey()));
 										greed--;
 									}
 								}
-								res = ((HashMap<Resource, Integer>) v1.getField().getResources());
+								res = ((HashMap<Resources, Integer>) v1.getField().getResources());
 								int generosity = r.nextInt(res.entrySet().size() - goals.entrySet().size()) + 1;
-								for (Map.Entry<Resource, Integer> e : res.entrySet()) {
+								for (Map.Entry<Resources, Integer> e : res.entrySet()) {
 									if (generosity > 0 && (!goals.containsKey(e.getKey()) || goals.get(e.getKey()) > 0) && e.getValue() > 1) {
 										offered.put(e.getKey(), r.nextInt(e.getValue() / 2));
 									}
@@ -238,13 +238,13 @@ public class KIController {
 									req.decline();
 								}
 							} else if (req instanceof TradeRequest) {
-								HashMap<Resource, Integer> offRes = ((TradeRequest) req).getOfferedResources();
-								HashMap<Resource, Integer> reqRes = ((TradeRequest) req).getRequestedResources();
+								HashMap<Resources, Integer> offRes = ((TradeRequest) req).getOfferedResources();
+								HashMap<Resources, Integer> reqRes = ((TradeRequest) req).getRequestedResources();
 								Vertex place = ((TradeRequest) req).getPlace();
-								HashMap<Resource, Integer> res = current.getGoals().get(place);
+								HashMap<Resources, Integer> res = current.getGoals().get(place);
 								boolean isGoal = false;
 								int minTrust = 60;
-								for (Map.Entry<Resource, Integer> e : reqRes.entrySet()) {
+								for (Map.Entry<Resources, Integer> e : reqRes.entrySet()) {
 									if (!isGoal) {
 										if (res.containsKey(e.getKey())) {
 											isGoal = true;
@@ -252,7 +252,7 @@ public class KIController {
 									}
 								}
 								if (!isGoal) {
-									for (Map.Entry<Resource, Integer> e : offRes.entrySet()) {
+									for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
 										if (res.containsKey(e.getKey())) {
 											minTrust -= 10;
 											if (e.getValue() >= res.get(e.getKey())) {

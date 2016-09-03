@@ -24,17 +24,15 @@ public class Field {
     private int fertility;
     private int mountains;
     //Specialresource
-    private Resource localResource;
+    private Resources localResource;
 
     private  int forestType;
 
     //Alle Resouorcen eines Fields werden in einer Map gemanaged
-    @JsonIgnore
-    private Map<Resource, Integer> resources;
+    private Map<Resources, Integer> resources;
 
     //Alle Buildings eines Fields werden in einer Map gemanaged
-    @JsonIgnore
-    private Map<Building, Integer> buildings;
+    private Map<Buildings, Integer> buildings;
 
     //Der Player dem das Field gehört
     private Player player;
@@ -55,17 +53,17 @@ public class Field {
 
         this.forestType = forestType;
 
-        buildings = new LinkedHashMap<Building, Integer>(){{
+        buildings = new LinkedHashMap<Buildings, Integer>(){{
 
-            for(Building key : Buildings.values()) {
+            for(Buildings key : Buildings.values()) {
                 if (key != Buildings.UNIT) {
                     this.put(key, 0);
                 }
             }
         }};
-        resources = new LinkedHashMap<Resource, Integer>(){{
+        resources = new LinkedHashMap<Resources, Integer>(){{
 
-            for(Resource key : Resources.values()) {
+            for(Resources key : Resources.values()) {
                 if(key == Resources.FOOD){
                     this.put(key, fertility);
                 } else if (key == Resources.STONE){
@@ -94,6 +92,7 @@ public class Field {
      * Gibt die Untis zurück, die auf dem Feld stehen und sich noch nicht bewegt haben.
      * @return
      */
+    @JsonIgnore
     public ArrayList<Unit> getUnmovedUnits(){
 
         ArrayList<Unit> unmovedUnits = new ArrayList<>();
@@ -145,20 +144,19 @@ public class Field {
     }
 
 
-    public Resource getLocalResource() {
+    public Resources getLocalResource() {
         return localResource;
     }
 
-    public void setLocalResource(Resource localResource) {
+    public void setLocalResource(Resources localResource) {
         this.localResource = localResource;
     }
 
-    public Map<Resource, Integer> getResources() {
+    public Map<Resources, Integer> getResources() {
         return resources;
     }
 
-    public Map<Building, Integer> getBuildings() {
+    public Map<Buildings, Integer> getBuildings() {
         return buildings;
     }
-
 }

@@ -1,5 +1,8 @@
 package game;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import graph.Vertex;
 import ki.AllianceRequest;
 import ki.Notification;
@@ -15,32 +18,38 @@ public class Player {
 
     protected ArrayList<Player> alliances = new ArrayList<>();
     private ArrayList<Notification> notifications = new ArrayList<>();
-    private boolean isKI = false;
+
+    @JsonIgnore
     protected Queue<Request> requests = new Queue<>();
+
+    @JsonIgnore
     private Color color;
 
 
-    public Player(String name, boolean isKI, Color color) {
+    public Player(String name, Color color) {
         this.name = name;
-        this.isKI = isKI;
         this.color = color;
+    }
+
+    @JsonCreator
+    public Player(@JsonProperty("name") String name, @JsonProperty("red")  int red, @JsonProperty("blue")  int blue, @JsonProperty("green")  int green) {
+        this.name = name;
+        this.color = new Color(red, blue, green);
     }
 
     public String getName() {
         return this.name;
     }
 
+
+    @JsonIgnore
     public ArrayList<Vertex> getFields() {
 
         return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer() == this).collect(Collectors.toCollection(ArrayList::new));
 
     }
 
-    public boolean isKI() {
-        return this.isKI;
-
-    }
-
+    @JsonIgnore
     public boolean isActive() {
         return !(this.getFields().isEmpty());
     }
@@ -108,5 +117,17 @@ public class Player {
 
     public Color getColor() {
         return color;
+    }
+
+    public int getRed(){
+        return color.getRed();
+    }
+
+    public int getBlue(){
+        return color.getBlue();
+    }
+
+    public int getGreen(){
+        return color.getGreen();
     }
 }

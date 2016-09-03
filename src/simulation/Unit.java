@@ -1,5 +1,7 @@
 package simulation;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import game.Player;
 
 public class Unit {
@@ -7,7 +9,8 @@ public class Unit {
     private boolean moved;
     private Player player;
 
-    public Unit(Player player){
+    @JsonCreator
+    public Unit(@JsonProperty("player") Player player){
         this.player = player;
     }
 

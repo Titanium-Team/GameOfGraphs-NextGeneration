@@ -1,6 +1,7 @@
 package ki;
 
 import field.resource.Resource;
+import field.resource.Resources;
 import game.Player;
 import graph.Vertex;
 
@@ -15,21 +16,21 @@ import static game.GameOfGraphs.getGame;
  */
 public class TradeRequest extends Request {
 
-	private HashMap<Resource,Integer> offeredResources, requestedResources;
+	private HashMap<Resources,Integer> offeredResources, requestedResources;
 	private Vertex place;
 
-	public TradeRequest(Player parent, HashMap<Resource, Integer> offeredResources, HashMap<Resource, Integer> requestedResources,Vertex place,Player recipient) {
+	public TradeRequest(Player parent, HashMap<Resources, Integer> offeredResources, HashMap<Resources, Integer> requestedResources, Vertex place, Player recipient) {
 		super(parent,recipient);
 		this.offeredResources = offeredResources;
 		this.requestedResources = requestedResources;
 		this.place=place;
 	}
 
-	public HashMap<Resource, Integer> getOfferedResources() {
+	public HashMap<Resources, Integer> getOfferedResources() {
 		return offeredResources;
 	}
 
-	public HashMap<Resource, Integer> getRequestedResources() {
+	public HashMap<Resources, Integer> getRequestedResources() {
 		return requestedResources;
 	}
 
@@ -48,8 +49,8 @@ public class TradeRequest extends Request {
 	void accept() {
 		Vertex root = getGame().getKiController().getClosestVertex(place,this.getRecipient());
 		if(root!=null && getGame().getGraphController().getGraph().getNeighbours(place).contains(root)) {
-			HashMap<Resource,Integer> temp1= new HashMap<>();
-			HashMap<Resource,Integer> temp2=new HashMap<>();
+			HashMap<Resources,Integer> temp1= new HashMap<>();
+			HashMap<Resources,Integer> temp2=new HashMap<>();
 			boolean possible;
 			Depot depot;
 			depot=checkResources(root,temp1,requestedResources);
@@ -78,16 +79,16 @@ public class TradeRequest extends Request {
 	 * @param resources Die geforderten Ressourcen
 	 * @return aktualisierte Ressourcen und ob der Handel möglich ist
 	 */
-	private Depot checkResources(Vertex place, HashMap<Resource,Integer> temp, HashMap<Resource,Integer> resources){
+	private Depot checkResources(Vertex place, HashMap<Resources,Integer> temp, HashMap<Resources,Integer> resources){
 		Depot dep;
 		boolean result=true;
-		HashMap<Resource,Integer> res;
+		HashMap<Resources,Integer> res;
 		if(resources.equals(requestedResources)){
 			res=offeredResources;
 		}else{
 			res=requestedResources;
 		}
-		for (Map.Entry<Resource,Integer> e : place.getField().getResources().entrySet()) {
+		for (Map.Entry<Resources,Integer> e : place.getField().getResources().entrySet()) {
 			if(result){
 				if(place.getField().getResources().get(e.getKey())>=resources.get(e.getKey())){
 					temp.put(e.getKey(),place.getField().getResources().get(e.getKey())-resources.get(e.getKey())+res.get(e.getKey()));
@@ -103,8 +104,8 @@ public class TradeRequest extends Request {
 	@Override
 	public String toString() {
 		String result =getParent().toString() + " wants to trade with you. He offers you ";
-		Set<Map.Entry<Resource,Integer>> set=offeredResources.entrySet();
-		for (Map.Entry<Resource, Integer>e:set){
+		Set<Map.Entry<Resources,Integer>> set=offeredResources.entrySet();
+		for (Map.Entry<Resources, Integer>e:set){
 			result+=e.getValue() + e.getKey().toString();
 			result+=",";
 		}
@@ -113,7 +114,7 @@ public class TradeRequest extends Request {
 		}
 		result+="and wants ";
 		set=requestedResources.entrySet();
-		for (Map.Entry<Resource, Integer>e:set){
+		for (Map.Entry<Resources, Integer>e:set){
 			result+=e.getValue() + e.getKey().toString();
 			result+=",";
 		}
