@@ -39,11 +39,6 @@ public class GameOfGraphs {
 		this.loadingManager.add(Textures.values());
 		this.loadingManager.load();
 
-		//Players
-		this.players.add(new Player("Jan", Color.CYAN));
-		this.players.add(new Player("Jonas", Color.RED));
-		//this.players.add(new KIFraction("Independent"));
-
 		//Controller
 		eventManager = new EventManager();
 		fieldController = new FieldController();

@@ -29,9 +29,9 @@ public class KIFraction extends Player{
     @JsonIgnore
     private HashMap<Vertex,HashMap<Resources,Integer>> goals = new HashMap<>();
 
-    public KIFraction(String name) {
+    public KIFraction(String name, Color color) {
         //super(name);
-        super(name, Color.BLACK);
+        super(name, color);
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
     }

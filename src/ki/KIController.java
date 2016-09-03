@@ -12,6 +12,8 @@ import graph.Graph;
 import graph.List;
 import graph.Vertex;
 import simulation.Unit;
+
+import java.awt.*;
 import java.util.*;
 
 import static field.resource.Resources.FOOD;
@@ -44,7 +46,7 @@ public class KIController {
 			//RebellionNotification
 			if (v1.getField().getResources().get(Resources.FOOD) < 0 && r.nextInt(100) < 50 && v1.getField().getResources().get(POPULATION) > 1) {
 				ArrayList<Unit> rebels = new ArrayList<>();
-				KIFraction rebelPlayer = new KIFraction("independent");
+				KIFraction rebelPlayer = new KIFraction("Independent", new Color(232, 77, 91));
 				for (int i = 0; i < v1.getField().getResources().get(POPULATION) / 2; i++) {
 					rebels.add(new Unit(rebelPlayer));
 				}

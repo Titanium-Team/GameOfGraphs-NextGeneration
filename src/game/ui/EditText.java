@@ -61,6 +61,7 @@ public class EditText<T> extends UIComponent<T>{
     public void render(Layers layers) {
         Graphics2D g = layers.first().getGraphics2D();
 
+        g.setStroke(new BasicStroke(1));
         g.setColor(lineColor);
         g.drawRect(boundingBox.getMin().getX(), boundingBox.getMin().getY(), boundingBox.getWidth(), boundingBox.getHeight());
         g.setClip(boundingBox.getMin().getX(), boundingBox.getMin().getY(), boundingBox.getWidth(), boundingBox.getHeight());
@@ -175,6 +176,7 @@ public class EditText<T> extends UIComponent<T>{
 
     public void setText(T text) {
         this.text = text;
+        cursor = ((String) text).length();
     }
 
     public void setTextColor(Color textColor) {

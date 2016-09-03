@@ -8,7 +8,7 @@ import game.GameOfGraphs;
 import game.MenuView;
 import game.Player;
 import ki.KIFraction;
-import mapEditor.MapEditorView;
+import mapEditor.MapEditor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,7 +98,7 @@ public class Main {
 
         e.addScene(new MenuView());
         e.addScene(new FieldView());
-        e.addScene(new MapEditorView());
+        e.addScene(new MapEditor());
 
         e.show(MenuView.class);
 

@@ -9,6 +9,7 @@ import ki.KIFraction;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class GraphController {
 
         graph = new Graph();
 
-        KIFraction fraction1 = new KIFraction("Independent");
+        KIFraction fraction1 = new KIFraction("Independent", new Color(232, 77, 91));
         GameOfGraphs.getGame().getPlayers().add(fraction1);
 
         /*Vertex a = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true));
@@ -67,6 +68,14 @@ public class GraphController {
 
 
     public void save(Graph graph) {
+        if (GameOfGraphs.getGame().getPlayers().size() == 1) {
+            int value = JOptionPane.showConfirmDialog(null, "You need at leat 2 Players, thats why you can't play this map. Do you still want to save it?", "Save?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (value == JOptionPane.YES_OPTION) {
+                graph.setChecked(false);
+            } else {
+                return;
+            }
+        }
         if (!checkGraph()){
             int value = JOptionPane.showConfirmDialog(null, "Not all vertecies are joined, thats why you can't play this map. Do you still want to save it?", "Save?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if (value == JOptionPane.YES_OPTION){

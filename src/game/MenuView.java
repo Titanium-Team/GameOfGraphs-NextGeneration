@@ -9,8 +9,7 @@ import field.FieldView;
 import game.ui.Button;
 import game.ui.DropDownMenu;
 import game.ui.UIComponent;
-import ki.TradeView;
-import mapEditor.MapEditorView;
+import mapEditor.MapEditor;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -33,7 +32,7 @@ public class MenuView extends GameScene {
 
     {
         this.options.put("Play", FieldView.class);
-        this.options.put("Map Editor", MapEditorView.class);
+        this.options.put("Map Editor", MapEditor.class);
         this.options.put("Exit", null);
     }
 

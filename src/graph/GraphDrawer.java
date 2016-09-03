@@ -1,11 +1,8 @@
-package game;
+package graph;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
-import graph.Edge;
-import graph.Graph;
-import graph.Vertex;
-import mapEditor.MapEditorView;
+import mapEditor.MapEditor;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -54,14 +51,14 @@ public class GraphDrawer {
         g.setClip(oldClip);
 
         ArrayList<Edge> edgeList = graph.getEdges();
-        if (whoAreYou.equals("MapEditor") && MapEditorView.getDragEdge() != null ) {
+        if (whoAreYou.equals("MapEditor") && MapEditor.getDragEdge() != null ) {
             edgeList.add(new Edge(new String[]{"equals", "equals"}, 0));
         }
         for (Edge edge:edgeList) {
             Vertex vertex1 = null, vertex2 = null;
             if (whoAreYou.equals("MapEditor") && edge.getVerticesId()[0].equals("equals") && edge.getVerticesId()[1].equals("equals")){
-                vertex1 = MapEditorView.getDragEdge()[0];
-                vertex2 = MapEditorView.getDragEdge()[1];
+                vertex1 = MapEditor.getDragEdge()[0];
+                vertex2 = MapEditor.getDragEdge()[1];
             }else {
                 vertex1 = edge.getVerticesId(graph)[0];
                 vertex2 = edge.getVerticesId(graph)[1];

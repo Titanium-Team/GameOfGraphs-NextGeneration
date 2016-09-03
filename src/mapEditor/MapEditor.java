@@ -11,7 +11,7 @@ import field.Field;
 import field.buildings.Buildings;
 import field.resource.Resources;
 import game.GameOfGraphs;
-import game.GraphDrawer;
+import graph.GraphDrawer;
 import game.Player;
 import game.sprite.Textures;
 import game.ui.*;
@@ -20,15 +20,14 @@ import graph.Edge;
 import graph.Graph;
 import graph.Vector;
 import graph.Vertex;
+import ki.KIFraction;
 import simulation.Unit;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
-public class MapEditorView extends GameScene{
+public class MapEditor extends GameScene{
     private Graph graph;
     private static Vertex[] dragEdge;
 
@@ -38,7 +37,7 @@ public class MapEditorView extends GameScene{
 
     private boolean leftMouse = false;
 
-    private Field currentField;
+    private Vertex currentVertex;
     private Edge currentEdge;
     private boolean question = false;
 
@@ -47,22 +46,21 @@ public class MapEditorView extends GameScene{
     private DropDownMenu<Integer> forest;
     private DropDownMenu<Player> owner;
     private EditText<String> weight;
+    private EditText<String> name;
 
     private PlayerChooser playerChooser;
 
-    public MapEditorView() {
+    public MapEditor() {
         graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
         playerChooser = new PlayerChooser(this, new ILocation(500, 500), (component, value) -> {
             GameOfGraphs.getGame().getPlayers().add((Player) value);
 
-            LinkedList<Player> list = new LinkedList<>();
-            for (Player player:GameOfGraphs.getGame().getPlayers()){
-                list.add(player);
-            }
+            LinkedList<Player> list = new LinkedList(GameOfGraphs.getGame().getPlayers());
             list.add(new Player("add New Player", null));
 
             owner.setOptions(list);
+            currentVertex.getField().setPlayer((Player) value);
         });
         E.getE().addComponent(playerChooser);
         playerChooser.setEnabled(false);
@@ -94,6 +92,15 @@ public class MapEditorView extends GameScene{
             for (Vertex v : graph.getVertices()){
                 graph.removeVertex(v);
             }
+
+            GameOfGraphs.getGame().getPlayers().removeAll(GameOfGraphs.getGame().getPlayers());
+            KIFraction fraction1 = new KIFraction("Independent", new Color(232, 77, 91));
+            GameOfGraphs.getGame().getPlayers().add(fraction1);
+
+            LinkedList<Player> list = new LinkedList(GameOfGraphs.getGame().getPlayers());
+            list.add(new Player("add New Player", null));
+
+            owner.setOptions(list);
         }));
         buttons.add(new Button<>(this, "Remove", new ILocation(1000, 680), (component, value) -> {
             chooser = 3;
@@ -107,65 +114,65 @@ public class MapEditorView extends GameScene{
 
         editTexts = new ArrayList<>();
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(85, 505), new Location(100, 525)), true, false, 1, (component, value) -> {
-            currentField.setFertility(Integer.parseInt(value.equals("") ? "0" : value));
+            currentVertex.getField().setFertility(Integer.parseInt(value.equals("") ? "0" : value));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 505), new Location(205, 525)), true, false, 1, (component, value) -> {
-            currentField.setMountains(Integer.parseInt(value.equals("") ? "0" : value));
+            currentVertex.getField().setMountains(Integer.parseInt(value.equals("") ? "0" : value));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(265, 505), new Location(290, 525)), true, false, 2, (component, value) -> {
             ArrayList<Unit> units = new ArrayList<Unit>();
             for (int i = 0; i < Integer.parseInt(value.equals("") ? "0" : value); i++){
-                units.add(new Unit(currentField.getPlayer()));
+                units.add(new Unit(currentVertex.getField().getPlayer()));
             }
-            currentField.setUnits(units);
+            currentVertex.getField().setUnits(units);
         }));
 
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(65, 525), new Location(80, 545)), true, false, 1, (component, value) -> {
-            currentField.getResources().put(Resources.POPULATION, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getResources().put(Resources.POPULATION, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 550), new Location(70, 570)), true, false, 1, (component, value) -> {
-            currentField.getResources().put(Resources.FOOD, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getResources().put(Resources.FOOD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(60, 575), new Location(75, 595)), true, false, 1, (component, value) -> {
-            currentField.getResources().put(Resources.STONE, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getResources().put(Resources.STONE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(60, 600), new Location(75, 620)), true, false, 1, (component, value) -> {
-            currentField.getResources().put(Resources.WOOD, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getResources().put(Resources.WOOD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(65, 625), new Location(80, 645)), true, false, 1, (component, value) -> {
-            currentField.getResources().put(Resources.WHEAT, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getResources().put(Resources.WHEAT, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 650), new Location(70, 670)), true, false, 1, (component, value) -> {
-            currentField.getResources().put(Resources.TREE, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getResources().put(Resources.TREE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(50, 675), new Location(65, 695)), true, false, 1, (component, value) -> {
-            currentField.getResources().put(Resources.IRON, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getResources().put(Resources.IRON, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(55, 700), new Location(70, 720)), true, false, 1, (component, value) -> {
-            currentField.getResources().put(Resources.GOLD, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getResources().put(Resources.GOLD, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
 
 
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(160, 525), new Location(175, 545)), true, false, 1, (component, value) -> {
-            currentField.getBuildings().put(Buildings.MINE, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getBuildings().put(Buildings.MINE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(160, 550), new Location(175, 570)), true, false, 1, (component, value) -> {
-            currentField.getBuildings().put(Buildings.FARM, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getBuildings().put(Buildings.FARM, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(180, 575), new Location(195, 595)), true, false, 1, (component, value) -> {
-            currentField.getBuildings().put(Buildings.WINDMILL, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getBuildings().put(Buildings.WINDMILL, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 600), new Location(205, 620)), true, false, 1, (component, value) -> {
-            currentField.getBuildings().put(Buildings.LUMBERJACK, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getBuildings().put(Buildings.LUMBERJACK, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(165, 625), new Location(180, 645)), true, false, 1, (component, value) -> {
-            currentField.getBuildings().put(Buildings.BAZAAR, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getBuildings().put(Buildings.BAZAAR, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 650), new Location(205, 670)), true, false, 1, (component, value) -> {
-            currentField.getBuildings().put(Buildings.SLAVE_MARKET, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getBuildings().put(Buildings.SLAVE_MARKET, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
         editTexts.add(new game.ui.EditText<String>(this, "0", new IBoundingBox(new Location(190, 675), new Location(205, 695)), true, false, 1, (component, value) -> {
-            currentField.getBuildings().put(Buildings.MARKETPLACE, (Integer.parseInt(value.equals("") ? "0" : value)));
+            currentVertex.getField().getBuildings().put(Buildings.MARKETPLACE, (Integer.parseInt(value.equals("") ? "0" : value)));
         }));
 
         for (int i = 0; i < editTexts.size(); i++){
@@ -183,7 +190,12 @@ public class MapEditorView extends GameScene{
             E.getE().addComponent(editTexts.get(i));
         }
 
-
+        name = new EditText<String>(this, "", new IBoundingBox(new ILocation(375, 580), new ILocation(425, 600)), false, false, (component, value) -> {
+            currentVertex.setId(value);
+        });
+        name.setLineColor(Color.YELLOW);
+        name.setTextColor(Color.YELLOW);
+        E.getE().addComponent(name);
 
         owner = new DropDownMenu<Player>(this, new ILocation(375, 555), new LinkedList<Player>(){{
             for (Player player:GameOfGraphs.getGame().getPlayers()){
@@ -194,7 +206,7 @@ public class MapEditorView extends GameScene{
             if (value.getName().equals("add New Player")){
                 playerChooser.setEnabled(true);
             }else {
-                currentField.setPlayer(value);
+                currentVertex.getField().setPlayer(value);
             }
         });
         owner.setBackground(Color.DARK_GRAY);
@@ -206,7 +218,7 @@ public class MapEditorView extends GameScene{
             add(2);
             add(3);
         }}, (component, value) -> {
-            currentField.setForestType(value);
+            currentVertex.getField().setForestType(value);
         });
         forest.setBackground(Color.DARK_GRAY);
         forest.setForeground(Color.GREEN);
@@ -219,14 +231,14 @@ public class MapEditorView extends GameScene{
                 }
             }
         }}, (component, value) -> {
-            currentField.setLocalResource(value);
+            currentVertex.getField().setLocalResource(value);
         });
         specialResources.setBackground(Color.DARK_GRAY);
         specialResources.setForeground(Color.BLUE);
         E.getE().addComponent(specialResources);
 
         weight = new EditText<String>(this, "", new IBoundingBox(new Location(65, 505), new Location(105, 525)), true, true, (component, value) -> {
-            currentEdge.setWeight(Double.parseDouble(value));
+            currentEdge.setWeight(Double.parseDouble(value.equals("") ? String.valueOf(0) : value));
         });
         weight.setLineColor(Color.ORANGE);
         weight.setTextColor(Color.ORANGE);
@@ -255,7 +267,7 @@ public class MapEditorView extends GameScene{
         g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
 
-        if(currentField == null && currentEdge == null) {
+        if(currentVertex == null && currentEdge == null) {
             g.drawString("No field or edge selected.", 520, 600);
 
             for (game.ui.EditText<String> text : editTexts){
@@ -264,6 +276,7 @@ public class MapEditorView extends GameScene{
             specialResources.setEnabled(false);
             forest.setEnabled(false);
             owner.setEnabled(false);
+            name.setEnabled(false);
 
             weight.setEnabled(false);
 
@@ -283,6 +296,8 @@ public class MapEditorView extends GameScene{
             g.drawString(String.valueOf("FOREST: "), 320, 545);
             g.setColor(Color.BLACK);
             g.drawString("OWNER: ", 320, 570);
+            g.setColor(Color.YELLOW);
+            g.drawString("NAME: ", 320, 595);
 
             for (game.ui.EditText<String> text : editTexts){
                 text.setEnabled(true);
@@ -290,12 +305,13 @@ public class MapEditorView extends GameScene{
             specialResources.setEnabled(true);
             forest.setEnabled(true);
             owner.setEnabled(true);
+            name.setEnabled(true);
 
             g.setColor(Color.LIGHT_GRAY);
 
             //Zeichnen der Resourcen und Gebäude
-            Map<Resources, Integer> resources = currentField.getResources();
-            Map<Buildings, Integer> buildings = currentField.getBuildings();
+            Map<Resources, Integer> resources = currentVertex.getField().getResources();
+            Map<Buildings, Integer> buildings = currentVertex.getField().getBuildings();
 
             final int[] y = {0};
             resources.forEach((resource, amount) -> {
@@ -320,6 +336,7 @@ public class MapEditorView extends GameScene{
             specialResources.setEnabled(false);
             forest.setEnabled(false);
             owner.setEnabled(false);
+            name.setEnabled(false);
 
             weight.setEnabled(true);
 
@@ -338,23 +355,24 @@ public class MapEditorView extends GameScene{
                 if (!(mouseEntry.getPoint().getX() >= 0 && mouseEntry.getPoint().getX() <= 1280 && mouseEntry.getPoint().getY() >= 500 && mouseEntry.getPoint().getY() <= 720)) {
                     if (!question) {
                         currentEdge = null;
-                        currentField = null;
+                        currentVertex = null;
 
                         final Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
                         if (mouseEntry.getButton() == 1) {
                             leftMouse = true;
                             if (vertex != null) {
-                                currentField = vertex.getField();
+                                currentVertex = vertex;
 
                                 for(int i = 0; i < owner.getOptions().size(); i++){
-                                    if (currentField.getPlayer().getName().equals(owner.getOptions().get(i).getName())){
+                                    if (currentVertex.getField().getPlayer().getName().equals(owner.getOptions().get(i).getName())){
                                         owner.setSelectedIndex(i);
                                     }
                                 }
 
-                                forest.setSelectedIndex(currentField.getForestType()-1);
+                                name.setText(currentVertex.getID());
+                                forest.setSelectedIndex(currentVertex.getField().getForestType()-1);
 
-                                switch (currentField.getLocalResource().getName()){
+                                switch (currentVertex.getField().getLocalResource().getName()){
                                     case "Wheat":
                                         specialResources.setSelectedIndex(0);
                                         break;
@@ -372,58 +390,58 @@ public class MapEditorView extends GameScene{
                                 for (int i = 0; i < editTexts.size(); i++){
                                     switch (i){
                                         case 0:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getFertility()));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getFertility()));
                                             break;
                                         case 1:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getMountains()));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getMountains()));
                                             break;
                                         case 2:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getUnits().size()));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getUnits().size()));
                                             break;
                                         case 3:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getResources().get(Resources.POPULATION)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.POPULATION)));
                                             break;
                                         case 4:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getResources().get(Resources.FOOD)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.FOOD)));
                                             break;
                                         case 5:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getResources().get(Resources.STONE)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.STONE)));
                                             break;
                                         case 6:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getResources().get(Resources.WOOD)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.WOOD)));
                                             break;
                                         case 7:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getResources().get(Resources.WHEAT)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.WHEAT)));
                                             break;
                                         case 8:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getResources().get(Resources.TREE)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.TREE)));
                                             break;
                                         case 9:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getResources().get(Resources.IRON)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.IRON)));
                                             break;
                                         case 10:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getResources().get(Resources.GOLD)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getResources().get(Resources.GOLD)));
                                             break;
                                         case 11:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getBuildings().get(Buildings.MINE)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.MINE)));
                                             break;
                                         case 12:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getBuildings().get(Buildings.FARM)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.FARM)));
                                             break;
                                         case 13:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getBuildings().get(Buildings.WINDMILL)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.WINDMILL)));
                                             break;
                                         case 14:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getBuildings().get(Buildings.LUMBERJACK)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.LUMBERJACK)));
                                             break;
                                         case 15:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getBuildings().get(Buildings.BAZAAR)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.BAZAAR)));
                                             break;
                                         case 16:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getBuildings().get(Buildings.SLAVE_MARKET)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.SLAVE_MARKET)));
                                             break;
                                         case 17:
-                                            editTexts.get(i).setText(String.valueOf(currentField.getBuildings().get(Buildings.MARKETPLACE)));
+                                            editTexts.get(i).setText(String.valueOf(currentVertex.getField().getBuildings().get(Buildings.MARKETPLACE)));
                                             break;
                                     }
                                 }
@@ -434,8 +452,6 @@ public class MapEditorView extends GameScene{
                                     currentEdge = edge;
 
                                     weight.setText(String.valueOf(edge.getWeight()));
-                                }else {
-
                                 }
                             }
                             switch (chooser) {
@@ -456,7 +472,7 @@ public class MapEditorView extends GameScene{
                                 case 3:
                                     if (vertex != null && currentEdge == null){
                                         graph.removeVertex(vertex);
-                                        currentField = null;
+                                        currentVertex = null;
                                     }else {
                                         Edge edge = graph.getEdge(((int) mouseEntry.getPoint().getX()), ((int) mouseEntry.getPoint().getY()), 5);
                                         if (edge != null){
@@ -561,53 +577,99 @@ public class MapEditorView extends GameScene{
 
     private class PlayerChooser extends UIComponent{
 
-        private ArrayList<Color> colorList;
+        private ArrayList<MyColor> colorList;
         private ILocation location;
 
-        private DropDownMenu<Color> colorMenu;
+        private DropDownMenu<MyColor> colorMenu;
         private EditText<String> name;
 
         private Button<String> cancel, submit;
+
+        private CheckBox checkBox;
+
+        private boolean firstStart = true;
 
         public PlayerChooser(GameScene gameScene, ILocation location, Trigger trigger) {
             super(gameScene, trigger);
             this.location = location;
 
             colorList = new ArrayList<>();
-            colorList.add(Color.CYAN);
-            colorList.add(Color.BLACK);
-            colorList.add(Color.BLUE);
-            colorList.add(Color.RED);
-            colorList.add(Color.MAGENTA);
-            colorList.add(Color.YELLOW);
-            colorList.add(Color.GRAY);
+            colorList.add(new MyColor(Color.CYAN, "Cyan"));
+            colorList.add(new MyColor(Color.BLACK, "Black"));
+            colorList.add(new MyColor(Color.BLUE, "Blue"));
+            colorList.add(new MyColor(Color.RED, "Red"));
+            colorList.add(new MyColor(Color.MAGENTA, "Magenta"));
+            colorList.add(new MyColor(Color.YELLOW, "Yellow"));
+            colorList.add(new MyColor(Color.GRAY, "Gray"));
 
-            colorMenu = new DropDownMenu(gameScene, new ILocation(location.getX()+50, location.getY()+10), new LinkedList<String>(){{
-                for(Color c : colorList){
-                    add(c.toString());
+            name = new EditText<String>(gameScene, "", new IBoundingBox(new ILocation(location.getX()+40, location.getY()+10), new ILocation(location.getX()+100, location.getY()+30)), false, false, "Name", (component, value) -> {});
+            name.setTextColor(Color.BLACK);
+
+            cancel = new Button<>(gameScene, "Cancel", new ILocation(location.getX()+25, location.getY()+125), (component, value) -> {
+                setEnabled(false);
+
+                colorMenu.setEnabled(false);
+                name.setEnabled(false);
+                cancel.setEnabled(false);
+                submit.setEnabled(false);
+                checkBox.setEnabled(false);
+            });
+            submit = new Button<>(gameScene, "Submit", new ILocation(location.getX()+75, location.getY()+125), (component, value) -> {
+                if (name.getText().length() != 0) {
+                    ArrayList<Player> players = (ArrayList<Player>) GameOfGraphs.getGame().getPlayers();
+                    for (Player p : players){
+                        if (p.getName().equals(name.getText())){
+                            setEnabled(false);
+
+                            name.setText("");
+                            colorMenu.setEnabled(false);
+                            name.setEnabled(false);
+                            cancel.setEnabled(false);
+                            submit.setEnabled(false);
+                            checkBox.setEnabled(false);
+
+                            return;
+                        }
+                    }
+
+                    if (!checkBox.isChecked()) {
+                        getTrigger().call(this, new Player(name.getText(), colorMenu.getOption().getColor()));
+                    } else {
+                        getTrigger().call(this, new KIFraction(name.getText(), colorMenu.getOption().getColor()));
+                    }
+
+
+                    colorList.remove(colorMenu.getOption());
+
+                    colorMenu.setOptions(new LinkedList<>(colorList));
+
+                }
+                setEnabled(false);
+
+                name.setText("");
+                colorMenu.setEnabled(false);
+                name.setEnabled(false);
+                cancel.setEnabled(false);
+                submit.setEnabled(false);
+                checkBox.setEnabled(false);
+            });
+
+            checkBox = new CheckBox(this, new ILocation(location.getX()+50, location.getY()+75), 15, 15, (component, value) -> {});
+
+            colorMenu = new DropDownMenu(gameScene, new ILocation(location.getX()+30, location.getY()+40), new LinkedList<MyColor>(){{
+                for(MyColor c : colorList){
+                    add(c);
                 }
             }}, (component, value) -> {});
+            colorMenu.setBackground(Color.LIGHT_GRAY);
+            colorMenu.setForeground(Color.BLACK);
 
-            name = new EditText<String>(gameScene, "", new IBoundingBox(new ILocation(location.getX()+50, location.getY()+20), new ILocation(location.getX()+100, location.getY()+30)), false, false, (component, value) -> {});
-
-            cancel = new Button<>(gameScene, "Cancel", new ILocation(location.getX()+50, location.getY()+40), (component, value) -> {
-                setEnabled(false);
-            });
-            submit = new Button<>(gameScene, "Submit", new ILocation(location.getX()+75, location.getY()+40), (component, value) -> {
-                getTrigger().call(this, new Player(name.getText(), colorMenu.getOption()));
-
-                setEnabled(false);
-            });
-
-            E.getE().addComponent(colorMenu);
-            E.getE().addComponent(name);
-            E.getE().addComponent(cancel);
-            E.getE().addComponent(submit);
-
+            name.setText("");
             colorMenu.setEnabled(false);
             name.setEnabled(false);
             cancel.setEnabled(false);
             submit.setEnabled(false);
+            checkBox.setEnabled(false);
         }
 
         @Override
@@ -615,7 +677,25 @@ public class MapEditorView extends GameScene{
             Graphics2D g = layers.first().getGraphics2D();
 
             g.setColor(Color.LIGHT_GRAY);
-            g.fillRect(location.getX(), location.getY(), 175, 100);
+            g.fillRect(location.getX(), location.getY(), 150, 150);
+
+            g.setColor(Color.BLACK);
+            g.drawRect(location.getX(), location.getY(), 150, 150);
+
+            g.drawString("Is Ki:", location.getX()+15, location.getY()+90);
+
+            g.setColor(colorMenu.getOption().getColor());
+            g.fillRect(location.getX()+85, location.getY()+40, 20, 20);
+
+            if (firstStart){
+                E.getE().addComponent(checkBox);
+                E.getE().addComponent(name);
+                E.getE().addComponent(cancel);
+                E.getE().addComponent(submit);
+                E.getE().addComponent(colorMenu);
+
+                firstStart = false;
+            }
         }
 
         @Override
@@ -624,11 +704,31 @@ public class MapEditorView extends GameScene{
             name.setEnabled(isEnabled());
             cancel.setEnabled(isEnabled());
             submit.setEnabled(isEnabled());
+            checkBox.setEnabled(isEnabled());
         }
 
         @Override
         public boolean isActive() {
             return this.getGameScene().isActive() && this.isEnabled();
+        }
+
+        private class MyColor{
+            private String name;
+            private Color color;
+
+            public MyColor(Color color, String name) {
+                this.name = name;
+                this.color = color;
+            }
+
+            @Override
+            public String toString() {
+                return name;
+            }
+
+            public Color getColor() {
+                return color;
+            }
         }
     }
 }

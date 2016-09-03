@@ -11,7 +11,7 @@ import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
-import game.GraphDrawer;
+import graph.GraphDrawer;
 import game.sprite.Textures;
 import game.ui.Button;
 import game.ui.DropDownMenu;

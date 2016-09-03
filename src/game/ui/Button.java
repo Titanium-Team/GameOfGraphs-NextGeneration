@@ -44,6 +44,8 @@ public class Button<T> extends UIComponent<T> {
     public void render(Layers layers) {
         Graphics2D g = layers.first().g();
 
+        g.setStroke(new BasicStroke(1));
+
         if (this.boundingBox == null) {
             this.boundingBox = new IBoundingBox(this.location, new ILocation(this.location.getX() + g.getFontMetrics().stringWidth(this.text.toString()) + 4, this.location.getY() + g.getFontMetrics().getHeight() + 4));
         }
