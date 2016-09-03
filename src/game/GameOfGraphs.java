@@ -6,7 +6,6 @@ import game.loading.LoadingManager;
 import game.sprite.Textures;
 import graph.GraphController;
 import ki.KIController;
-import ki.KIFraction;
 import simulation.SimulationController;
 
 import java.awt.*;
@@ -16,7 +15,6 @@ import java.util.List;
 public class GameOfGraphs {
 
 	private static GameOfGraphs game;
-
 
 	private int currentPlayer = 0;
 	private List<Player> players = new ArrayList<>();
@@ -72,7 +70,9 @@ public class GameOfGraphs {
 		if(this.currentPlayer >= this.players.size()) {
 			this.currentPlayer = 0;
 		}
-		while(this.getCurrentPlayer()instanceof KIFraction) {
+
+		/*
+		while(this.getCurrentPlayer() instanceof KIFraction) {
 			kiController.run(this.getCurrentPlayer());
 			currentPlayer++;
 			if(this.currentPlayer >= this.players.size()) {
@@ -80,6 +80,8 @@ public class GameOfGraphs {
 				this.isFirstTurn=false;
 			}
 		}
+		*/
+
 		kiController.run(this.getCurrentPlayer());
 		simulationController.run(this.getCurrentPlayer());
 	}
