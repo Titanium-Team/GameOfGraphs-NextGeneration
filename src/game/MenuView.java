@@ -103,8 +103,6 @@ public class MenuView extends GameScene {
             }
 
         });
-	    TradeView.update(inputEntry,delta);
-
     }
 
     @Override

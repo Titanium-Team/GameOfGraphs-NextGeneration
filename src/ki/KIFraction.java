@@ -55,7 +55,7 @@ public class KIFraction extends Player{
 
     public HashMap<Player, Integer> getTrust() {
 
-        if(!(this.trust.isEmpty())) {
+        if(this.trust.isEmpty()) {
             ArrayList<Player> players = (ArrayList<Player>) getGame().getPlayers();
             players.remove(this);
 

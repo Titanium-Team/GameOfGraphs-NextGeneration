@@ -2,17 +2,17 @@ package ki;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
+import de.SweetCode.e.math.IBoundingBox;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
-import de.SweetCode.e.rendering.layers.Layer;
 import de.SweetCode.e.rendering.layers.Layers;
-import field.resource.Resource;
+import field.FieldView;
 import field.resource.Resources;
 import game.Player;
 import game.ui.DropDownMenu;
+import game.ui.UIComponent;
 import graph.Vertex;
 import mapEditor.Button;
-import mapEditor.EditText;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -25,143 +25,152 @@ import static game.GameOfGraphs.getGame;
 /**
  * Created by Tim Bolz on 31.08.2016.
  */
-public class TradeView  {
+public class TradeView extends UIComponent {
 
-	private static ArrayList<EditText> textFields=new ArrayList<>();
-	private static boolean firstTime=true;
-	private static EditText enabled;
-	private static int height= Resources.values().length*50 +100;
-	private static Button cancel,submit;
-	private static Button pressed;
-	private static DropDownMenu<Player> players;
-	private static Player currentPlayer;
-	private static Vertex currentVertex;
+	private ArrayList<game.ui.EditText<String>> textFields=new ArrayList<>();
+	private boolean firstTime=true;
+	private int height= Resources.values().length*50 +100;
+	private game.ui.Button<String> cancel,submit;
+	private DropDownMenu<Player> players;
+	private Vertex currentVertex;
+	private GameScene gameScene;
 
-	public static void drawer(GameScene gameScene, int x, int y, Graphics2D g, Player currentPlayer, Vertex currentVertex, Layers layers){
-		TradeView.currentPlayer=currentPlayer;
-		TradeView.currentVertex=currentVertex;
+	private ILocation location;
+
+	public TradeView(GameScene gameScene, ILocation location){
+		super(gameScene, (component, value) -> {});
+		this.location = location;
+		this.gameScene = gameScene;
+
+		for (int i = 0; i < Resources.values().length; i++) {
+			if (textFields.size()<Resources.values().length*2) {
+				game.ui.EditText<String> wanted = new game.ui.EditText<String>(gameScene, "", new IBoundingBox(new ILocation(location.getX()+55, location.getY()+50*i+47), new ILocation(location.getX()+45+55, location.getY()+15+50*i+47)), true, false, "Wanted", (component, value) -> {});
+				game.ui.EditText<String> offered = new game.ui.EditText<String>(gameScene, "", new IBoundingBox(new ILocation(location.getX()+105, location.getY()+50*i+47), new ILocation(location.getX()+45+105, location.getY()+15+50*i+47)), true, false, "Offered", (component, value) -> {});
+
+				textFields.add(wanted);
+				textFields.add(offered);
+			}
+
+		}
+
+		cancel = new game.ui.Button<>(gameScene, "Cancel", new ILocation(location.getX()+55,location.getY()+height-20), (component, value) -> {
+			performAction();
+
+			((FieldView) gameScene).setTradeEnabled(false);
+		});
+		submit = new game.ui.Button<>(gameScene, "Submit", new ILocation(location.getX()+105,location.getY()+height-20), (component, value) -> {
+			performAction();
+
+			HashMap<Resources, Integer> offered = new HashMap<>(), wanted = new HashMap<>();
+			game.ui.EditText<String> t1, t2;
+			Resources res;
+			for (int i = 0; i < textFields.size(); i = i + 2) {
+				res=Resources.values()[i/2];
+				t1 = textFields.get(i);
+				t2 = textFields.get(i + 1);
+				if (t1.getText().isEmpty()) {
+					if (!t2.getText().isEmpty()) {
+						offered.put(res, new Integer(t2.getText()));
+					}
+				} else if (t2.getText().isEmpty()) {
+					wanted.put(res, new Integer(t1.getText()));
+				} else {
+					int w = new Integer(t1.getText()), o = new Integer(t2.getText());
+					if (w>o){
+						wanted.put(res,w-o);
+					}else if(o>w){
+						offered.put(res,o-w);
+					}
+				}
+				t1.setText("");
+				t2.setText("");
+			}
+			Player p= players.getOption();
+			TradeRequest tr=new TradeRequest(getGame().getCurrentPlayer(),offered,wanted,currentVertex,p);
+			p.addRequest(tr);
+			System.out.println(tr);
+			((FieldView) gameScene).setTradeEnabled(false);
+		});
+
+
+	}
+
+	@Override
+	public void update(InputEntry inputEntry, long l){
+	}
+
+	@Override
+	public boolean isActive() {
+		return this.getGameScene().isActive() && this.isEnabled();
+	}
+
+	private void performAction() {
+		for (game.ui.EditText<String> e: textFields){
+			e.setEnabled(false);
+		}
+		players.setEnabled(false);
+		submit.setEnabled(false);
+		cancel.setEnabled(false);
+	}
+
+	@Override
+	public void render(Layers layers) {
+
+
+		Graphics2D g = layers.first().getGraphics2D();
+
 		g.setColor(Color.WHITE);
 		int width = 200;
-		g.fillRoundRect(x,y, width,height,10,10);
+		g.fillRoundRect(location.getX(),location.getY(), width,height,10,10);
 		g.setColor(Color.BLACK);
 		Font font=g.getFont();
 		g.setFont(new Font("Arial",Font.BOLD,12));
-		g.drawString("TRADE",x+50,y+15);
+		g.drawString("TRADE",location.getX()+50,location.getY()+15);
 		g.setFont(font);
-		g.drawRoundRect(x,y, width,height,10,10);
-		if(cancel!=null)cancel.draw(g);
-		if (submit != null)submit.draw(g);
-		if(players!=null && players.getOption()!=null){
-			players.render(layers);
-		}else{
-			players= new DropDownMenu<Player>(gameScene,new ILocation(x+75,y+height-40),new LinkedList<Player>(){{
-				for(Vertex v:getGame().getGraphController().getGraph().getNeighbours(currentVertex)){
-					if(!v.getField().getPlayer().equals(currentPlayer)){
-						if(v.getField().getPlayer() instanceof KIFraction){
-							if(((KIFraction) v.getField().getPlayer()).isFraction()){
-								this.add(v.getField().getPlayer());
-							}
-						}else{
-							this.add(v.getField().getPlayer());
-						}
-					}
-				}
-			}},(t, value)->{});
-			E.getE().addComponent(players);
-		}
-		if(firstTime) {
-			cancel=new Button(x+55,y+height-20,45,15,Color.white,Color.black,"Cancel");
-			submit=new Button(x+105,y+height-20,45,15,Color.white,Color.black,"Submit");
-			for (int i = 0; i < Resources.values().length; i++) {
-				g.setColor(Color.BLACK);
-				g.drawString(Resources.values()[i].getName() + ":", x + 10, y + 50 * i + 60);
-				if (textFields.size()<Resources.values().length*2) {
-					EditText wanted = new EditText(45, 15, x + 55, y + 50 * i + 47, "", true, false, "wanted");
-					EditText offered = new EditText(45, 15, x + 105, y + 50 * i + 47, "", true, false, "offered");
+		g.drawRoundRect(location.getX(),location.getY(), width,height,10,10);
 
-					textFields.add(wanted);
-					textFields.add(offered);
-				}
-				for (EditText txt:textFields) {
-					txt.drawer(g);
-				}
+		if(firstTime) {
+			for (game.ui.EditText<String> e: textFields){
+				E.getE().addComponent(e);
+				e.setTextColor(Color.black);
+				e.setLineColor(Color.BLACK);
 			}
+			E.getE().addComponent(cancel);
+			E.getE().addComponent(submit);
+
 			firstTime=false;
 		}else{
 			for (int i = 0; i < Resources.values().length; i++) {
 				g.setColor(Color.BLACK);
-				g.drawString(Resources.values()[i].getName() + ":", x + 10, y + 50 * i + 60);
+				g.drawString(Resources.values()[i].getName() + ":", location.getX() + 10, location.getY() + 50 * i + 60);
 			}
-			for(EditText txt:textFields){
-				g.setColor(Color.black);
-				txt.drawer(g);
-			}
-		}
-
-	}
-	public static void update(InputEntry inputEntry, long l){
-		try{
-			if (textFields != null) {
-				for (EditText e : textFields) {
-					inputEntry.getMouseEntries().forEach(mouseEntry -> {
-						if (mouseEntry.getPoint().getX() >= e.getX() && mouseEntry.getPoint().getX() <= e.getX() + e.getWidth() && mouseEntry.getPoint().getY() >= e.getY() && mouseEntry.getPoint().getY() <= e.getY() + e.getHeight()) {
-							enabled = e;
-						}else if(cancel.isPushed(mouseEntry.getPoint())){
-							pressed=cancel;
-						}else if(submit.isPushed(mouseEntry.getPoint())){
-							pressed=submit;
-						}
-					});
-				}
-			}
-			if (enabled != null) {
-				enabled.update(inputEntry, l);
-			}
-			if(pressed!=null){
-				performAction(pressed);
-				pressed=null;
-			}
-		}catch(ConcurrentModificationException c){
-			enabled = null;
 		}
 	}
 
-	private static void performAction(Button pressed) {
-		if(pressed.equals(cancel)){
-			//TODO: hide
-		}else{
-			try {
-				HashMap<Resources, Integer> offered = new HashMap<>(), wanted = new HashMap<>();
-				EditText t1, t2;
-				Resources res;
-				for (int i = 0; i < textFields.size(); i = i + 2) {
-					res=Resources.values()[i/2];
-					t1 = textFields.get(i);
-					t2 = textFields.get(i + 1);
-					if (t1.getText().isEmpty()) {
-						if (!t2.getText().isEmpty()) {
-							offered.put(res, new Integer(t2.getText()));
+	public void setCurrentVertex(Vertex currentVertex) {
+		this.currentVertex = currentVertex;
+
+		players= new DropDownMenu<Player>(gameScene,new ILocation(location.getX()+75,location.getY()+height-50),new LinkedList<Player>(){{
+			for(Vertex v:getGame().getGraphController().getGraph().getNeighbours(currentVertex)){
+				if(!v.getField().getPlayer().equals(getGame().getCurrentPlayer())){
+					if(v.getField().getPlayer() instanceof KIFraction){
+						if(((KIFraction) v.getField().getPlayer()).isFraction()){
+							this.add(v.getField().getPlayer());
 						}
-					} else if (t2.getText().isEmpty()) {
-						wanted.put(res, new Integer(t1.getText()));
-					} else {
-						int w = new Integer(t1.getText()), o = new Integer(t2.getText());
-						if (w>o){
-							wanted.put(res,w-o);
-						}else if(o>w){
-							offered.put(res,o-w);
-						}
+					}else{
+						this.add(v.getField().getPlayer());
 					}
-					t1.setText("");
-					t2.setText("");
 				}
-				Player p= players.getOption();
-				TradeRequest tr=new TradeRequest(currentPlayer,offered,wanted,currentVertex,p);
-				p.addRequest(tr);
-				System.out.println(tr);
-			}catch(NumberFormatException n){
-				System.out.println("WTF?!");
 			}
+		}},(t, value)->{});
+		E.getE().addComponent(players);
+		players.setEnabled(true);
+
+		for (game.ui.EditText<String> e: textFields){
+			e.setEnabled(true);
 		}
+
+		cancel.setEnabled(true);
+		submit.setEnabled(true);
 	}
 }

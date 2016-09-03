@@ -48,6 +48,8 @@ public class Button<T> extends UIComponent<T> {
             this.boundingBox = new IBoundingBox(this.location, new ILocation(this.location.getX() + g.getFontMetrics().stringWidth(this.text.toString()) + 4, this.location.getY() + g.getFontMetrics().getHeight() + 4));
         }
 
+        g.setColor(Color.BLACK);
+
         g.drawRect(this.boundingBox.getMin().getX(), this.boundingBox.getMin().getY(), this.boundingBox.getWidth(), this.boundingBox.getHeight());
         g.drawString(this.text.toString(), this.boundingBox.getMin().getX() + 2, this.boundingBox.getMin().getY() + this.boundingBox.getHeight() - 5);
     }

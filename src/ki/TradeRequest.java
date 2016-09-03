@@ -106,20 +106,20 @@ public class TradeRequest extends Request {
 		String result =getParent().toString() + " wants to trade with you. He offers you ";
 		Set<Map.Entry<Resources,Integer>> set=offeredResources.entrySet();
 		for (Map.Entry<Resources, Integer>e:set){
-			result+=e.getValue() + e.getKey().toString();
+			result+=e.getValue() + " " + e.getKey().toString();
 			result+=",";
 		}
 		if(result.lastIndexOf(',')==result.length()-1){
-			result=result.substring(0,result.length()-2) +" ";
+			result=result.substring(0,result.length()-1) +" ";
 		}
 		result+="and wants ";
 		set=requestedResources.entrySet();
 		for (Map.Entry<Resources, Integer>e:set){
-			result+=e.getValue() + e.getKey().toString();
+			result+=e.getValue() + " " +  e.getKey().toString();
 			result+=",";
 		}
 		if(result.lastIndexOf(',')==result.length()-1){
-			result=result.substring(0,result.length()-2) +" ";
+			result=result.substring(0,result.length()-1) +" ";
 		}
 		result+="in return.";
 		return result;

@@ -6,6 +6,7 @@ import game.loading.LoadingManager;
 import game.sprite.Textures;
 import graph.GraphController;
 import ki.KIController;
+import ki.KIFraction;
 import simulation.SimulationController;
 
 import java.awt.*;
@@ -14,108 +15,113 @@ import java.util.List;
 
 public class GameOfGraphs {
 
-    private static GameOfGraphs game;
+	private static GameOfGraphs game;
 
 
-    private int currentPlayer = 0;
-    private List<Player> players = new ArrayList<>();
+	private int currentPlayer = 0;
+	private List<Player> players = new ArrayList<>();
 
-    private TextBuilder textBuilder = new TextBuilder();
-    private LoadingManager loadingManager = new LoadingManager();
+	private TextBuilder textBuilder = new TextBuilder();
+	private LoadingManager loadingManager = new LoadingManager();
 
-    private boolean isFirstTurn = true;
+	private boolean isFirstTurn = true;
 
-    private EventManager eventManager;
-    private FieldController fieldController;
-    private GraphController graphController;
-    private KIController kiController;
-    private SimulationController simulationController;
+	private EventManager eventManager;
+	private FieldController fieldController;
+	private GraphController graphController;
+	private KIController kiController;
+	private SimulationController simulationController;
 
-    public GameOfGraphs() {
-        GameOfGraphs.game = this;
+	public GameOfGraphs() {
+		GameOfGraphs.game = this;
 
-        // load stuff
-        this.loadingManager.add(Textures.values());
-        this.loadingManager.load();
+		// load stuff
+		this.loadingManager.add(Textures.values());
+		this.loadingManager.load();
 
-        //Players
-        this.players.add(new Player("Jan", Color.CYAN));
-        this.players.add(new Player("Jonas", Color.RED));
-        //this.players.add(new KIFraction("Independent"));
+		//Players
+		this.players.add(new Player("Jan", Color.CYAN));
+		this.players.add(new Player("Jonas", Color.RED));
+		//this.players.add(new KIFraction("Independent"));
 
-        //Controller
-        eventManager = new EventManager();
-        fieldController = new FieldController();
-        graphController = new GraphController();
-        kiController = new KIController();
-        simulationController = new SimulationController(this.getCurrentPlayer());
+		//Controller
+		eventManager = new EventManager();
+		fieldController = new FieldController();
+		graphController = new GraphController();
+		kiController = new KIController();
+		simulationController = new SimulationController(this.getCurrentPlayer());
 
 
 
-    }
+	}
 
-    public static GameOfGraphs getGame() {
-        return game;
-    }
+	public static GameOfGraphs getGame() {
+		return game;
+	}
 
-    public void nextTurn() {
+	public void nextTurn() {
+		fieldController.run(this.getCurrentPlayer());
+		this.currentPlayer++;
 
-        fieldController.run(this.getCurrentPlayer());
-        this.currentPlayer++;
+		if(this.currentPlayer >= this.players.size()) {
+			this.currentPlayer = 0;
+			this.isFirstTurn = false;
+		}
+		while(!(this.getCurrentPlayer().isActive())) {
+			this.currentPlayer++;
+			if(this.currentPlayer >= this.players.size()) {
+				this.currentPlayer = 0;
+			}
+		}
 
-        if(this.currentPlayer >= this.players.size()) {
-            this.currentPlayer = 0;
-            this.isFirstTurn = false;
-        }
+		if(this.currentPlayer >= this.players.size()) {
+			this.currentPlayer = 0;
+		}
+		while(this.getCurrentPlayer()instanceof KIFraction) {
+			kiController.run(this.getCurrentPlayer());
+			currentPlayer++;
+			if(this.currentPlayer >= this.players.size()) {
+				this.currentPlayer = 0;
+				this.isFirstTurn=false;
+			}
+		}
+		kiController.run(this.getCurrentPlayer());
+		simulationController.run(this.getCurrentPlayer());
+	}
 
-        while(!(this.getCurrentPlayer().isActive())) {
-            this.currentPlayer++;
-            if(this.currentPlayer >= this.players.size()) {
-                this.currentPlayer = 0;
-            }
-        }
+	public TextBuilder getTextBuilder() {
+		return textBuilder;
+	}
 
-        if(this.currentPlayer >= this.players.size()) {
-            this.currentPlayer = 0;
-        }
-	    kiController.run();
-        simulationController.run(this.getCurrentPlayer());
+	public EventManager getEventManager() {
+		return eventManager;
+	}
 
-    }
+	public FieldController getFieldController() {
+		return fieldController;
+	}
 
-    public TextBuilder getTextBuilder() {
-        return textBuilder;
-    }
+	public GraphController getGraphController() {
+		return graphController;
+	}
 
-    public EventManager getEventManager() {
-        return eventManager;
-    }
+	public KIController getKiController() {
+		return kiController;
+	}
 
-    public FieldController getFieldController() {
-        return fieldController;
-    }
+	public simulation.SimulationController getSimulationController() {
+		return simulationController;
+	}
 
-    public GraphController getGraphController() {
-        return graphController;
-    }
+	public Player getCurrentPlayer() {
+		return this.players.get(this.currentPlayer);
+	}
 
-    public KIController getKiController() {
-        return kiController;
-    }
+	public List<Player> getPlayers() {
+		return this.players;
+	}
 
-    public simulation.SimulationController getSimulationController() {
-        return simulationController;
-    }
-
-    public Player getCurrentPlayer() {
-        return this.players.get(this.currentPlayer);
-    }
-
-    public List<Player> getPlayers() {
-        return this.players;
-    }
-
-    public boolean isFirstTurn() {
-        return isFirstTurn;
-    }
+	public boolean isFirstTurn() {
+		return isFirstTurn;
+	}
 }

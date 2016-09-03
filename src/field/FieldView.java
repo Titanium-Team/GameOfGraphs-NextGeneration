@@ -17,8 +17,8 @@ import game.ui.Button;
 import game.ui.DropDownMenu;
 import graph.Graph;
 import graph.Vertex;
-import ki.AllianceRequest;
 import ki.KIFraction;
+import ki.TradeView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +38,10 @@ public class FieldView extends GameScene{
     //Aktueller Vertex und Field
     private Vertex currentVertex = null;
     private Field currentField = null;
+
+	//boolean für Handel
+	private boolean tradeEnabled=false;
+	private TradeView tradeView = new TradeView(this, new ILocation(200, 100));
 
     private Graph graph;
     //Boolean zum Überprüfen, ob gerade Truppen bewegt werden
@@ -116,8 +120,13 @@ public class FieldView extends GameScene{
     });
 
     private Button<String> allianceButton = new Button<String>(this,"Request Alliance",new ILocation(900,570),(t,value)->{
-        this.currentField.getPlayer().addRequest(new AllianceRequest(GameOfGraphs.getGame().getCurrentPlayer(),currentField.getPlayer()));
+        GameOfGraphs.getGame().getCurrentPlayer().requestAlliance(currentField.getPlayer());
     });
+
+	private Button<String> tradeButton = new Button<String>(this,"Trade with Player",new ILocation(830,630),(t, value)->{
+		tradeEnabled=true;
+		tradeView.setCurrentVertex(currentVertex);
+	});
 
     private Button<String> bazaarButton1 = new Button<String>(this, "Trade", new ILocation(830, 570),(t, value) -> {
 
@@ -174,10 +183,13 @@ public class FieldView extends GameScene{
 	    //Alliance
 	    E.getE().addComponent(allianceButton);
 
+
         E.getE().addComponent(nextTurnButton);
 
         E.getE().addComponent(this.questionButton);
 
+	    E.getE().addComponent(tradeButton);
+	    E.getE().addComponent(tradeView);
     }
 
     @Override
@@ -203,6 +215,8 @@ public class FieldView extends GameScene{
         g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
 
+	    tradeView.setEnabled(tradeEnabled);
+
         if(currentField == null) {
 
             g.drawString("No field selected.", 520, 600);
@@ -218,6 +232,7 @@ public class FieldView extends GameScene{
             this.bazaarButton1.setEnabled(false);
             this.bazaarButton2.setEnabled(false);
 	        this.allianceButton.setEnabled(false);
+	        this.tradeButton.setEnabled(false);
 
         }else{
             //Zeichnen der Statistiken
@@ -249,6 +264,7 @@ public class FieldView extends GameScene{
             this.bazaarButton2.setEnabled(false);
             this.freeBuildButton.setEnabled(active && GameOfGraphs.getGame().isFirstTurn() && this.free);
 	        this.allianceButton.setEnabled(!active);
+	        this.tradeButton.setEnabled(active);
 
             //Zeichnen der Trade-Button
             if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
@@ -307,7 +323,6 @@ public class FieldView extends GameScene{
                 g.drawString(String.valueOf(amount), this.maxWidthOfBuildingName + 125, 540 + y[0] * 20);
                 y[0]++;
             });
-
         }
     }
 
@@ -335,7 +350,7 @@ public class FieldView extends GameScene{
                         }
 
                     }});
-                } else {
+                } else if(!tradeEnabled) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
                     }
@@ -378,4 +393,7 @@ public class FieldView extends GameScene{
         return (E.getE().getScreen().getCurrent() == this);
     }
 
+	public void setTradeEnabled(boolean tradeEnabled) {
+		this.tradeEnabled = tradeEnabled;
+	}
 }
