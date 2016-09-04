@@ -71,43 +71,32 @@ public class Connector {
          return false;
      }
 
-    public static void createGame(Graph g, Player p){
+    public static void createGame(Graph g){
         host = true;
 
         Statement statement = setup();
 
         String graph = null;
-        String player = null;
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         try {
             graph = mapper.writeValueAsString(g);
-            player = mapper.writeValueAsString(p);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         try {
-            statement.executeUpdate("INSERT INTO Games (map, turn, start) VALUES ('"+ graph +"', '" + p.getName() +"', 0)");
+            statement.executeUpdate("INSERT INTO Games (map, turn, start) VALUES ('"+ graph +"', '', 0)");
 
             ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE map='" + graph + "'");
             resultSet.next();
 
             gameId = resultSet.getInt("id");
 
-            statement.executeUpdate("INSERT INTO Player (player, gameId, ki, used) VALUES ('"+ player +"', " + gameId + ", 0, 0)");
 
-            resultSet = statement.executeQuery("SELECT  * FROM Player WHERE player='" + player + "'");
-            resultSet.next();
-
-            playerId = resultSet.getInt("id");
-
-            nextTurn(p.getName());
 
             ArrayList<Player> players = new ArrayList<>();
-            players.add(p);
-
             boolean add = true;
 
             ArrayList<Vertex> vertices = g.getVertices();
