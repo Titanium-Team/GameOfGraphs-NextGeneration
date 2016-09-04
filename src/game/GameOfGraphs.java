@@ -1,7 +1,7 @@
 package game;
 
 import connection.Connector;
-import event.EventManager;
+
 import field.FieldController;
 import game.loading.LoadingManager;
 import game.sprite.Textures;
@@ -26,7 +26,6 @@ public class GameOfGraphs {
 
 	private boolean isFirstTurn = true;
 
-	private EventManager eventManager;
 	private FieldController fieldController;
 	private GraphController graphController;
 	private KIController kiController;
@@ -44,7 +43,6 @@ public class GameOfGraphs {
 		this.loadingManager.load();
 
 		//Controller
-		eventManager = new EventManager();
 		fieldController = new FieldController();
 		graphController = new GraphController();
 		kiController = new KIController();
@@ -86,10 +84,6 @@ public class GameOfGraphs {
 
 	public TextBuilder getTextBuilder() {
 		return textBuilder;
-	}
-
-	public EventManager getEventManager() {
-		return eventManager;
 	}
 
 	public FieldController getFieldController() {
