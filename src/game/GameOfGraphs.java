@@ -55,6 +55,11 @@ public class GameOfGraphs {
 		return game;
 	}
 
+    /**
+     *  Wird aufgerufen um den nächsten Zug des nächsten Spielers einzuleiten.
+     *
+     *  Wenn der nächste Spieler eine KI ist dann wird dessen Zug automatisch ausgeführt.
+     */
 	public void nextTurn() {
         boolean breakCondition = false;
 		while (!(breakCondition)) {
@@ -84,6 +89,10 @@ public class GameOfGraphs {
 		}
 	}
 
+    /**
+     * Gibt den TextBuilder zurück.
+     * @return
+     */
 	public TextBuilder getTextBuilder() {
 		return textBuilder;
 	}
@@ -92,10 +101,18 @@ public class GameOfGraphs {
 		return eventManager;
 	}
 
+    /**
+     * Gibt den FieldController zurück
+     * @return
+     */
 	public FieldController getFieldController() {
 		return fieldController;
 	}
 
+    /**
+     * Gibt den Graph
+     * @return
+     */
 	public GraphController getGraphController() {
 		return graphController;
 	}
