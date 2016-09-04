@@ -613,6 +613,8 @@ public class MapEditor extends GameScene{
                     break;
             }
         }
+
+        owner.setOptions(GameOfGraphs.getGame().getPlayers());
     }
 
     public static Vertex[] getDragEdge() {
