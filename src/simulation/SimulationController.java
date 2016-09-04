@@ -173,7 +173,7 @@ public class SimulationController {
      */
 
     private void addUnitsToField(Vertex vertex, ArrayList<Unit> units){
-        if (currentPlayer == vertex.getField().getPlayer()) {
+        if (units != null && currentPlayer == vertex.getField().getPlayer()) {
             vertex.getField().getUnits().addAll(units);
         }
     }

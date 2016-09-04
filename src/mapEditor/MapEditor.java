@@ -1,6 +1,5 @@
 package mapEditor;
 
-import connection.Connector;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.IBoundingBox;
@@ -233,7 +232,7 @@ public class MapEditor extends GameScene{
                 if (value instanceof KIFraction){
                     KIFraction kiFraction = new KIFraction("Independent", new Color(232, 77, 91));
                     currentVertex.getField().setPlayer(kiFraction);
-                    GameOfGraphs.getGame().getPlayers().add(kiFraction)
+                    GameOfGraphs.getGame().getPlayers().add(kiFraction);
                 }else {
                     currentVertex.getField().setPlayer((Player) value);
                 }
