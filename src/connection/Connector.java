@@ -275,8 +275,6 @@ public class Connector {
     public static String getCurrentPlayer(){
         Statement statement = setup();
 
-        ObjectMapper mapper = new ObjectMapper();
-
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE id=" + gameId);
 

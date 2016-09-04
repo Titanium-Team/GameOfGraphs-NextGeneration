@@ -19,7 +19,9 @@ public class Player {
 
     protected String name;
 
+    @JsonIgnore
     protected ArrayList<Player> alliances = new ArrayList<>();
+    @JsonIgnore
     private ArrayList<Notification> notifications = new ArrayList<>();
 
     @JsonIgnore

@@ -73,7 +73,7 @@ public class GraphController {
             ArrayList<Vertex> vertices = graph.getVertices();
             for (Vertex v : vertices) {
                 for (Player temp : players) {
-                    if (v.getField().getPlayer().getName().equals(temp.getName())) {
+                    if (v.getField().getPlayer().getName().equals(temp.getName()) && !(temp instanceof KIFraction)) {
                         add = false;
                         break;
                     }
