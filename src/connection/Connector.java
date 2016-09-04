@@ -156,8 +156,10 @@ public class Connector {
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE id=" + gameId);
 
-            resultSet.first();
-            return resultSet.getBoolean("start");
+
+            if (resultSet.first()) {
+                return resultSet.getBoolean("start");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -231,7 +233,12 @@ public class Connector {
             try {
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE start=0");
 
-                return (host = !resultSet.next());
+                if (resultSet.next()){
+                    return host = false;
+                }else {
+                    gameId = resultSet.getInt("id");
+                    return host = true;
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
