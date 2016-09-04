@@ -131,7 +131,7 @@ public class Connector {
         Statement statement = setup();
 
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM Player WHERE gameId=" + gameId);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Player WHERE gameId=" + gameId + " AND used=1");
 
             while (resultSet.next()){
                 countPlayer++;

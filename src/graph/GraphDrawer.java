@@ -59,6 +59,9 @@ public class GraphDrawer {
             if (whoAreYou.equals("MapEditor") && edge.getVerticesId()[0].equals("equals") && edge.getVerticesId()[1].equals("equals")){
                 vertex1 = MapEditor.getDragEdge()[0];
                 vertex2 = MapEditor.getDragEdge()[1];
+                if (vertex1 == null){
+                    break;
+                }
             }else {
                 vertex1 = edge.getVerticesId(graph)[0];
                 vertex2 = edge.getVerticesId(graph)[1];
