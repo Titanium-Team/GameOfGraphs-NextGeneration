@@ -19,7 +19,7 @@ public class Connector {
     private static final String user = "GameOfGraphs";
     private static final String password = "game";
 
-    private static int gameId = 9;
+    private static int gameId = -1;
     private static int playerId;
 
     private static boolean host;
@@ -237,6 +237,23 @@ public class Connector {
     }
 
     public static boolean isHost() {
+        if (gameId == -1){
+            Statement statement = setup();
+
+            try {
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE start=0");
+
+                if (resultSet.next()) {
+                    host = false;
+                }else {
+                    host = true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
         return host;
+
     }
 }
