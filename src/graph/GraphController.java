@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 public class GraphController {
-    private Graph graph = null;
+    private Graph graph = new Graph();
 
     public GraphController() {}
 

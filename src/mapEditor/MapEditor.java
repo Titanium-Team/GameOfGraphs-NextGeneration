@@ -103,13 +103,10 @@ public class MapEditor extends GameScene{
                 graph = (Graph) g[0];
             }
         }));
-        buttons.add(new game.ui.Button<>(this, "Move", new ILocation(1000, 605), (component, value) -> {
-            GameOfGraphs.getGame().getGraphController().checkGraph();
-        }));
-        buttons.add(new game.ui.Button<>(this, "Check", new ILocation(1000, 630), (component, value) -> {
+        buttons.add(new game.ui.Button<>(this, "Check", new ILocation(1000, 605), (component, value) -> {
             chooser = 2;
         }));
-        buttons.add(new Button<>(this, "Remove All", new ILocation(1000, 655), (component, value) -> {
+        buttons.add(new Button<>(this, "Remove All", new ILocation(1000, 630), (component, value) -> {
             for (Vertex v : graph.getVertices()){
                 graph.removeVertex(v);
             }
@@ -412,7 +409,7 @@ public class MapEditor extends GameScene{
                                         temp = vertex;
                                     } else if (currentEdge == null){
                                         ArrayList<Vertex> vertexList = graph.getVertices();
-                                        graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) ), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) ), GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0), true)));
+                                        graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) ), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) ), GameOfGraphs.getGame().getFieldController().createField(new KIFraction("Independent", new Color(232, 77, 91)), true)));
                                     }
                                     break;
                                 case 1:
@@ -513,7 +510,8 @@ public class MapEditor extends GameScene{
                     if (dragEdge != null) {
                         dragEdge[1].setPosition((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) ), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) ));
                     }
-            }}
+            }
+        }
         });
 
         inputEntry.getKeyEntries().forEach(e -> {
