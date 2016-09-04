@@ -156,7 +156,7 @@ public class Connector {
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE id=" + gameId);
 
-            resultSet.next();
+            resultSet.first();
             return resultSet.getBoolean("start");
         } catch (SQLException e) {
             e.printStackTrace();
