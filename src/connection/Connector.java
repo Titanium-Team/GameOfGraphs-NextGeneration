@@ -245,6 +245,8 @@ public class Connector {
             try {
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE start=0");
 
+                gameId = resultSet.getInt("id");
+
                 if (resultSet.next()) {
                     host = false;
                 }else {
