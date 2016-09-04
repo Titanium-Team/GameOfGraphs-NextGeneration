@@ -128,7 +128,6 @@ public class FieldView extends GameScene{
 
         } else {
             JOptionPane.showMessageDialog(null, "Trade not possible.");
-
         }
 
     });
@@ -140,11 +139,11 @@ public class FieldView extends GameScene{
 
     });
 
-    private Button<String> allianceButton = new Button<String>(this,"Request Alliance",new ILocation(900,570),(t,value)->{
+    private Button<String> allianceButton = new Button<String>(this,"Request Alliance",new ILocation(1100, 700),(t,value)->{
         getGame().getCurrentPlayer().requestAlliance(currentField.getPlayer());
     });
 
-	private Button<String> tradeButton = new Button<String>(this,"Trade with Player",new ILocation(830,630),(t, value)->{
+	private Button<String> tradeButton = new Button<String>(this,"Trade with Player",new ILocation(1000, 700),(t, value)->{
 		tradeEnabled=true;
 		tradeView.setCurrentVertex(currentVertex);
         tradeView.enableAll();
@@ -197,18 +196,15 @@ public class FieldView extends GameScene{
 
 
     public FieldView(){
-        scheduler.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                if (Connector.isEnabledMutiplayer()){
-                    String player = Connector.getCurrentPlayer();
+        scheduler.scheduleAtFixedRate(() -> {
+            if (Connector.isEnabledMutiplayer()){
+                String player = Connector.getCurrentPlayer();
 
-                    if (!GameOfGraphs.getGame().getCurrentPlayer().getName().equals(player)){
-                        for (Player p:GameOfGraphs.getGame().getPlayers()){
-                            if (p.getName().equals(player)){
-                                GameOfGraphs.getGame().setCurrentPlayer(p);
-                                GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph(), false);
-                            }
+                if (!GameOfGraphs.getGame().getCurrentPlayer().getName().equals(player)){
+                    for (Player p:GameOfGraphs.getGame().getPlayers()){
+                        if (p.getName().equals(player)){
+                            GameOfGraphs.getGame().setCurrentPlayer(p);
+                            GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph(), false);
                         }
                     }
                 }
@@ -302,7 +298,7 @@ public class FieldView extends GameScene{
             g.setColor(Color.BLACK);
             g.drawString("OWNER: " + this.currentField.getPlayer().getName(), 20, 700);
 
-            g.drawString("ID:" + this.currentVertex.getID(), 1000, 20);
+            g.drawString("ID:" + this.currentVertex.getID(), 120, 700);
 
             g.setColor(Color.LIGHT_GRAY);
 

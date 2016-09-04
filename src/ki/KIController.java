@@ -3,23 +3,20 @@ package ki;
 import field.buildings.Buildings;
 import field.recipe.Recipe;
 import field.recipe.RecipeResource;
-import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
 import game.Player;
 import game.Queue;
-import graph.Graph;
-import graph.List;
 import graph.Vertex;
 import simulation.Unit;
 
 import java.awt.*;
 import java.util.*;
 
-import static field.resource.Resources.FOOD;
-import static field.resource.Resources.IRON;
-import static field.resource.Resources.POPULATION;
-import static game.GameOfGraphs.*;
+import static field.resource.Resources.*;
+import static game.GameOfGraphs.getGame;
+
+import game.Queue;
 
 /**
  * Created by Tim on 08.06.2016.
@@ -377,9 +374,11 @@ public class KIController {
 			Recipe recipe=b.getRecipe();
 			for(RecipeResource rRes:recipe.getItemIngredients()){
 				if(v.getField().getResources().get(rRes.getResource())<rRes.getAmount()){
-					if(!((KIFraction) v.getField().getPlayer()).getGoals().get(v).containsKey(rRes) || ((KIFraction) v.getField().getPlayer()).getGoals().get(v).get(rRes)<rRes.getAmount()) {
-						((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(),rRes.getAmount());
-					}
+					try {
+						if (!((KIFraction) v.getField().getPlayer()).getGoals().get(v).containsKey(rRes) || ((KIFraction) v.getField().getPlayer()).getGoals().get(v).get(rRes) < rRes.getAmount()) {
+							((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(), rRes.getAmount());
+						}
+					} catch(Exception e) {}
 				}
 			}
 		}

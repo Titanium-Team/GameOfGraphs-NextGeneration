@@ -15,11 +15,9 @@ import ki.KIFraction;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class MapSelectView extends GameScene {
 
@@ -76,7 +74,7 @@ public class MapSelectView extends GameScene {
     });
 
 
-    private Button<String> playButton = new Button<>(this, "Play", new ILocation(700, 440), (c, t) -> {
+    private Button<String> playButton = new Button<>(this, "Play", new ILocation(480, 380), (c, t) -> {
 
         E.getE().show(FieldView.class);
         if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
@@ -86,21 +84,20 @@ public class MapSelectView extends GameScene {
     });
 
     public MapSelectView() {
-        E.getE().addComponent(gameModeMenu);
+        //E.getE().addComponent(gameModeMenu);
 
         E.getE().addComponent(selectedMapMenu);
         E.getE().addComponent(loadMapButtonS);
 
-        E.getE().addComponent(createGameButton);
-        E.getE().addComponent(joinGameButton);
-
-        E.getE().addComponent(playerDropDownM);
+        //E.getE().addComponent(createGameButton);
+        //E.getE().addComponent(joinGameButton);
+        //E.getE().addComponent(playerDropDownM);
 
         E.getE().addComponent(playButton);
 
         this.createGameButton.setEnabled(Connector.isHost());
 
-        this.scheduler.scheduleAtFixedRate(() -> {
+        /*this.scheduler.scheduleAtFixedRate(() -> {
 
             if(MapSelectView.this.isActive()) {
                 Graph graph = Connector.getGraph();
@@ -133,7 +130,7 @@ public class MapSelectView extends GameScene {
                 }});
             }
 
-        }, 0, 1000, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);*/
 
     }
 
