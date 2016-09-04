@@ -231,7 +231,7 @@ public class MapEditor extends GameScene{
                 playerChooser.setEnabled(true);
             }else {
                 if (value instanceof KIFraction){
-                    currentVertex.getField().setPlayer((KIFraction) value);
+                    currentVertex.getField().setPlayer(new KIFraction("Independent", new Color(232, 77, 91)));
                 }else {
                     currentVertex.getField().setPlayer((Player) value);
                 }
