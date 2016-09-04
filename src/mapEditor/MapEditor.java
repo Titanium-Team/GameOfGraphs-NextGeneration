@@ -1,6 +1,5 @@
 package mapEditor;
 
-import connection.Connector;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.IBoundingBox;
