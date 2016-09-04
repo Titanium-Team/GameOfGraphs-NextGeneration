@@ -136,7 +136,7 @@ public class GameOfGraphs {
 			}
 		}
 
-		throw new IllegalArgumentException("Daniel sucks balls.");
+		throw new IllegalArgumentException("Player not found.");
 	}
 
 	public LinkedList<Player> getPlayers() {
