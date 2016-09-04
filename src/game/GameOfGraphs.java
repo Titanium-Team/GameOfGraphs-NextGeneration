@@ -56,39 +56,6 @@ public class GameOfGraphs {
 	}
 
 	public void nextTurn() {
-		/*fieldController.run(this.getCurrentPlayer());
-		this.currentPlayer++;
-
-		if(this.currentPlayer >= this.players.size()) {
-			this.currentPlayer = 0;
-			this.isFirstTurn = false;
-		}
-
-		while(!(this.getCurrentPlayer().isActive())) {
-			this.currentPlayer++;
-			if(this.currentPlayer >= this.players.size()) {
-				this.currentPlayer = 0;
-			}
-		}
-
-		if(this.currentPlayer >= this.players.size()) {
-			this.currentPlayer = 0;
-		}
-
-
-		while(this.getCurrentPlayer() instanceof KIFraction) {
-			kiController.run(this.getCurrentPlayer());
-			currentPlayer++;
-			if(this.currentPlayer >= this.players.size()) {
-				this.currentPlayer = 0;
-				this.isFirstTurn=false;
-			}
-		}
-
-		
-		kiController.run(this.getCurrentPlayer());
-		simulationController.run(this.getCurrentPlayer());*/
-
         boolean breakCondition = false;
 		while (!(breakCondition)) {
 
@@ -102,7 +69,6 @@ public class GameOfGraphs {
 			if(this.getCurrentPlayer().isActive()) {
                 breakCondition = true;
 			}
-
 		}
 
 		this.kiController.run(this.getCurrentPlayer());

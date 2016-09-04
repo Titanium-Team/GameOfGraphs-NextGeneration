@@ -40,7 +40,7 @@ public class KIFraction extends Player{
     }
 
     @JsonCreator
-    public KIFraction(@JsonProperty("name") String name, @JsonProperty("red")  int red, @JsonProperty("blue")  int blue, @JsonProperty("green")  int green) {
+    public KIFraction(@JsonProperty("name") String name, @JsonProperty("red")  int red, @JsonProperty("green")  int green, @JsonProperty("blue")  int blue) {
         super(name, new Color(red, green, blue));
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
@@ -101,4 +101,6 @@ public class KIFraction extends Player{
     public HashMap<Vertex,HashMap<Resources,Integer>> getGoals() {
         return goals;
     }
+
+
 }
