@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
+import static game.GameOfGraphs.getGame;
+
 /**
  * Created by Tim on 10.06.2016.
  */
@@ -63,8 +65,8 @@ public class KIFraction extends Player{
 
     public HashMap<Player, Integer> getTrust() {
 
-        if(this.trust.size()<getGame().getPlayers().size()-1) {
-            ArrayList<Player> players = (ArrayList<Player>) getGame().getPlayers();
+        if(this.trust.size()< getGame().getPlayers().size()-1) {
+            LinkedList<Player> players = getGame().getPlayers();
             players.remove(this);
 
             for (Player p : players) {
