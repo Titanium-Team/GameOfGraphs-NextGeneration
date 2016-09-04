@@ -78,6 +78,11 @@ public class Connector {
      }
 
     public static void createGame(Graph g){
+
+        if(g == null) {
+            return;
+        }
+
         host = true;
 
         Statement statement = setup();
@@ -159,6 +164,7 @@ public class Connector {
 
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE id=" + gameId);
+
 
             if (resultSet.first()) {
                 return resultSet.getBoolean("start");
