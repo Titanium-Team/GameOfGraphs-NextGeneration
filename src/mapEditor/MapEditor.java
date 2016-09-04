@@ -615,7 +615,9 @@ public class MapEditor extends GameScene{
             }
         }
 
-        owner.setOptions(GameOfGraphs.getGame().getPlayers());
+        LinkedList<Player> players = ((LinkedList<Player>) GameOfGraphs.getGame().getPlayers().clone());
+        players.add(new Player("add New Player", null));
+        owner.setOptions(players);
     }
 
     public static Vertex[] getDragEdge() {
