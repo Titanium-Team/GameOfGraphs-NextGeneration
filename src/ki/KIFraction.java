@@ -60,7 +60,7 @@ public class KIFraction extends Player{
 
     @JsonIgnore
     public boolean isFraction(){
-        return !name.equalsIgnoreCase( "independent");
+        return this.getFields().size()>1;
     }
 
     public HashMap<Player, Integer> getTrust() {
