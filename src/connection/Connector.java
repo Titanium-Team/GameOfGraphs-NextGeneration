@@ -239,7 +239,7 @@ public class Connector {
         Statement statement = setup();
 
         try {
-            statement.executeUpdate("UPDATE Games SET turn='" + name + "', graph='" + graph + "' WHERE id=" + gameId);
+            statement.executeUpdate("UPDATE Games SET turn='" + name + "', map='" + graph + "' WHERE id=" + gameId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
