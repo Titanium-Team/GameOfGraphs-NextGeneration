@@ -2,6 +2,8 @@ package graph;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.SweetCode.e.math.ILocation;
+import de.SweetCode.e.utils.ToString.ToStringBuilder;
 import field.Field;
 
 /**
@@ -20,7 +22,11 @@ import field.Field;
  * @author Qualitaets- und UnterstuetzungsAgentur - Landesinstitut fuer Schule, Materialien zum schulinternen Lehrplan Informatik SII
  * @version Oktober 2015
  */
-public class Vertex{
+public class Vertex implements Comparable<Vertex> {
+
+  private Vertex previous;
+  private double minDistance;
+
   //Einmalige ID des Knotens und Markierung
   private String id;
   private boolean markStart;
@@ -116,6 +122,41 @@ public class Vertex{
 
   public void setField(Field field) {
     this.field = field;
+  }
+
+  public Vertex getPrevious() {
+    return previous;
+  }
+
+  public void setPrevious(Vertex previous) {
+    this.previous = previous;
+  }
+
+  public void setMinDistance(double minDistance) {
+    this.minDistance = minDistance;
+  }
+
+  public double getMinDistance() {
+    return this.minDistance;
+  }
+
+  @Override
+  public int compareTo(Vertex o) {
+    return Double.compare(o.getMinDistance(), this.getMinDistance());
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.create(this)
+            .append("id", this.id)
+            .append("location", new ILocation(this.x, this.y))
+            .append("minDistance", this.minDistance)
+            .append("markStart", this.markStart)
+            .append("markTarget", this.markTarget)
+            .append("mark", this.mark)
+            .append("field", this.field)
+            .append("parent", this.parent)
+          .build();
   }
 
 }

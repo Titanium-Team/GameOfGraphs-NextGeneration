@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @version Oktober 2015
  */
 public class Edge{
+
   private String[] verticesId;
   private double weight;
   private boolean mark;
@@ -35,6 +36,7 @@ public class Edge{
     this.verticesId = new String[2];
     this.verticesId[0] = verticesId[0];
     this.verticesId[1] = verticesId[1];
+
     weight = pWeight;
     mark = false;
   }
@@ -81,5 +83,16 @@ public class Edge{
   public boolean isMark(){
     return mark;
   }
-  
+
+  public Vertex[] getVertices(Graph graph) {
+
+    Vertex[] vertices = new Vertex[2];
+
+    vertices[0] = graph.getVertex(verticesId[0]);
+    vertices[1] = graph.getVertex(verticesId[1]);
+
+    return vertices;
+
+  }
+
 }

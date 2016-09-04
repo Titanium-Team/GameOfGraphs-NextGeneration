@@ -2,8 +2,6 @@ package graph;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import game.GameOfGraphs;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -262,7 +260,7 @@ public class Graph{
     ArrayList<Vertex> result = new ArrayList<>();
     
     //Alle Kanten durchlaufen.
-    for (Edge edge:edges){
+    for (Edge edge : edges){
       
       //Wenn ein Knoten der Kante pVertex ist, den anderen als Nachbarn in die Ergebnisliste einfuegen.
       Vertex[] vertexPair = edge.getVerticesId(this);

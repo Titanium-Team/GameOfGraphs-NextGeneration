@@ -11,10 +11,12 @@ import ki.AttackNotification;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
 
 public class SimulationController {
 
-    private Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
     private Player currentPlayer;
 
     public SimulationController(Player player){
@@ -28,15 +30,11 @@ public class SimulationController {
 
         this.currentPlayer = currentPlayer;
 
-        if (graph == null){
-            graph = GameOfGraphs.getGame().getGraphController().getGraph();
-        }
-
-
         /*
         Units des currentPlayer werden auf "nicht bewegt" gesetzt, damit
         sie in der Runde vom Spieler überhaupt bewegt werden können.
          */
+        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
         ArrayList<Vertex> allVertices = graph.getVertices();
         ArrayList<Vertex> vertices = new ArrayList<>();
         for (Vertex vertex : allVertices) {
@@ -122,29 +120,43 @@ public class SimulationController {
 
     public void moveUnits(Vertex start, Vertex end, int amountUnits) {
         if (currentPlayer == start.getField().getPlayer()) {
-            List<Vertex> path = giveListOfVerticesToFollow(start, end);
+            Path path = this.findPath(start, end);
+            LinkedList<Vertex> list = path.getPath();
+
             if (!isMovementPossible(path)) {
                 JOptionPane.showMessageDialog(null, "Das Zielfeld ist zuweit weg oder ungültig! Bitte wähle einen nähres Feld (unter 50 km)");
             } else {
-                if (path != null) {
-                    path.toFirst();
+                if (!list.isEmpty()) {
+                    /*path.toFirst();
                     while (path.hasAccess() && path.getNext() != null) {
                         ArrayList<Unit> units = getListOfUnitsToMove(path.getContent(), path.getNext(), end ,amountUnits);
                         assert units != null;
                         if (path.getNext().getField().getPlayer() != currentPlayer && !path.getNext().getField().getUnits().isEmpty()) {
                             fight(start, path.getNext(), units);
-                            /*if (units.get(0) != null) {
-                                JOptionPane.showMessageDialog(null, "Deine Truppen haben gewonnen!");
-                            } else if (path.getNext().getField().getUnits().get(0) != null) {
-                                JOptionPane.showMessageDialog(null, "Die Truppen des Gegners haben gewonnen!");
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Keine der beiden Truppen hat gewonnen!");
-                            }*/
                         } else {
                             path.getNext().getField().setPlayer(currentPlayer);
                         }
                         addUnitsToField(path.getNext(), units);
                         path.next();
+                    }*/
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        Vertex v = list.get(i);
+                        Vertex next = (i == list.size() - 1 ? null : list.get(i + 1));
+
+                        if(next == null) break;
+
+                        ArrayList<Unit> units = getListOfUnitsToMove(v, next, end, amountUnits);
+
+                        if(next.getField().getPlayer() != currentPlayer && !next.getField().getUnits().isEmpty()) {
+                            fight(start, next, units);
+                        } else {
+                            next.getField().setPlayer(currentPlayer);
+                        }
+
+                        addUnitsToField(next, units);
+
                     }
                 }
             }
@@ -167,12 +179,12 @@ public class SimulationController {
     }
 
     public ArrayList<Vertex> showMovementPossibilities(Vertex vertex){
-        ArrayList<Vertex> newList = new ArrayList<>();
-        return showMovementPossibilities(vertex, 0, newList);
+        return showMovementPossibilities(vertex, 0, new ArrayList<>());
     }
 
     private ArrayList<Vertex> showMovementPossibilities(Vertex vertex, double weight, ArrayList<Vertex> markedVertices){
         if (weight <= 50) {
+            Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
             ArrayList<Vertex> neighbours = graph.getNeighbours(vertex);
             if (neighbours != null) {
                 for (int i = 0; i < neighbours.size(); i++) {
@@ -186,22 +198,89 @@ public class SimulationController {
     }
 
 
-    private boolean isMovementPossible(List<Vertex> vertexList){
+    private boolean isMovementPossible(Path path){
         double weight = 0.0;
-        vertexList.toFirst();
-        while (vertexList.hasAccess() && vertexList.getNext() != null){
-            Edge e = graph.getEdge(vertexList.getContent(), vertexList.getNext());
+        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
+        LinkedList<Vertex> list = path.getPath();
+
+        for(int i = 0; i < list.size(); i++) {
+
+            Vertex v = list.get(i);
+            Vertex next = (i == list.size() - 1 ? null : list.get(i + 1));
+            Edge e = graph.getEdge(v, next);
+
             if (e != null){
                 weight += e.getWeight();
-            }else {
-                return false;
+            } else {
+                return (weight < 50);
             }
             if (weight > 50){
                 return false;
             }
-            vertexList.next();
         }
+
         return true;
+    }
+
+
+    public Path findPath(Vertex start, Vertex target) {
+
+        this.load(start);
+
+        LinkedList<Vertex> path = new LinkedList<>();
+
+        Vertex current = target;
+
+        while(!(current == null)) {
+            path.add(current);
+            current = current.getPrevious();
+        }
+
+        Collections.reverse(path);
+        return new Path(path);
+    }
+
+    private void load(Vertex source) {
+
+        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
+        ArrayList<Vertex> list = graph.getVertices();
+
+        list.forEach(e -> {
+            e.setPrevious(null);
+            e.setMinDistance(Double.POSITIVE_INFINITY);
+        });
+
+        source.setMinDistance(0);
+
+        PriorityQueue<Vertex> vertices = new PriorityQueue<>();
+        vertices.add(source);
+
+        while (!(vertices.isEmpty())) {
+
+            Vertex current = vertices.poll();
+
+            ArrayList<Edge> edges = graph.getEdges(current);
+
+            edges.forEach(e -> {
+
+                Edge edge = e;
+                Vertex[] vertis = edge.getVertices(graph);
+                Vertex vertex = (vertis[0] == current ? vertis[1] : vertis[0]);
+
+                double distance = current.getMinDistance() + edge.getWeight();
+
+                if(distance < vertex.getMinDistance()) {
+
+                    vertex.setMinDistance(distance);
+                    vertex.setPrevious(current);
+                    vertices.add(vertex);
+
+                }
+
+            });
+
+        }
+
     }
 
     /**
@@ -225,7 +304,7 @@ public class SimulationController {
 
     public List<Vertex> giveListOfVerticesToFollow(Vertex start, Vertex destination) {
         List<Vertex> path = new List<>();
-
+        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
         ArrayList<Vertex> unvisitedArrayList = graph.getVertices();
         List<Vertex> unvisited = new List<>();
         for (Vertex vertex: unvisitedArrayList) {
@@ -332,8 +411,7 @@ public class SimulationController {
     //TODO: Verbesserung des Kampf-Systems
     public void fight(Vertex origin, Vertex vertex, ArrayList<Unit> attackingUnits){
 
-        if(attackingUnits.isEmpty()) {
-            //throw new IllegalArgumentException("WHY DO YOU ATTACK WITH NO UNITS AT ALL. THAT IS NOT HOW IT WORKS. DAMIT IT A-ARON.");
+        if(attackingUnits == null || attackingUnits.isEmpty()) {
             return;
         }
 
@@ -382,4 +460,17 @@ public class SimulationController {
 
     }
 
+    public static <T> LinkedList<T> convertList(List<T> list) {
+
+        LinkedList<T> convert = new LinkedList<T>();
+        list.toFirst();
+
+        while(list.hasAccess()) {
+            convert.add(list.getContent());
+            list.next();
+        }
+
+        return convert;
+
+    }
 }
