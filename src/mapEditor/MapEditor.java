@@ -92,17 +92,13 @@ public class MapEditor extends GameScene{
             chooser = 1;
         }));
         buttons.add(new game.ui.Button<>(this, "Save", new ILocation(1000, 555), (component, value) -> {
-            //GameOfGraphs.getGame().getGraphController().save(graph);
-
-            Connector.createGame(graph, currentVertex.getField().getPlayer());
+            GameOfGraphs.getGame().getGraphController().save(graph);
         }));
         buttons.add(new game.ui.Button<>(this, "Load", new ILocation(1000, 580), (component, value) -> {
-            /*Object[] g = GameOfGraphs.getGame().getGraphController().load();
+            Object[] g = GameOfGraphs.getGame().getGraphController().load();
             if (g != null){
                 graph = (Graph) g[0];
-            }*/
-
-            graph = Connector.getGraph();
+            }
         }));
         buttons.add(new game.ui.Button<>(this, "Move", new ILocation(1000, 605), (component, value) -> {
             GameOfGraphs.getGame().getGraphController().checkGraph();
