@@ -1,7 +1,5 @@
 package game;
 
-import connection.Connector;
-
 import field.FieldController;
 import game.loading.LoadingManager;
 import game.sprite.Textures;
@@ -59,9 +57,9 @@ public class GameOfGraphs {
      *  Wenn der nächste Spieler eine KI ist dann wird dessen Zug automatisch ausgeführt.
      */
 	public void nextTurn() {
-        boolean breakCondition = false;
 		this.fieldController.run(this.getCurrentPlayer());
-		while (!(breakCondition)) {
+
+		while (true) {
 
 			this.currentPlayer++;
 
@@ -71,19 +69,18 @@ public class GameOfGraphs {
 			}
 
 			if(this.getCurrentPlayer().isActive()) {
-                breakCondition = true;
+                break;
 			}
-		}
+        }
 
-		this.kiController.run(this.getCurrentPlayer());
-		this.simulationController.run(this.getCurrentPlayer());
+        LinkedList<Player> tmp = new LinkedList<>(this.players);
+        this.simulationController.run(this.getCurrentPlayer());
+        this.kiController.run(this.getCurrentPlayer());
+        this.players = tmp;
+
 
 		if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
 			GameOfGraphs.getGame().nextTurn();
-		}
-
-		if (Connector.isEnabledMutiplayer()) {
-			Connector.nextTurn(getCurrentPlayer().getName(), getGraphController().getGraph());
 		}
 	}
 

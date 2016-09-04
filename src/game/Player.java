@@ -9,7 +9,6 @@ import ki.Request;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -50,7 +49,17 @@ public class Player {
     @JsonIgnore
     public ArrayList<Vertex> getFields() {
 
-        return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().getName().equals(vertex.getField().getPlayer().getName())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Vertex> vertices = new ArrayList<>();
+
+        GameOfGraphs.getGame().getGraphController().getGraph().getVertices().forEach(e -> {
+
+            if(e.getField().getPlayer().getName().equals(this.getName())) {
+                vertices.add(e);
+            }
+
+        });
+
+        return vertices;
 
     }
 

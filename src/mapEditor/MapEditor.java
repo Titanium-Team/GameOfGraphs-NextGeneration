@@ -53,7 +53,7 @@ public class MapEditor extends GameScene{
         this.updateView();
 
     });
-    private Button<String> randomizeAllButton = new Button<>(this, "Randomize", new ILocation(1000, 700), (c, v) -> {
+    private Button<String> randomizeAllButton = new Button<>(this, "Randomize", new ILocation(1000, 680), (c, v) -> {
 
         this.graph.getVertices().forEach(e -> e.setField(GameOfGraphs.getGame().getFieldController().createField(e.getField().getPlayer(), false)));
         if (currentVertex != null) {
@@ -122,7 +122,7 @@ public class MapEditor extends GameScene{
 
             owner.setOptions(list);
         }));
-        buttons.add(new Button<>(this, "Remove", new ILocation(1000, 680), (component, value) -> {
+        buttons.add(new Button<>(this, "Remove", new ILocation(1000, 655), (component, value) -> {
             chooser = 3;
         }));
 

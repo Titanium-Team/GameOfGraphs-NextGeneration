@@ -1,6 +1,5 @@
 package ki;
 
-import field.resource.Resource;
 import field.resource.Resources;
 import game.Player;
 import graph.Vertex;
@@ -43,7 +42,7 @@ public class TradeRequest extends Request {
 	@Override
 	void decline() {
 		if(this.getParent() instanceof KIFraction){
-			((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())-5);
+			//((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())-5);
 		}
 	}
 

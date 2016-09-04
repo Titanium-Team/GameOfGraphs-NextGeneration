@@ -65,7 +65,7 @@ public class KIController {
 					currentPlayer.getNotifications().remove(toRemove);
 				}else{
 					if(!(currentPlayer instanceof KIFraction))JOptionPane.showMessageDialog(null,new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1).getDisplayMessage());
-					getGame().nextTurn();
+					//getGame().nextTurn();
 				}
 			}
 
@@ -222,7 +222,7 @@ public class KIController {
 						Request req = current.getRequests().front();
 						if (req instanceof AllianceRequest) {
 							if (!current.getProperties().contains(Property.DISTRUSTFUL)) {
-								int trust = current.getTrust().get(req.getParent());
+								int trust = (current.getTrust().containsKey(req.getParent()) ? current.getTrust().get(req.getParent()) : 1);
 								if (current.getProperties().contains(Property.DIPLOMATIC)) {
 									if (trust <= 90) {
 										trust += 10;
@@ -253,7 +253,7 @@ public class KIController {
 									}
 								}
 							}
-							if (!isGoal) {
+							if (!isGoal && res != null) {
 								for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
 									if (res.containsKey(e.getKey())) {
 										minTrust -= 10;
@@ -397,9 +397,7 @@ public class KIController {
 							((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(), rRes.getAmount());
 						}
 
-					}catch(NullPointerException n){
-
-					}
+					}catch(NullPointerException n){}
 				}
 			}
 		}
@@ -418,8 +416,10 @@ public class KIController {
 				v=v2;
 			}
 		}
-		if(v.getField().getUnits().size()>3) {
-			getGame().getSimulationController().moveUnits(v, place, v.getField().getUnits().size() - 3);
+		if(!(v == null)) {
+			if (v.getField().getUnits().size() > 3) {
+				getGame().getSimulationController().moveUnits(v, place, v.getField().getUnits().size() - 3);
+			}
 		}
 	}
 
