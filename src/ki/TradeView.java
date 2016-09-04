@@ -136,6 +136,8 @@ public class TradeView extends UIComponent {
 			E.getE().addComponent(cancel);
 			E.getE().addComponent(submit);
 
+			E.getE().addComponent(players);
+
 			firstTime=false;
 		}else{
 			for (int i = 0; i < Resources.values().length; i++) {
@@ -161,8 +163,8 @@ public class TradeView extends UIComponent {
 				}
 			}
 		}},(t, value)->{});
-		E.getE().addComponent(players);
-		players.setEnabled(true);
+		players.setBackground(Color.WHITE);
+		players.setForeground(Color.BLACK);
 
 		for (game.ui.EditText<String> e: textFields){
 			e.setEnabled(true);
@@ -170,5 +172,7 @@ public class TradeView extends UIComponent {
 
 		cancel.setEnabled(true);
 		submit.setEnabled(true);
+
+		players.setEnabled(true);
 	}
 }

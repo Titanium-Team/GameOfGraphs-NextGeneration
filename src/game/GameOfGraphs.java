@@ -9,7 +9,6 @@ import ki.KIController;
 import ki.KIFraction;
 import simulation.SimulationController;
 
-import java.awt.*;
 import java.util.LinkedList;
 
 public class GameOfGraphs {
@@ -32,9 +31,6 @@ public class GameOfGraphs {
 
 	public GameOfGraphs() {
 		GameOfGraphs.game = this;
-
-		this.players.add(new Player("Yonas", Color.YELLOW));
-		this.players.add(new Player("Daniela", Color.PINK));
 
 		// load stuff
 		this.loadingManager.add(Textures.values());
@@ -143,6 +139,10 @@ public class GameOfGraphs {
 
 	public LinkedList<Player> getPlayers() {
 		return this.players;
+	}
+
+	public void setPlayers(LinkedList<Player> players) {
+		this.players = players;
 	}
 
 	public boolean isFirstTurn() {

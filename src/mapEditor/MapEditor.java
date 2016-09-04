@@ -1,5 +1,6 @@
 package mapEditor;
 
+import connection.Connector;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.IBoundingBox;
@@ -77,6 +78,7 @@ public class MapEditor extends GameScene{
 
             owner.setOptions(list);
             currentVertex.getField().setPlayer(value instanceof KIFraction ? (KIFraction) value : (Player) value);
+
         });
         E.getE().addComponent(playerChooser);
         playerChooser.setEnabled(false);
@@ -91,12 +93,16 @@ public class MapEditor extends GameScene{
         }));
         buttons.add(new game.ui.Button<>(this, "Save", new ILocation(1000, 555), (component, value) -> {
             GameOfGraphs.getGame().getGraphController().save(graph);
+
+            //Connector.createGame(graph, null);
         }));
         buttons.add(new game.ui.Button<>(this, "Load", new ILocation(1000, 580), (component, value) -> {
-            Object[] g = GameOfGraphs.getGame().getGraphController().load();
+            /*Object[] g = GameOfGraphs.getGame().getGraphController().load();
             if (g != null){
                 graph = (Graph) g[0];
-            }
+            }*/
+
+            graph = Connector.getGraph();
         }));
         buttons.add(new game.ui.Button<>(this, "Move", new ILocation(1000, 605), (component, value) -> {
             GameOfGraphs.getGame().getGraphController().checkGraph();
@@ -115,6 +121,8 @@ public class MapEditor extends GameScene{
 
             LinkedList<Player> list = new LinkedList(GameOfGraphs.getGame().getPlayers());
             list.add(new Player("add New Player", null));
+
+            playerChooser.reset();
 
             owner.setOptions(list);
         }));
@@ -222,7 +230,11 @@ public class MapEditor extends GameScene{
             if (value.getName().equals("add New Player")){
                 playerChooser.setEnabled(true);
             }else {
-                currentVertex.getField().setPlayer(value);
+                if (value instanceof KIFraction){
+                    currentVertex.getField().setPlayer((KIFraction) value);
+                }else {
+                    currentVertex.getField().setPlayer((Player) value);
+                }
             }
         });
         owner.setBackground(Color.DARK_GRAY);
@@ -734,6 +746,19 @@ public class MapEditor extends GameScene{
         @Override
         public boolean isActive() {
             return this.getGameScene().isActive() && this.isEnabled();
+        }
+
+        public void reset() {
+            colorList = new ArrayList<>();
+            colorList.add(new MyColor(Color.CYAN, "Cyan"));
+            colorList.add(new MyColor(Color.BLACK, "Black"));
+            colorList.add(new MyColor(Color.BLUE, "Blue"));
+            colorList.add(new MyColor(Color.RED, "Red"));
+            colorList.add(new MyColor(Color.MAGENTA, "Magenta"));
+            colorList.add(new MyColor(Color.YELLOW, "Yellow"));
+            colorList.add(new MyColor(Color.GRAY, "Gray"));
+
+            colorMenu.setOptions(new LinkedList<>(colorList));
         }
 
         private class MyColor{

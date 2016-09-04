@@ -2,21 +2,20 @@
 package graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import game.GameOfGraphs;
 import game.Player;
 import game.Queue;
 import ki.KIFraction;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+
+import game.Queue;
 
 public class GraphController {
     private Graph graph;
@@ -70,6 +69,28 @@ public class GraphController {
 
     public void setGraph(Graph graph) {
         this.graph = graph;
+
+        LinkedList<Player> players = new LinkedList<>();
+
+        boolean add = true;
+
+        ArrayList<Vertex> vertices = graph.getVertices();
+        for (Vertex v:vertices){
+            for (Player temp : players) {
+                if (v.getField().getPlayer().getName().equals(temp.getName())) {
+                    add = false;
+                    break;
+                }
+            }
+
+            if (add){
+                players.add(v.getField().getPlayer());
+            }
+            add = true;
+        }
+
+        GameOfGraphs.getGame().setPlayers(players);
+        GameOfGraphs.getGame().nextTurn();
     }
 
     public void save(Graph graph) {
@@ -110,16 +131,9 @@ public class GraphController {
 
                 File graphFile = new File(file.getAbsolutePath() + "\\graph.gog");
                 ObjectMapper mapper = new ObjectMapper(new SmileFactory());
+                mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
                 mapper.writeValue(graphFile, graph);
-
-                File background = new File(file.getAbsolutePath() + "\\background.png");
-                ImageIO.write(graph.getBackground(), "png", background);
-
-                File vertex = new File(file.getAbsolutePath() + "\\vertexImage.png");
-                ImageIO.write(graph.getVertexImage(), "png", vertex);
-
-                File edge = new File(file.getAbsolutePath() + "\\edgeImage.png");
-                ImageIO.write(graph.getEdgeImage(), "png", edge);
 
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -211,16 +225,7 @@ public class GraphController {
                 ObjectMapper mapper = new ObjectMapper(new SmileFactory());
                 Graph graphTemp = mapper.readValue(graphFile, Graph.class);
 
-                File background = new File(file.getAbsolutePath() + "\\background.png");
-                graphTemp.setBackground(ImageIO.read(background));
-
-                File vertex = new File(file.getAbsolutePath() + "\\vertexImage.png");
-                graphTemp.setVertexImage(ImageIO.read(vertex));
-
-                File edge = new File(file.getAbsolutePath() + "\\edgeImage.png");
-                graphTemp.setEdgeImage(ImageIO.read(edge));
-
-                graph = graphTemp;
+                setGraph(graphTemp);
 
                 /*thickness.setText(String.valueOf(graph.getThickness()));
                 radius.setText(String.valueOf(graph.getRadius()));

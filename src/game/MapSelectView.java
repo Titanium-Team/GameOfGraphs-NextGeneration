@@ -1,5 +1,7 @@
 package game;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.ILocation;
@@ -9,7 +11,10 @@ import field.FieldView;
 import game.ui.Button;
 import game.ui.DropDownMenu;
 import graph.Graph;
+import graph.Vertex;
+import ki.KIFraction;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
