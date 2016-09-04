@@ -6,8 +6,10 @@ import game.loading.LoadingManager;
 import game.sprite.Textures;
 import graph.GraphController;
 import ki.KIController;
+import ki.KIFraction;
 import simulation.SimulationController;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,17 @@ public class GameOfGraphs {
 	public GameOfGraphs() {
 		GameOfGraphs.game = this;
 
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
 		// load stuff
 		this.loadingManager.add(Textures.values());
 		this.loadingManager.load();
@@ -71,7 +84,7 @@ public class GameOfGraphs {
 			this.currentPlayer = 0;
 		}
 
-		/*
+
 		while(this.getCurrentPlayer() instanceof KIFraction) {
 			kiController.run(this.getCurrentPlayer());
 			currentPlayer++;
@@ -80,7 +93,7 @@ public class GameOfGraphs {
 				this.isFirstTurn=false;
 			}
 		}
-		*/
+
 
 		kiController.run(this.getCurrentPlayer());
 		simulationController.run(this.getCurrentPlayer());

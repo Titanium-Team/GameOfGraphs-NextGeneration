@@ -19,7 +19,7 @@ public class Connector {
     private static final String user = "GameOfGraphs";
     private static final String password = "game";
 
-    private static int gameId;
+    private static int gameId=9;
     private static int playerId;
 
     private static boolean host;
@@ -182,7 +182,7 @@ public class Connector {
         Statement statement = setup();
 
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE if=" + gameId);
+            ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE id=" + gameId);
 
             if (resultSet.next()) {
                 String graph = resultSet.getString("map");

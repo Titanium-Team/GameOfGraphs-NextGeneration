@@ -17,6 +17,7 @@ import java.awt.*;
 import java.util.*;
 
 import static field.resource.Resources.FOOD;
+import static field.resource.Resources.IRON;
 import static field.resource.Resources.POPULATION;
 import static game.GameOfGraphs.*;
 
@@ -87,19 +88,19 @@ public class KIController {
 						int minUnits = Integer.MAX_VALUE;
 						if (current.getProperties().contains(Property.AGGRESSIVE)) {
 							if (current.getProperties().contains(Property.STRATEGIC)) {
-								minUnits = 5;
+								minUnits = 4;
 							} else {
-								minUnits = 3;
+								minUnits = 2;
 							}
 						} else if (r.nextInt(3) == 1) {
-							minUnits = 4;
+							minUnits = 3;
 						}
-						if (v1.getField().getUnits().size() >= minUnits) {
+						if (v1.getField().getUnits().size() >= minUnits+2) {
 							Vertex goal = null;
 							int amount = minUnits;
 							ArrayList<Vertex> neighbors = getGame().getGraphController().getGraph().getNeighbours(v1);
 							if (current.getProperties().contains(Property.AGGRESSIVE)) {
-								amount = v1.getField().getUnits().size();
+								amount = v1.getField().getUnits().size()-2;
 							}
 							for (Vertex v : neighbors) {
 								if (!current.equals(v.getField().getPlayer())) {
@@ -112,9 +113,11 @@ public class KIController {
 								Player archEnemy = null;
 								Vertex tempGoal;
 								for (Player p : getGame().getPlayers()) {
-									if (current.getTrust().get(p) < min) {
-										archEnemy = p;
-										min = current.getTrust().get(p);
+									if(current.getTrust().containsKey(p)) {
+										if (current.getTrust().get(p) < min) {
+											archEnemy = p;
+											min = current.getTrust().get(p);
+										}
 									}
 								}
 								tempGoal = this.getClosestVertex(v1, archEnemy);
@@ -134,7 +137,9 @@ public class KIController {
 								getGame().getSimulationController().moveUnits(v1, goal, amount);
 							}
 						} else {
-							this.buildIfBuildable(Buildings.UNIT, v1);
+							if(v1.getField().getLocalResource().equals(IRON)) {
+								this.buildIfBuildable(Buildings.UNIT, v1);
+							}
 						}
 					}
 				} else if (current.isFraction()) {
@@ -388,10 +393,8 @@ public class KIController {
 			Recipe recipe=b.getRecipe();
 			for(RecipeResource rRes:recipe.getItemIngredients()){
 				if(v.getField().getResources().get(rRes.getResource())<rRes.getAmount()){
-					if(!((KIFraction) v.getField().getPlayer()).getGoals().get(v).containsKey(rRes)) {
+					if(!((KIFraction) v.getField().getPlayer()).getGoals().get(v).containsKey(rRes) || ((KIFraction) v.getField().getPlayer()).getGoals().get(v).get(rRes)<rRes.getAmount()) {
 						((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(),rRes.getAmount());
-					}else{
-						((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(), ((KIFraction) v.getField().getPlayer()).getGoals().get(v).get(rRes) + rRes.getAmount());
 					}
 				}
 			}
