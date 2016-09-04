@@ -144,6 +144,7 @@ public class Connector {
 
                 return true;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
