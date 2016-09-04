@@ -90,7 +90,6 @@ public class GraphController {
         }
 
         GameOfGraphs.getGame().setPlayers(players);
-        GameOfGraphs.getGame().nextTurn();
     }
 
     public void save(Graph graph) {
