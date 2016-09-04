@@ -112,7 +112,11 @@ public class MapSelectView extends GameScene {
 
         if(this.time >= 5000) {
 
-            GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph());
+
+            Graph graph = Connector.getGraph();
+            if (graph != null){
+                GameOfGraphs.getGame().getGraphController().setGraph(graph);
+            }
 
             if(Connector.gameReady()) {
                 E.getE().show(FieldView.class);
