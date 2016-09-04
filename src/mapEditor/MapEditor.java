@@ -91,9 +91,9 @@ public class MapEditor extends GameScene{
             chooser = 1;
         }));
         buttons.add(new game.ui.Button<>(this, "Save", new ILocation(1000, 555), (component, value) -> {
-            GameOfGraphs.getGame().getGraphController().save(graph);
+            //GameOfGraphs.getGame().getGraphController().save(graph);
 
-            //Connector.createGame(graph, null);
+            Connector.createGame(graph, currentVertex.getField().getPlayer());
         }));
         buttons.add(new game.ui.Button<>(this, "Load", new ILocation(1000, 580), (component, value) -> {
             /*Object[] g = GameOfGraphs.getGame().getGraphController().load();

@@ -353,7 +353,7 @@ public class FieldView extends GameScene{
         inputEntry.getMouseEntries().forEach(entry -> {
             
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
-                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
+                Vertex vertex = graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
                 if (vertex != null && (vertex.getField().getPlayer() instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer().getName().equals(vertex.getField().getPlayer().getName()))) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
