@@ -16,9 +16,7 @@ public class SimulationController {
 
     private Player currentPlayer;
 
-    public SimulationController(Player player){
-        this.currentPlayer = player;
-    }
+    public SimulationController(){}
 
 
     public void run(Player currentPlayer){

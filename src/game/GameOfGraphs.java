@@ -46,7 +46,7 @@ public class GameOfGraphs {
 		fieldController = new FieldController();
 		graphController = new GraphController();
 		kiController = new KIController();
-		simulationController = new SimulationController(this.getCurrentPlayer());
+		simulationController = new SimulationController();
 	}
 
 	public static GameOfGraphs getGame() {
@@ -134,6 +134,10 @@ public class GameOfGraphs {
      * @return
      */
 	public Player getCurrentPlayer() {
+        if(this.players.isEmpty()) {
+            return null;
+        }
+
 		return this.players.get(this.currentPlayer);
 	}
 
