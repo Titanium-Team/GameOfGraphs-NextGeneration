@@ -91,6 +91,7 @@ public class MapSelectView extends GameScene {
         E.getE().addComponent(playButton);
 
         this.createGameButton.setEnabled(Connector.isHost());
+
     }
 
     @Override
@@ -111,8 +112,9 @@ public class MapSelectView extends GameScene {
 
         if(this.time >= 5000) {
 
+            GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph());
+
             if(Connector.gameReady()) {
-                GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph());
                 E.getE().show(FieldView.class);
                 return;
             }

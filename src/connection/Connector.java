@@ -96,8 +96,6 @@ public class Connector {
 
             gameId = resultSet.getInt("id");
 
-
-
             ArrayList<Player> players = new ArrayList<>();
             boolean add = true;
 
