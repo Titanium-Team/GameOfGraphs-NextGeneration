@@ -11,6 +11,7 @@ import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
+import game.Player;
 import graph.GraphDrawer;
 import game.sprite.Textures;
 import game.ui.Button;
@@ -173,6 +174,7 @@ public class FieldView extends GameScene{
 
     //Button zum einleiten des nächsten Zuges
     private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1200, 700),(t, value) -> {
+        currentVertex.setMarkStart(false);
         this.currentField = null;
         this.currentVertex = null;
         GameOfGraphs.getGame().nextTurn();
@@ -183,9 +185,6 @@ public class FieldView extends GameScene{
 
     
     public FieldView(){
-
-        this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
-
         E.getE().addComponent(unitDropDownMenu);
         //Build
         E.getE().addComponent(buildingDropDownMenu);
@@ -269,7 +268,7 @@ public class FieldView extends GameScene{
             g.setColor(Color.LIGHT_GRAY);
 
             //Zeichnen der UIComponents
-            boolean active = GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer();
+            boolean active = GameOfGraphs.getGame().getCurrentPlayer().getName().equals(this.currentField.getPlayer().getName());
             this.buildingDropDownMenu.setEnabled(active);
             this.buildButton.setEnabled(active);
             this.unitDropDownMenu.setEnabled(active);
@@ -346,14 +345,18 @@ public class FieldView extends GameScene{
     @Override
     public void update(InputEntry inputEntry, long l) {
 
+        if (graph == null){
+            graph = GameOfGraphs.getGame().getGraphController().getGraph();
+        }
+
         GraphDrawer.update(inputEntry,l);
 
         //MouseListener
         inputEntry.getMouseEntries().forEach(entry -> {
             
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
-                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
-                if (vertex != null && (vertex.getField().getPlayer()instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer() == vertex.getField().getPlayer())) {
+                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
+                if (vertex != null && (vertex.getField().getPlayer() instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer().getName().equals(vertex.getField().getPlayer().getName()))) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
                     }

@@ -1,6 +1,8 @@
 package ki;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.Player;
@@ -32,6 +34,13 @@ public class KIFraction extends Player{
     public KIFraction(String name, Color color) {
         //super(name);
         super(name, color);
+        int chance = r.nextInt(Property.values().length);
+        properties.add(Property.values()[chance]);
+    }
+
+    @JsonCreator
+    public KIFraction(@JsonProperty("name") String name, @JsonProperty("red")  int red, @JsonProperty("blue")  int blue, @JsonProperty("green")  int green) {
+        super(name, new Color(red, green, blue));
         int chance = r.nextInt(Property.values().length);
         properties.add(Property.values()[chance]);
     }

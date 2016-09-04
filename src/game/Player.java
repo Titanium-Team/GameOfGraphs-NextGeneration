@@ -1,10 +1,9 @@
 package game;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import graph.Vertex;
 import ki.AllianceRequest;
+import ki.KIFraction;
 import ki.Notification;
 import ki.Request;
 
@@ -12,6 +11,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({@JsonSubTypes.Type(value = KIFraction.class)})
 public class Player {
 
     protected String name;
