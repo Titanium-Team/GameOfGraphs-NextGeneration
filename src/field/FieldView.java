@@ -18,6 +18,7 @@ import graph.Graph;
 import graph.GraphDrawer;
 import graph.Vertex;
 import ki.KIFraction;
+import ki.RequestView;
 import ki.TradeView;
 
 import javax.swing.*;
@@ -142,6 +143,15 @@ public class FieldView extends GameScene{
 	private Button<String> tradeButton = new Button<String>(this,"Trade with Player",new ILocation(830,630),(t, value)->{
 		tradeEnabled=true;
 		tradeView.setCurrentVertex(currentVertex);
+        tradeView.enableAll();
+	});
+
+	private boolean requestShown;
+	private RequestView requestView = new RequestView(this,new ILocation(400,200));
+
+	private Button<String> requestButton = new Button<String>(this,"Show Requests",new ILocation(830,660),(t, value)->{
+		requestShown=true;
+		requestView.setRequest(currentField.getPlayer().getRequests().front());
 	});
 
     private Button<String> bazaarButton1 = new Button<String>(this, "Trade", new ILocation(830, 570),(t, value) -> {
@@ -205,6 +215,9 @@ public class FieldView extends GameScene{
 
 	    E.getE().addComponent(tradeButton);
 	    E.getE().addComponent(tradeView);
+
+	    E.getE().addComponent(requestButton);
+	    E.getE().addComponent(requestView);
     }
 
     @Override
@@ -232,6 +245,7 @@ public class FieldView extends GameScene{
         g.setBackground(Color.WHITE);
 
 	    tradeView.setEnabled(tradeEnabled);
+	    requestView.setEnabled(requestShown);
 
         if(currentField == null) {
 
@@ -249,6 +263,7 @@ public class FieldView extends GameScene{
             this.bazaarButton2.setEnabled(false);
 	        this.allianceButton.setEnabled(false);
 	        this.tradeButton.setEnabled(false);
+	        this.requestButton.setEnabled(false);
 
         }else{
             //Zeichnen der Statistiken
@@ -281,6 +296,7 @@ public class FieldView extends GameScene{
             this.freeBuildButton.setEnabled(active && GameOfGraphs.getGame().isFirstTurn() && this.free);
 	        this.allianceButton.setEnabled(!active);
 	        this.tradeButton.setEnabled(active);
+	        this.requestButton.setEnabled(active && !currentField.getPlayer().getRequests().isEmpty());
 
             //Zeichnen der Trade-Button
             if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
@@ -416,5 +432,9 @@ public class FieldView extends GameScene{
 
 	public void setTradeEnabled(boolean tradeEnabled) {
 		this.tradeEnabled = tradeEnabled;
+	}
+
+	public void setRequestShown(boolean requestShown) {
+		this.requestShown = requestShown;
 	}
 }

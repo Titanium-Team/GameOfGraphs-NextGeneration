@@ -86,7 +86,6 @@ public class TradeView extends UIComponent {
 			Player p= players.getOption();
 			TradeRequest tr=new TradeRequest(getGame().getCurrentPlayer(),offered,wanted,currentVertex,p);
 			p.addRequest(tr);
-			System.out.println(tr);
 			((FieldView) gameScene).setTradeEnabled(false);
 		});
 
@@ -149,23 +148,31 @@ public class TradeView extends UIComponent {
 
 	public void setCurrentVertex(Vertex currentVertex) {
 		this.currentVertex = currentVertex;
-
-		players= new DropDownMenu<Player>(gameScene,new ILocation(location.getX()+75,location.getY()+height-50),new LinkedList<Player>(){{
-			for(Vertex v:getGame().getGraphController().getGraph().getNeighbours(currentVertex)){
-				if(!v.getField().getPlayer().equals(getGame().getCurrentPlayer())){
-					if(v.getField().getPlayer() instanceof KIFraction){
-						if(((KIFraction) v.getField().getPlayer()).isFraction()){
+		if(players==null) {
+			players = new DropDownMenu<Player>(gameScene, new ILocation(location.getX() + 75, location.getY() + height - 50),null, (t, value) -> {
+			});
+		}
+		players.setOptions(new LinkedList<Player>(){{
+			for (Vertex v : getGame().getGraphController().getGraph().getNeighbours(currentVertex)) {
+				if (!v.getField().getPlayer().equals(getGame().getCurrentPlayer())) {
+					if (v.getField().getPlayer() instanceof KIFraction) {
+						if (((KIFraction) v.getField().getPlayer()).isFraction()) {
 							this.add(v.getField().getPlayer());
 						}
-					}else{
+					} else {
 						this.add(v.getField().getPlayer());
 					}
 				}
 			}
-		}},(t, value)->{});
+
+		}});
 		players.setBackground(Color.WHITE);
 		players.setForeground(Color.BLACK);
 
+
+	}
+
+	public void enableAll(){
 		for (game.ui.EditText<String> e: textFields){
 			e.setEnabled(true);
 		}

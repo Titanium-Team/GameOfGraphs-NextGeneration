@@ -58,20 +58,22 @@ public class KIFraction extends Player{
 
     @JsonIgnore
     public boolean isFraction(){
-        return !name.equals( "independent");
+        return !name.equalsIgnoreCase( "independent");
     }
 
     public HashMap<Player, Integer> getTrust() {
 
-        if(this.trust.isEmpty()) {
-            LinkedList<Player> players = new LinkedList<>(GameOfGraphs.getGame().getPlayers());
+        if(this.trust.size()<getGame().getPlayers().size()-1) {
+            ArrayList<Player> players = (ArrayList<Player>) getGame().getPlayers();
             players.remove(this);
 
             for (Player p : players) {
-                if (properties.contains(Property.DISTRUSTFUL)) {
-                    trust.put(p, 10);
-                } else {
-                    trust.put(p, 40);
+                if(!trust.containsKey(p)) {
+                    if (properties.contains(Property.DISTRUSTFUL)) {
+                        trust.put(p, 10);
+                    } else {
+                        trust.put(p, 40);
+                    }
                 }
             }
 

@@ -19,7 +19,9 @@ public class Connector {
     private static final String user = "GameOfGraphs";
     private static final String password = "game";
 
-    private static int gameId = -1;
+
+    private static int gameId=9;
+
     private static int playerId;
 
     private static boolean host;
