@@ -57,7 +57,7 @@ public class Connector {
                  gameId = resultSet.getInt("id");
                  GameOfGraphs.getGame().getGraphController().setGraph(getGraph());
 
-                 statement.executeUpdate("UPDATE Player SET used=1 WHERE  player=" + player);
+                 statement.executeUpdate("UPDATE Player SET used=1 WHERE  player='" + player + "'");
 
                  resultSet = statement.executeQuery("SELECT * FROM Player WHERE player='" + player + "'");
                  resultSet.first();
