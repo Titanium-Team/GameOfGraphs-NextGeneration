@@ -42,6 +42,10 @@ public class DropDownMenu<T> extends UIComponent<T> {
         this.selectedIndex = 0;
     }
 
+    public int getSelectedIndex() {
+        return this.selectedIndex;
+    }
+
     public void setSelectedIndex(int selectedIndex){
         this.selectedIndex = selectedIndex;
     }
@@ -195,4 +199,5 @@ public class DropDownMenu<T> extends UIComponent<T> {
     public List<T> getOptions() {
         return options;
     }
+
 }

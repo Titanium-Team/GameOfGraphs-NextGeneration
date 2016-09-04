@@ -6,7 +6,6 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
-import de.SweetCode.e.utils.StringUtils;
 import field.FieldView;
 import game.ui.Button;
 import game.ui.DropDownMenu;
@@ -16,6 +15,7 @@ import ki.KIFraction;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -110,13 +110,23 @@ public class MapSelectView extends GameScene {
             if(Connector.gameReady() || Connector.gameStarted()) {
                 E.getE().show(FieldView.class);
                 Connector.setEnabledMutiplayer(true);
+
+                if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
+                    GameOfGraphs.getGame().nextTurn();
+                }
                 return;
             }
 
             this.playerDropDownM.setOptions(new LinkedList<Player>() {{
 
-                if(!(Connector.unusedPlayers() == null)) {
-                    this.addAll(Connector.unusedPlayers());
+                List<Player> players = Connector.unusedPlayers();
+                if(!(players == null)) {
+                    int index = (playerDropDownM.getOptions().size() >= players.size() ? playerDropDownM.getSelectedIndex() : -1);
+                    this.addAll(players);
+
+                    if(index == -1) {
+                        playerDropDownM.setSelectedIndex(index);
+                    }
                 }
 
             }});
