@@ -23,23 +23,10 @@ public class MapSelectView extends GameScene {
 
     private final static Map<String, Graph> maps = new LinkedHashMap<>();
 
-    private DropDownMenu<String> dropDownMenu = new DropDownMenu<>(this, new ILocation(400,400), new LinkedList<String>() {{
-
-        maps.put("Bla", null);
-        maps.put("Bla 1", null);
-        maps.put("Bl          2a", null);
-        maps.put("Bl 3333a", null);
-        maps.put("Bl4a", null);
-
-        maps.keySet().forEach(e -> {
-
-            this.add(e);
-
-        });
-
-    }}, (c, t) -> {
+    private DropDownMenu<String> dropDownMenu = new DropDownMenu<>(this, new ILocation(400,400), new LinkedList<>(), (c, t) -> {
 
         GameOfGraphs.getGame().getGraphController().setGraph(maps.get(t));
+        System.out.println(maps.get(t));
 
     });
 
@@ -49,6 +36,7 @@ public class MapSelectView extends GameScene {
 
         if(!(graph == null)) {
             this.maps.put(String.valueOf(graph[1]), (Graph) graph[0]);
+            this.dropDownMenu.getOptions().add(String.valueOf(graph[1]));
         }
 
     });
