@@ -118,7 +118,7 @@ public class MapSelectView extends GameScene {
                 GameOfGraphs.getGame().getGraphController().setGraph(graph);
             }
 
-            if(Connector.gameReady()) {
+            if(Connector.gameReady() || Connector.gameStarted()) {
                 E.getE().show(FieldView.class);
                 return;
             }
