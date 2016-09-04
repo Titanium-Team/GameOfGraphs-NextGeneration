@@ -222,6 +222,8 @@ public class SimulationController {
         return new Path(path);
     }
 
+    //TODO: Dijkstra in der Präsi zeigen!
+
     private void load(Vertex source) {
 
         Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
@@ -282,7 +284,7 @@ public class SimulationController {
      */
 
 
-    //TODO: Dijkstra in der Präsi zeigen!
+
 
     public List<Vertex> giveListOfVerticesToFollow(Vertex start, Vertex destination) {
         List<Vertex> path = new List<>();
@@ -379,6 +381,7 @@ public class SimulationController {
         return path;
     }
 
+
     /**
      * Erste einfach Simulation eines Kampfes zwischen zwei Soldatentrupps.
      *
@@ -406,8 +409,8 @@ public class SimulationController {
 
         while(aU != 0 && dU != 0){
 
-            int aURoll = rn.nextInt(aU) + 1;
-            int dUROLL = rn.nextInt(dU) + 1;
+            int aURoll = (rn.nextInt(9)+1) + rn.nextInt(aU) + 1;
+            int dUROLL = (rn.nextInt(9)+1) + rn.nextInt(dU) + 1;
             if (aURoll > dUROLL){
                 dU--;
             }else{
