@@ -95,6 +95,7 @@ public class GameOfGraphs {
 
 			if(this.currentPlayer >= this.players.size()) {
 				this.currentPlayer = 0;
+                this.isFirstTurn = false;
 			}
 
 			if(this.getCurrentPlayer().isActive()) {
