@@ -389,7 +389,6 @@ public class SimulationController {
      * @param attackingUnits
      * Die ArrayList der Units, die den Angriff leiten.
      */
-    
     public void fight(Vertex origin, Vertex vertex, ArrayList<Unit> attackingUnits){
 
         if(attackingUnits == null || attackingUnits.isEmpty()) {

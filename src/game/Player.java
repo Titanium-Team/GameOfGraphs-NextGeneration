@@ -50,7 +50,7 @@ public class Player {
     @JsonIgnore
     public ArrayList<Vertex> getFields() {
 
-        return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().equals(this)).collect(Collectors.toCollection(ArrayList::new));
+        return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().getName().equals(vertex.getField().getPlayer().getName())).collect(Collectors.toCollection(ArrayList::new));
 
     }
 
