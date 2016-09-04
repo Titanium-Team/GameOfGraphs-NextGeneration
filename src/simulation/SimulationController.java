@@ -10,10 +10,7 @@ import graph.Vertex;
 import ki.AttackNotification;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class SimulationController {
 
@@ -422,8 +419,9 @@ public class SimulationController {
         aU = attackingUnits.size();
         dU = defendingUnits.size();
 
-        /*while(aU != 0 && dU != 0){
-            Random rn = new Random();
+        Random rn = E.getE().getRandom(false);
+
+        while(aU != 0 && dU != 0){
 
             int aURoll = rn.nextInt(aU) + 1;
             int dUROLL = rn.nextInt(dU) + 1;
@@ -432,13 +430,15 @@ public class SimulationController {
             }else{
                 aU--;
             }
-        }*/
+        }
 
+        attackWin = (dU == 0);
+        /*
         if(dU == 0) {
             attackWin = true;
         } else {
             attackWin = E.getE().getRandom(false).nextInt(aU) > E.getE().getRandom(false).nextInt(dU);
-        }
+        }*/
 
         Player defender = vertex.getField().getPlayer();
         Player attacker = attackingUnits.get(0).getPlayer();
