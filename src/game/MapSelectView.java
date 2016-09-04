@@ -11,6 +11,7 @@ import field.FieldView;
 import game.ui.Button;
 import game.ui.DropDownMenu;
 import graph.Graph;
+import ki.KIFraction;
 
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
@@ -75,7 +76,14 @@ public class MapSelectView extends GameScene {
     });
 
 
-    private Button<String> playButton = new Button<>(this, "Play", new ILocation(700, 440), (c, t) -> E.getE().show(FieldView.class));
+    private Button<String> playButton = new Button<>(this, "Play", new ILocation(700, 440), (c, t) -> {
+
+        E.getE().show(FieldView.class);
+        if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
+            GameOfGraphs.getGame().nextTurn();
+        }
+
+    });
 
     public MapSelectView() {
         E.getE().addComponent(gameModeMenu);
