@@ -57,7 +57,9 @@ public class MapEditor extends GameScene{
     private Button<String> randomizeAllButton = new Button<>(this, "Randomize", new ILocation(1000, 700), (c, v) -> {
 
         this.graph.getVertices().forEach(e -> e.setField(GameOfGraphs.getGame().getFieldController().createField(e.getField().getPlayer(), false)));
-        this.updateView();
+        if (currentVertex != null) {
+            this.updateView();
+        }
 
     });
 
@@ -611,6 +613,8 @@ public class MapEditor extends GameScene{
                     break;
             }
         }
+
+        owner.setOptions(GameOfGraphs.getGame().getPlayers());
     }
 
     public static Vertex[] getDragEdge() {

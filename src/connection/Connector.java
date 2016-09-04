@@ -20,11 +20,13 @@ public class Connector {
     private static final String password = "game";
 
 
-    private static int gameId=9;
+    private static int gameId=-1;
 
     private static int playerId;
 
     private static boolean host;
+
+    private static boolean enabledMutiplayer;
 
     private static Statement setup(){
         try {
@@ -76,6 +78,11 @@ public class Connector {
      }
 
     public static void createGame(Graph g){
+
+        if(g == null) {
+            return;
+        }
+
         host = true;
 
         Statement statement = setup();
@@ -158,6 +165,7 @@ public class Connector {
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE id=" + gameId);
 
+
             if (resultSet.first()) {
                 return resultSet.getBoolean("start");
             }
@@ -217,11 +225,21 @@ public class Connector {
         return null;
     }
 
-    public static void nextTurn(String name){
+    public static void nextTurn(String name, Graph g){
+        String graph = null;
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        try {
+            graph = mapper.writeValueAsString(g);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         Statement statement = setup();
 
         try {
-            statement.executeUpdate("UPDATE Games SET turn='" + name + "' WHERE id=" + gameId);
+            statement.executeUpdate("UPDATE Games SET turn='" + name + "', graph='" + graph + "' WHERE id=" + gameId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -247,5 +265,13 @@ public class Connector {
         }
         return host;
 
+    }
+
+    public static boolean isEnabledMutiplayer() {
+        return enabledMutiplayer;
+    }
+
+    public static void setEnabledMutiplayer(boolean enabledMutiplayer) {
+        Connector.enabledMutiplayer = enabledMutiplayer;
     }
 }
