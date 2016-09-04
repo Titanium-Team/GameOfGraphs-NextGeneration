@@ -26,6 +26,8 @@ public class Connector {
 
     private static boolean host;
 
+    private static boolean enabledMutiplayer;
+
     private static Statement setup(){
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
@@ -253,5 +255,13 @@ public class Connector {
         }
         return host;
 
+    }
+
+    public static boolean isEnabledMutiplayer() {
+        return enabledMutiplayer;
+    }
+
+    public static void setEnabledMutiplayer(boolean enabledMutiplayer) {
+        Connector.enabledMutiplayer = enabledMutiplayer;
     }
 }
