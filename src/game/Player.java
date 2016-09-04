@@ -35,9 +35,9 @@ public class Player {
     }
 
     @JsonCreator
-    public Player(@JsonProperty("name") String name, @JsonProperty("red")  int red, @JsonProperty("blue")  int blue, @JsonProperty("green")  int green) {
+    public Player(@JsonProperty("name") String name, @JsonProperty("red")  int red, @JsonProperty("green")  int green, @JsonProperty("blue")  int blue) {
         this.name = name;
-        this.color = new Color(red, blue, green);
+        this.color = new Color(red, green, blue);
     }
 
     public String getName() {
@@ -132,5 +132,9 @@ public class Player {
 
     public int getGreen(){
         return color.getGreen();
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
