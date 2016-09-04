@@ -90,6 +90,7 @@ public class GameOfGraphs {
 		simulationController.run(this.getCurrentPlayer());*/
 
         boolean breakCondition = false;
+		this.fieldController.run(this.getCurrentPlayer());
 		while (!(breakCondition)) {
 
 			this.currentPlayer++;
@@ -106,7 +107,6 @@ public class GameOfGraphs {
 		}
 
 		this.kiController.run(this.getCurrentPlayer());
-		this.fieldController.run(this.getCurrentPlayer());
 		this.simulationController.run(this.getCurrentPlayer());
 
 		if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
