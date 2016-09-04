@@ -3,7 +3,6 @@ package field.buildings;
 import field.Field;
 import field.recipe.Recipe;
 import field.recipe.RecipeResource;
-import field.resource.Resource;
 import field.resource.Resources;
 import simulation.Unit;
 
@@ -36,6 +35,12 @@ public enum Buildings implements Building {
         public String getName() {
             return "Units";
         }
+
+        @Override
+        public String toString() {
+            return "Unit";
+        }
+
     },
     MINE {
 
@@ -65,6 +70,12 @@ public enum Buildings implements Building {
         public String getName() {
             return "Mines";
         }
+
+        @Override
+        public String toString() {
+            return "Mine";
+        }
+
     },
     FARM {
         @Override
@@ -93,6 +104,12 @@ public enum Buildings implements Building {
         public String getName() {
             return "Farms";
         }
+
+        @Override
+        public String toString() {
+            return "Farm";
+        }
+
     },
     WINDMILL {
         @Override
@@ -116,8 +133,15 @@ public enum Buildings implements Building {
         public String getName() {
             return "Windmills";
         }
+
+        @Override
+        public String toString() {
+            return "Windmill";
+        }
+
     },
-    WOODCUTTER {
+    LUMBERJACK {
+
         @Override
         public void production(Field field) {
 
@@ -137,8 +161,14 @@ public enum Buildings implements Building {
 
         @Override
         public String getName() {
-            return "Butchers";
+            return "Lumberjack";
         }
+
+        @Override
+        public String toString() {
+            return "Lumberjack";
+        }
+
     },
     BAZAAR {
         @Override
@@ -157,6 +187,12 @@ public enum Buildings implements Building {
         public String getName() {
             return "Bazaar";
         }
+
+        @Override
+        public String toString() {
+            return "Bazaar";
+        }
+
     },
     SLAVE_MARKET {
         @Override
@@ -175,6 +211,12 @@ public enum Buildings implements Building {
         public String getName() {
             return "Slave Market";
         }
+
+        @Override
+        public String toString() {
+            return "Slave Market";
+        }
+
     },
     MARKETPLACE {
         @Override
@@ -192,6 +234,12 @@ public enum Buildings implements Building {
         public String getName() {
             return "Marketplace";
         }
+
+        @Override
+        public String toString() {
+            return "Marketplace";
+        }
+
     };
 
     /**
@@ -219,7 +267,7 @@ public enum Buildings implements Building {
             if(field.getBuildings().get(building) == field.getMountains()){
                 return false;
             }
-        } else if(building == Buildings.WINDMILL || building == Buildings.WOODCUTTER || building == Buildings.SLAVE_MARKET || building == Buildings.MARKETPLACE || building == Buildings.BAZAAR){
+        } else if(building == Buildings.WINDMILL || building == Buildings.LUMBERJACK || building == Buildings.SLAVE_MARKET || building == Buildings.MARKETPLACE || building == Buildings.BAZAAR){
             if(field.getBuildings().get(building) == 1){
                 return false;
             }
@@ -258,7 +306,7 @@ public enum Buildings implements Building {
      * @param field
      * @param freebuild
      */
-    public static void build(Building building, Field field, boolean freebuild){
+    public static void build(Buildings building, Field field, boolean freebuild){
 
         if(freebuild){
             if(building != UNIT){

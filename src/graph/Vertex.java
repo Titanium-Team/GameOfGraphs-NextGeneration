@@ -114,4 +114,8 @@ public class Vertex{
     this.dist = dist;
   }
 
+  public void setField(Field field) {
+    this.field = field;
+  }
+
 }

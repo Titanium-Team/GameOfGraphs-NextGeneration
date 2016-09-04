@@ -11,13 +11,15 @@ import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
-import game.GraphDrawer;
 import game.sprite.Textures;
 import game.ui.Button;
 import game.ui.DropDownMenu;
 import graph.Graph;
+import graph.GraphDrawer;
 import graph.Vertex;
 import ki.KIFraction;
+import ki.RequestView;
+import ki.TradeView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,19 +33,25 @@ import java.util.Map;
  */
 public class FieldView extends GameScene{
 
+    private int maxWidthOfResourceName = -1;
+    private int maxWidthOfBuildingName = -1;
+
     //Aktueller Vertex und Field
     private Vertex currentVertex = null;
     private Field currentField = null;
 
-    private Graph graph;
+	//boolean für Handel
+	private boolean tradeEnabled=false;
+	private TradeView tradeView = new TradeView(this, new ILocation(200, 100));
+
     //Boolean zum Überprüfen, ob gerade Truppen bewegt werden
     private boolean move = false;
     //Boolean bei FreeBuild
     private boolean free = true;
     private List<Vertex> marked = new ArrayList<>();
     //Ein Menu mit Auswahl aller Buildings
-    private DropDownMenu<Building> buildingDropDownMenu = new DropDownMenu<Building>(this, new ILocation(440, 510), new LinkedList<Building>() {{
-        for( Building building : Buildings.values()){
+    private DropDownMenu<Buildings> buildingDropDownMenu = new DropDownMenu<Buildings>(this, new ILocation(440, 510), new LinkedList<Buildings>() {{
+        for( Buildings building : Buildings.values()){
             this.add(building);
         }
     }}, (t, value) -> {});
@@ -71,6 +79,23 @@ public class FieldView extends GameScene{
         Buildings.build(buildingDropDownMenu.getOption(), this.currentField, true);
         this.free = false;
 
+        // Update selectedable units
+        if(buildingDropDownMenu.getOption() == Buildings.UNIT) {
+            int selectedIndex = this.unitDropDownMenu.getOption() - 1;
+            this.unitDropDownMenu.getOptions().clear();
+            this.unitDropDownMenu.setOptions(new LinkedList<Integer>() {{
+
+                for (int i = 0; i <= currentField.getUnmovedUnits().size(); i++) {
+                    this.add(i);
+                }
+
+            }});
+
+            if(selectedIndex < this.unitDropDownMenu.getOptions().size()) {
+                this.unitDropDownMenu.setSelectedIndex(selectedIndex);
+            }
+        }
+
     });
 
     //Handelsbutton, welche freigeschaltet werden, nachdem man das zugehörige Gebäude gebaut hat.
@@ -84,8 +109,8 @@ public class FieldView extends GameScene{
         }
 
     });
-    private DropDownMenu<Resource> resourceDropDownMenu = new DropDownMenu<Resource>(this, new ILocation(780, 540), new LinkedList<Resource>() {{
-        for( Resource resource : Resources.values()){
+    private DropDownMenu<Resources> resourceDropDownMenu = new DropDownMenu<Resources>(this, new ILocation(780, 540), new LinkedList<Resources>() {{
+        for( Resources resource : Resources.values()){
             if(resource != Resources.POPULATION && resource != Resources.GOLD) {
                 this.add(resource);
             }
@@ -110,6 +135,24 @@ public class FieldView extends GameScene{
         JOptionPane.showMessageDialog(null, null, "Help", 0, new ImageIcon(Textures.HELP_POPUP.getImage()));
 
     });
+
+    private Button<String> allianceButton = new Button<String>(this,"Request Alliance",new ILocation(900,570),(t,value)->{
+        GameOfGraphs.getGame().getCurrentPlayer().requestAlliance(currentField.getPlayer());
+    });
+
+	private Button<String> tradeButton = new Button<String>(this,"Trade with Player",new ILocation(830,630),(t, value)->{
+		tradeEnabled=true;
+		tradeView.setCurrentVertex(currentVertex);
+        tradeView.enableAll();
+	});
+
+	private boolean requestShown;
+	private RequestView requestView = new RequestView(this,new ILocation(400,200));
+
+	private Button<String> requestButton = new Button<String>(this,"Show Requests",new ILocation(830,660),(t, value)->{
+		requestShown=true;
+		requestView.setRequest(currentField.getPlayer().getRequests().front());
+	});
 
     private Button<String> bazaarButton1 = new Button<String>(this, "Trade", new ILocation(830, 570),(t, value) -> {
 
@@ -139,6 +182,7 @@ public class FieldView extends GameScene{
 
     //Button zum einleiten des nächsten Zuges
     private Button<String> nextTurnButton = new Button<String>(this, "Next Turn", new ILocation(1200, 700),(t, value) -> {
+        currentVertex.setMarkStart(false);
         this.currentField = null;
         this.currentVertex = null;
         GameOfGraphs.getGame().nextTurn();
@@ -149,8 +193,6 @@ public class FieldView extends GameScene{
 
 
     public FieldView(){
-
-        this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
         E.getE().addComponent(unitDropDownMenu);
         //Build
@@ -163,18 +205,31 @@ public class FieldView extends GameScene{
         E.getE().addComponent(resourceDropDownMenu);
         E.getE().addComponent(bazaarButton1);
         E.getE().addComponent(bazaarButton2);
+	    //Alliance
+	    E.getE().addComponent(allianceButton);
+
 
         E.getE().addComponent(nextTurnButton);
 
         E.getE().addComponent(this.questionButton);
 
+	    E.getE().addComponent(tradeButton);
+	    E.getE().addComponent(tradeView);
+
+	    E.getE().addComponent(requestButton);
+	    E.getE().addComponent(requestView);
     }
 
     @Override
     public void render(Layers layers) {
 
+        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
         Graphics2D g = layers.first().getGraphics2D();
 
+        if(this.maxWidthOfResourceName == -1) {
+            for(Resource resource : Resources.values()) this.maxWidthOfResourceName = Math.max(this.maxWidthOfResourceName, g.getFontMetrics().stringWidth(resource.getName() + ":"));
+            for(Building building : Buildings.values()) this.maxWidthOfBuildingName = Math.max(this.maxWidthOfBuildingName, g.getFontMetrics().stringWidth(building.getName() + ":"));
+        }
 
         //Zeichnen des Graphen
         GraphDrawer.drawer(g,graph,"Field");
@@ -188,6 +243,9 @@ public class FieldView extends GameScene{
         g.drawLine(420, 500, 420, 720);
         g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
+
+	    tradeView.setEnabled(tradeEnabled);
+	    requestView.setEnabled(requestShown);
 
         if(currentField == null) {
 
@@ -203,6 +261,9 @@ public class FieldView extends GameScene{
             this.freeBuildButton.setEnabled(false);
             this.bazaarButton1.setEnabled(false);
             this.bazaarButton2.setEnabled(false);
+	        this.allianceButton.setEnabled(false);
+	        this.tradeButton.setEnabled(false);
+	        this.requestButton.setEnabled(false);
 
         }else{
             //Zeichnen der Statistiken
@@ -222,7 +283,7 @@ public class FieldView extends GameScene{
             g.setColor(Color.LIGHT_GRAY);
 
             //Zeichnen der UIComponents
-            boolean active = GameOfGraphs.getGame().getCurrentPlayer() == this.currentField.getPlayer();
+            boolean active = GameOfGraphs.getGame().getCurrentPlayer().getName().equals(this.currentField.getPlayer().getName());
             this.buildingDropDownMenu.setEnabled(active);
             this.buildButton.setEnabled(active);
             this.unitDropDownMenu.setEnabled(active);
@@ -233,37 +294,41 @@ public class FieldView extends GameScene{
             this.bazaarButton1.setEnabled(false);
             this.bazaarButton2.setEnabled(false);
             this.freeBuildButton.setEnabled(active && GameOfGraphs.getGame().isFirstTurn() && this.free);
+	        this.allianceButton.setEnabled(!active);
+	        this.tradeButton.setEnabled(active);
+	        this.requestButton.setEnabled(active && !currentField.getPlayer().getRequests().isEmpty());
 
             //Zeichnen der Trade-Button
             if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
                 this.slaveMarketButton.setEnabled(true);
-                g.drawString("2x Iron -> 1 Person", 720, 525);
+                g.drawString("2x Iron → 1 Person", 720, 525);
             }
 
             if(this.currentField.getBuildings().get(Buildings.MARKETPLACE) > 0) {
                 this.marketPlaceButton.setEnabled(true);
                 this.resourceDropDownMenu.setEnabled(true);
-                g.drawString("1x Gold -> ", 720, 555);
+                g.drawString("1x Gold → ", 720, 555);
             }
 
             if(this.currentField.getBuildings().get(Buildings.BAZAAR) > 0) {
                 this.bazaarButton1.setEnabled(true);
                 this.bazaarButton2.setEnabled(true);
-                g.drawString("2x Food -> 1 Stone", 720, 585);
-                g.drawString("4x Food -> 1 Iron ", 720, 615);
+                g.drawString("2x Food → 1 Stone", 720, 585);
+                g.drawString("4x Food → 1 Iron ", 720, 615);
             }
 
             g.setColor(Color.BLACK);
 
             //Zeichnen der Resourcen und Gebäude
-            Map<Resource, Integer> resources = currentField.getResources();
-            Map<Building, Integer> buildings = currentField.getBuildings();
+            Map<Resources, Integer> resources = currentField.getResources();
+            Map<Buildings, Integer> buildings = currentField.getBuildings();
             List<RecipeResource> recipeList = buildingDropDownMenu.getOption().getRecipe().getItemIngredients();
 
             final int[] y = {0};
             resources.forEach((resource, amount) -> {
 
-                g.drawString(resource.getName() + ": " + amount, 20, 540 + y[0] * 20);
+                g.drawString(resource.getName() + ":", 20, 540 + y[0] * 20);
+                g.drawString(String.valueOf(amount), this.maxWidthOfResourceName + 25, 540 + y[0] * 20);
 
                 for (RecipeResource recipe : recipeList){
 
@@ -274,7 +339,7 @@ public class FieldView extends GameScene{
                         } else {
                             g.setColor(Color.RED);
                         }
-                        g.drawString(" -" + recipe.getAmount(), 80, 540 + y[0] * 20);
+                        g.drawString(" -" + recipe.getAmount(), 85, 540 + y[0] * 20);
                         g.setColor(Color.BLACK);
                     }
 
@@ -286,11 +351,10 @@ public class FieldView extends GameScene{
 
             y[0] = 0;
             buildings.forEach((building, amount) -> {
-
-                g.drawString(building.getName() + ": " + amount, 120, 540 + y[0] * 20);
+                g.drawString(building.getName() + ":", 120, 540 + y[0] * 20);
+                g.drawString(String.valueOf(amount), this.maxWidthOfBuildingName + 125, 540 + y[0] * 20);
                 y[0]++;
             });
-
         }
     }
 
@@ -298,13 +362,18 @@ public class FieldView extends GameScene{
     public void update(InputEntry inputEntry, long l) {
 
         GraphDrawer.update(inputEntry,l);
+        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
+
+        if(GraphDrawer.getHorizontal() == null) {
+            return;
+        }
 
         //MouseListener
         inputEntry.getMouseEntries().forEach(entry -> {
             
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
-                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
-                if (vertex != null && (vertex.getField().getPlayer()instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer() == vertex.getField().getPlayer())) {
+                Vertex vertex = graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
+                if (vertex != null && (vertex.getField().getPlayer() instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer().getName().equals(vertex.getField().getPlayer().getName()))) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
                     }
@@ -318,7 +387,7 @@ public class FieldView extends GameScene{
                         }
 
                     }});
-                } else {
+                } else if(!tradeEnabled) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
                     }
@@ -327,7 +396,7 @@ public class FieldView extends GameScene{
                 }
             } else if(move == true){
 
-                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
+                Vertex vertex = graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if(vertex != null) {
                     if (vertex.isMarkTarget()) {
                         GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption());
@@ -361,4 +430,11 @@ public class FieldView extends GameScene{
         return (E.getE().getScreen().getCurrent() == this);
     }
 
+	public void setTradeEnabled(boolean tradeEnabled) {
+		this.tradeEnabled = tradeEnabled;
+	}
+
+	public void setRequestShown(boolean requestShown) {
+		this.requestShown = requestShown;
+	}
 }

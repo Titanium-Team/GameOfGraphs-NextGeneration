@@ -1,6 +1,7 @@
 package field;
 
 import field.buildings.Building;
+import field.buildings.Buildings;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.Player;
@@ -52,9 +53,9 @@ public class FieldController {
         List<Vertex> vertices = player.getFields();
         for(Vertex vertex : vertices) {
 
-            Map<Building, Integer> buildings = vertex.getField().getBuildings();
+            Map<Buildings, Integer> buildings = vertex.getField().getBuildings();
 
-            for(Map.Entry<Building, Integer> entry : buildings.entrySet()){
+            for(Map.Entry<Buildings, Integer> entry : buildings.entrySet()){
 
                 if(entry.getValue() > 0) {
                     entry.getKey().production(vertex.getField());

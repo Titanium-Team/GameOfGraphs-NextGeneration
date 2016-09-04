@@ -2,45 +2,50 @@
 package graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import game.GameOfGraphs;
+import game.Player;
 import game.Queue;
 import ki.KIFraction;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public class GraphController {
-    private Graph graph;
+    private Graph graph = new Graph();
 
     public GraphController() {
-        Random r = new Random();
 
-        graph = new Graph();
+        KIFraction fraction1 = new KIFraction("Independent", new Color(232, 77, 91));
+        GameOfGraphs.getGame().getPlayers().add(fraction1);
 
-        Vertex a = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true));
+        /*Vertex a = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true));
         Vertex c = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(1),true));
 
-        KIFraction fraction1 = new KIFraction("KI 1");
         Vertex b = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction1 ,true));
-        KIFraction fraction2 = new KIFraction("KI 1");
+        KIFraction fraction2 = new KIFraction("KIplayer 1", Color.GREEN);
         Vertex d = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
+        Vertex e = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
 
         graph.addVertex(a);
         graph.addVertex(b);
         graph.addVertex(c);
         graph.addVertex(d);
+        graph.addVertex(e);
 
         graph.addEdge(new Edge(new String[] { a.getID(), b.getID() }, 50));
         graph.addEdge(new Edge(new String[] { b.getID(), c.getID() }, 50));
         graph.addEdge(new Edge(new String[] { c.getID(), d.getID() }, 50));
         graph.addEdge(new Edge(new String[] { d.getID(), a.getID() }, 50));
+        graph.addEdge(new Edge(new String[]{e.getID(),a.getID()},38));
+        graph.addEdge(new Edge(new String[]{e.getID(),c.getID()},38));
 
-        GameOfGraphs.getGame().getPlayers().add(fraction1);
+
+
         GameOfGraphs.getGame().getPlayers().add(fraction2);
         /*for (int i = 0; i < 15; i++){
             graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(2),false)));
@@ -57,9 +62,40 @@ public class GraphController {
         return graph;
     }
 
+    public void setGraph(Graph graph) {
+        this.graph = graph;
 
+        LinkedList<Player> players = new LinkedList<>();
+
+        boolean add = true;
+
+        ArrayList<Vertex> vertices = graph.getVertices();
+        for (Vertex v:vertices){
+            for (Player temp : players) {
+                if (v.getField().getPlayer().getName().equals(temp.getName())) {
+                    add = false;
+                    break;
+                }
+            }
+
+            if (add){
+                players.add(v.getField().getPlayer());
+            }
+            add = true;
+        }
+
+        GameOfGraphs.getGame().setPlayers(players);
+    }
 
     public void save(Graph graph) {
+        if (GameOfGraphs.getGame().getPlayers().size() < 2) {
+            int value = JOptionPane.showConfirmDialog(null, "You need at leat 2 Players, thats why you can't play this map. Do you still want to save it?", "Save?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (value == JOptionPane.YES_OPTION) {
+                graph.setChecked(false);
+            } else {
+                return;
+            }
+        }
         if (!checkGraph()){
             int value = JOptionPane.showConfirmDialog(null, "Not all vertecies are joined, thats why you can't play this map. Do you still want to save it?", "Save?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if (value == JOptionPane.YES_OPTION){
@@ -72,6 +108,9 @@ public class GraphController {
         }
 
         String name = JOptionPane.showInputDialog(null, "How should the map be called?", "Name", JOptionPane.QUESTION_MESSAGE);
+        if (name == null){
+            return;
+        }
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -86,16 +125,9 @@ public class GraphController {
 
                 File graphFile = new File(file.getAbsolutePath() + "\\graph.gog");
                 ObjectMapper mapper = new ObjectMapper(new SmileFactory());
+                mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
                 mapper.writeValue(graphFile, graph);
-
-                File background = new File(file.getAbsolutePath() + "\\background.png");
-                ImageIO.write(graph.getBackground(), "png", background);
-
-                File vertex = new File(file.getAbsolutePath() + "\\vertexImage.png");
-                ImageIO.write(graph.getVertexImage(), "png", vertex);
-
-                File edge = new File(file.getAbsolutePath() + "\\edgeImage.png");
-                ImageIO.write(graph.getEdgeImage(), "png", edge);
 
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -106,6 +138,8 @@ public class GraphController {
     public boolean checkGraph() {
         Queue<Vertex> biggestGroup = new Queue<>();
         int biggest = 0;
+
+        Set<Player> players = new HashSet<>();
 
         ArrayList<Vertex> vertexList = graph.getVertices();
         for (Vertex vertex:graph.getVertices()){
@@ -122,6 +156,15 @@ public class GraphController {
                 biggest = temp;
                 biggestGroup = tempGroup;
             }
+
+            if(!(vertex.getField().getPlayer() == null)) {
+                players.add(vertex.getField().getPlayer());
+            }
+
+        }
+
+        if(!(GameOfGraphs.getGame().getPlayers().size() == players.size())) {
+            return false;
         }
 
         graph.setAllVertexTargetMark(true);
@@ -129,11 +172,12 @@ public class GraphController {
             biggestGroup.front().setMarkTarget(false);
             biggestGroup.dequeue();
         }
-        if (graph.allVertexTargetMark(false)){
-            return true;
-        }else {
+
+        if (!(graph.allVertexTargetMark(false))) {
             return false;
         }
+
+        return true;
     }
 
     private Queue<Vertex> checkGraph(Queue<Vertex> q, Queue<Vertex> queue, Vertex start) {
@@ -161,7 +205,7 @@ public class GraphController {
         return queue;
     }
 
-    public Graph load() {
+    public Object[] load() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
@@ -175,16 +219,7 @@ public class GraphController {
                 ObjectMapper mapper = new ObjectMapper(new SmileFactory());
                 Graph graphTemp = mapper.readValue(graphFile, Graph.class);
 
-                File background = new File(file.getAbsolutePath() + "\\background.png");
-                graphTemp.setBackground(ImageIO.read(background));
-
-                File vertex = new File(file.getAbsolutePath() + "\\vertexImage.png");
-                graphTemp.setVertexImage(ImageIO.read(vertex));
-
-                File edge = new File(file.getAbsolutePath() + "\\edgeImage.png");
-                graphTemp.setEdgeImage(ImageIO.read(edge));
-
-                graph = graphTemp;
+                setGraph(graphTemp);
 
                 /*thickness.setText(String.valueOf(graph.getThickness()));
                 radius.setText(String.valueOf(graph.getRadius()));
@@ -194,7 +229,10 @@ public class GraphController {
                 vertexChooser.setTextured(graph.isVertexImageTextured());
                 edgeChooser.setTextured(graph.isEdgeImageTextured());*/
 
-                return graphTemp;
+                return new Object[] {
+                    graph,
+                    file.getName()
+                };
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

@@ -1,6 +1,7 @@
 package ki;
 
 import field.resource.Resource;
+import field.resource.Resources;
 
 import java.util.HashMap;
 
@@ -9,9 +10,9 @@ import java.util.HashMap;
  */
 public class Depot {
     private boolean possible;
-    private HashMap<Resource,Integer> map;
+    private HashMap<Resources,Integer> map;
 
-    public Depot(boolean possible, HashMap<Resource, Integer> map) {
+    public Depot(boolean possible, HashMap<Resources, Integer> map) {
         this.possible = possible;
         this.map = map;
     }
@@ -20,7 +21,7 @@ public class Depot {
         return possible;
     }
 
-    public HashMap<Resource, Integer> getMap() {
+    public HashMap<Resources, Integer> getMap() {
         return map;
     }
 }

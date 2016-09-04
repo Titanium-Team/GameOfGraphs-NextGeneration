@@ -2,45 +2,27 @@ package game;
 
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
-import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
-import field.FieldView;
-import game.ui.Button;
-import game.ui.DropDownMenu;
-import game.ui.UIComponent;
-import ki.TradeView;
-import mapEditor.MapEditorView;
+import mapEditor.MapEditor;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Ellipse2D;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class MenuView extends GameScene {
 
     private int selectedOption = 0;
-    private UIComponent checkBox = new Button<>(this, "Tesdasdasdasddxt", new ILocation(300, 300), (t, v) -> {
-        System.out.println("pressed");
-    });
-    private UIComponent dropDownMenu = new DropDownMenu<>(this, new ILocation(300, 350), new LinkedList<Integer>() {{
-        for(int i = 0; i < 10; i++) this.add(i);
-    }}, (t, value) -> {});
-
     private final Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
 
     {
-        this.options.put("Play", FieldView.class);
-        this.options.put("Map Editor", MapEditorView.class);
+        this.options.put("Play", MapSelectView.class);
+        this.options.put("Map Editor", MapEditor.class);
         this.options.put("Exit", null);
     }
 
-    public MenuView() {
-        E.getE().addComponent(checkBox);
-        E.getE().addComponent(dropDownMenu);
-    }
+    public MenuView() {}
 
     @Override
     public void render(Layers layers) {
@@ -48,20 +30,16 @@ public class MenuView extends GameScene {
         Graphics2D g = layers.first().getGraphics2D();
         g.setBackground(Color.WHITE);
 
-
-        g.setColor(Color.MAGENTA);
-        g.draw(new Ellipse2D.Double(500, 500, 100, 100));
-
         //draw menu
         int x = 0;
         for(Map.Entry<String, Class<? extends GameScene>> entry : this.options.entrySet()) {
 
             if(x == this.selectedOption) {
                 Image image = GameOfGraphs.getGame().getTextBuilder().toImage(entry.getKey(), 15);
-                g.drawImage(image, 480 - image.getWidth(null) / 2, 150 + x * 35, null);
+                g.drawImage(image, 640 - image.getWidth(null) / 2, 150 + x * 35, null);
             } else {
                 Image image = GameOfGraphs.getGame().getTextBuilder().toImage(entry.getKey(), 10);
-                g.drawImage(image, 480 - image.getWidth(null) / 2, 150 + x * 35, null);
+                g.drawImage(image, 640 - image.getWidth(null) / 2, 150 + x * 35, null);
             }
             x++;
 
@@ -103,8 +81,6 @@ public class MenuView extends GameScene {
             }
 
         });
-	    TradeView.update(inputEntry,delta);
-
     }
 
     @Override

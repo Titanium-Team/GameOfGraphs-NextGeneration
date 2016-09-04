@@ -64,4 +64,11 @@ public class HelpRequest extends Request {
 			((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())+10);
 		}
 	}
+
+	@Override
+	public String toString() {
+		String result=getParent().toString() + " needs your help, he wants you to send " + getAmountOfUnits() + " to the city of" +
+				      getPlace().getID() + " as soon as possible!"  ;
+		return result;
+	}
 }

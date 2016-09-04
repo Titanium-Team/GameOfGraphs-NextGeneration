@@ -18,6 +18,12 @@ public enum Resources implements Resource {
         public String getName() {
             return "People";
         }
+
+        @Override
+        public String toString() {
+            return "People";
+        }
+
     },
     FOOD {
         @Override
@@ -29,6 +35,12 @@ public enum Resources implements Resource {
         public String getName() {
             return "Food";
         }
+
+        @Override
+        public String toString() {
+            return "Food";
+        }
+
     },
     STONE {
         @Override
@@ -40,6 +52,12 @@ public enum Resources implements Resource {
         public String getName() {
             return "Stone";
         }
+
+        @Override
+        public String toString() {
+            return "Stone";
+        }
+
     },
     WOOD {
         @Override
@@ -51,6 +69,12 @@ public enum Resources implements Resource {
         public String getName() {
             return "Wood";
         }
+
+        @Override
+        public String toString() {
+            return "Wood";
+        }
+
     },
     WHEAT {
         @Override
@@ -62,6 +86,12 @@ public enum Resources implements Resource {
         public String getName() {
             return "Wheat";
         }
+
+        @Override
+        public String toString() {
+            return "Wheat";
+        }
+
     },
     TREE {
         @Override
@@ -73,6 +103,12 @@ public enum Resources implements Resource {
         public String getName() {
             return "Tree";
         }
+
+        @Override
+        public String toString() {
+            return "Tree";
+        }
+
     },
     IRON {
         @Override
@@ -84,6 +120,12 @@ public enum Resources implements Resource {
         public String getName() {
             return "Iron";
         }
+
+        @Override
+        public String toString() {
+            return "Iron";
+        }
+
     },
     GOLD {
         @Override
@@ -95,6 +137,12 @@ public enum Resources implements Resource {
         public String getName() {
             return "Gold";
         }
+
+        @Override
+        public String toString() {
+            return "Gold";
+        }
+
     };
 
     /**
