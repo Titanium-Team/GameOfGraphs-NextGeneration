@@ -43,8 +43,6 @@ public class GameOfGraphs {
 		kiController = new KIController();
 		simulationController = new SimulationController(this.getCurrentPlayer());
 
-
-
 	}
 
 	public static GameOfGraphs getGame() {
