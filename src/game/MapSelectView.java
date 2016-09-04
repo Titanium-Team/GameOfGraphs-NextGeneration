@@ -51,9 +51,9 @@ public class MapSelectView extends GameScene {
     private DropDownMenu<Player> playerDropDownM = new DropDownMenu<>(this, new ILocation(500,400), new LinkedList<Player>() {{
 
 
-        if(!(Connector.unusedPlayers() == null)) {
+/*        if(!(Connector.unusedPlayers() == null)) {
             this.addAll(Connector.unusedPlayers());
-        }
+        }*/
 
     }}, (c, t) -> {});
 
@@ -95,7 +95,7 @@ public class MapSelectView extends GameScene {
 
         E.getE().addComponent(playButton);
 
-        this.createGameButton.setEnabled(Connector.isHost());
+//        this.createGameButton.setEnabled(Connector.isHost());
 
         /*this.scheduler.scheduleAtFixedRate(() -> {
 
