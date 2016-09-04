@@ -18,6 +18,7 @@ import graph.Graph;
 import graph.GraphDrawer;
 import graph.Vertex;
 import ki.KIFraction;
+import ki.RequestView;
 import ki.TradeView;
 
 import javax.swing.*;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static game.GameOfGraphs.getGame;
 
 /**
  * Created by boeschemeier on 08.06.2016.
@@ -136,12 +139,21 @@ public class FieldView extends GameScene{
     });
 
     private Button<String> allianceButton = new Button<String>(this,"Request Alliance",new ILocation(900,570),(t,value)->{
-        GameOfGraphs.getGame().getCurrentPlayer().requestAlliance(currentField.getPlayer());
+        getGame().getCurrentPlayer().requestAlliance(currentField.getPlayer());
     });
 
 	private Button<String> tradeButton = new Button<String>(this,"Trade with Player",new ILocation(830,630),(t, value)->{
 		tradeEnabled=true;
 		tradeView.setCurrentVertex(currentVertex);
+        tradeView.enableAll();
+	});
+
+	private boolean requestShown;
+	private RequestView requestView = new RequestView(this,new ILocation(400,200));
+
+	private Button<String> requestButton = new Button<String>(this,"Show Requests",new ILocation(830,660),(t, value)->{
+		requestShown=true;
+		requestView.setRequest(currentField.getPlayer().getRequests().front());
 	});
 
     private Button<String> bazaarButton1 = new Button<String>(this, "Trade", new ILocation(830, 570),(t, value) -> {
@@ -175,8 +187,8 @@ public class FieldView extends GameScene{
         currentVertex.setMarkStart(false);
         this.currentField = null;
         this.currentVertex = null;
-        GameOfGraphs.getGame().nextTurn();
-        if (GameOfGraphs.getGame().isFirstTurn()) {
+        getGame().nextTurn();
+        if (getGame().isFirstTurn()) {
             this.free = true;
         }
     });
@@ -205,12 +217,16 @@ public class FieldView extends GameScene{
 
 	    E.getE().addComponent(tradeButton);
 	    E.getE().addComponent(tradeView);
+
+	    E.getE().addComponent(requestButton);
+	    E.getE().addComponent(requestView);
+
     }
 
     @Override
     public void render(Layers layers) {
 
-        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
+        Graph graph = getGame().getGraphController().getGraph();
         Graphics2D g = layers.first().getGraphics2D();
 
         if(this.maxWidthOfResourceName == -1) {
@@ -221,7 +237,7 @@ public class FieldView extends GameScene{
         //Zeichnen des Graphen
         GraphDrawer.drawer(g,graph,"Field");
 
-        g.drawString("Player: " + GameOfGraphs.getGame().getCurrentPlayer().getName(), 50, 50);
+        g.drawString("Player: " + getGame().getCurrentPlayer().getName(), 50, 50);
 
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0,500,1280,220);
@@ -232,6 +248,7 @@ public class FieldView extends GameScene{
         g.setBackground(Color.WHITE);
 
 	    tradeView.setEnabled(tradeEnabled);
+	    requestView.setEnabled(requestShown);
 
         if(currentField == null) {
 
@@ -249,6 +266,7 @@ public class FieldView extends GameScene{
             this.bazaarButton2.setEnabled(false);
 	        this.allianceButton.setEnabled(false);
 	        this.tradeButton.setEnabled(false);
+	        this.requestButton.setEnabled(false);
 
         }else{
             //Zeichnen der Statistiken
@@ -268,7 +286,7 @@ public class FieldView extends GameScene{
             g.setColor(Color.LIGHT_GRAY);
 
             //Zeichnen der UIComponents
-            boolean active = GameOfGraphs.getGame().getCurrentPlayer().getName().equals(this.currentField.getPlayer().getName());
+            boolean active = getGame().getCurrentPlayer().getName().equals(this.currentField.getPlayer().getName());
             this.buildingDropDownMenu.setEnabled(active);
             this.buildButton.setEnabled(active);
             this.unitDropDownMenu.setEnabled(active);
@@ -278,9 +296,10 @@ public class FieldView extends GameScene{
             this.slaveMarketButton.setEnabled(false);
             this.bazaarButton1.setEnabled(false);
             this.bazaarButton2.setEnabled(false);
-            this.freeBuildButton.setEnabled(active && GameOfGraphs.getGame().isFirstTurn() && this.free);
+            this.freeBuildButton.setEnabled(active && getGame().isFirstTurn() && this.free);
 	        this.allianceButton.setEnabled(!active);
 	        this.tradeButton.setEnabled(active);
+	        this.requestButton.setEnabled(active && !currentField.getPlayer().getRequests().isEmpty());
 
             //Zeichnen der Trade-Button
             if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
@@ -346,7 +365,7 @@ public class FieldView extends GameScene{
     public void update(InputEntry inputEntry, long l) {
 
         GraphDrawer.update(inputEntry,l);
-        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
+        Graph graph = getGame().getGraphController().getGraph();
 
         if(GraphDrawer.getHorizontal() == null) {
             return;
@@ -357,7 +376,7 @@ public class FieldView extends GameScene{
             
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
                 Vertex vertex = graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
-                if (vertex != null && (vertex.getField().getPlayer() instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer().getName().equals(vertex.getField().getPlayer().getName()))) {
+                if (vertex != null && (vertex.getField().getPlayer() instanceof KIFraction || getGame().getCurrentPlayer().getName().equals(vertex.getField().getPlayer().getName()))) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
                     }
@@ -383,7 +402,7 @@ public class FieldView extends GameScene{
                 Vertex vertex = graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if(vertex != null) {
                     if (vertex.isMarkTarget()) {
-                        GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption());
+                        getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption());
                     }
                 }
                 this.unitDropDownMenu.setSelectedIndex(0);
@@ -394,7 +413,7 @@ public class FieldView extends GameScene{
         // Movement
         if (this.currentField != null && this.currentVertex != null){
             if (this.unitDropDownMenu.getOption() > 0) {
-                marked = GameOfGraphs.getGame().getSimulationController().showMovementPossibilities(this.currentVertex);
+                marked = getGame().getSimulationController().showMovementPossibilities(this.currentVertex);
                 move = true;
             } else {
                 if(move == true){
@@ -416,5 +435,9 @@ public class FieldView extends GameScene{
 
 	public void setTradeEnabled(boolean tradeEnabled) {
 		this.tradeEnabled = tradeEnabled;
+	}
+
+	public void setRequestShown(boolean requestShown) {
+		this.requestShown = requestShown;
 	}
 }

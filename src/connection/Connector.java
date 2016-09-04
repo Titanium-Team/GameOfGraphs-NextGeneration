@@ -19,7 +19,9 @@ public class Connector {
     private static final String user = "GameOfGraphs";
     private static final String password = "game";
 
-    private static int gameId = -1;
+
+    private static int gameId=9;
+
     private static int playerId;
 
     private static boolean host;
@@ -136,7 +138,7 @@ public class Connector {
         Statement statement = setup();
 
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM Player WHERE gameId=" + gameId);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Player WHERE gameId=" + gameId + " AND used=1");
 
             while (resultSet.next()){
                 countPlayer++;
