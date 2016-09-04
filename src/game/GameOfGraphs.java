@@ -68,8 +68,8 @@ public class GameOfGraphs {
 
 	public void nextTurn() {
 		fieldController.run(this.getCurrentPlayer());
-
 		this.currentPlayer++;
+
 		if(this.currentPlayer >= this.players.size()) {
 			this.currentPlayer = 0;
 			this.isFirstTurn = false;
@@ -100,7 +100,7 @@ public class GameOfGraphs {
 		kiController.run(this.getCurrentPlayer());
 		simulationController.run(this.getCurrentPlayer());
 
-		while (true) {
+		/*while (true) {
 
 			this.currentPlayer++;
 
@@ -120,7 +120,7 @@ public class GameOfGraphs {
 
 		if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
 			GameOfGraphs.getGame().nextTurn();
-		}
+		}*/
 
 	}
 

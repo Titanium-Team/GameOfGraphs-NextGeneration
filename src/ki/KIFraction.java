@@ -65,7 +65,7 @@ public class KIFraction extends Player{
 
     public HashMap<Player, Integer> getTrust() {
 
-        if(this.trust.size()< getGame().getPlayers().size()-1) {
+        if(this.trust.size()<getGame().getPlayers().size()-1) {
             LinkedList<Player> players = getGame().getPlayers();
             players.remove(this);
 
