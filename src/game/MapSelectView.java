@@ -15,11 +15,9 @@ import ki.KIFraction;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class MapSelectView extends GameScene {
 
@@ -76,7 +74,7 @@ public class MapSelectView extends GameScene {
     });
 
 
-    private Button<String> playButton = new Button<>(this, "Play", new ILocation(700, 440), (c, t) -> {
+    private Button<String> playButton = new Button<>(this, "Play", new ILocation(480, 380), (c, t) -> {
 
         E.getE().show(FieldView.class);
         if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
@@ -86,52 +84,53 @@ public class MapSelectView extends GameScene {
     });
 
     public MapSelectView() {
-        E.getE().addComponent(gameModeMenu);
+        //E.getE().addComponent(gameModeMenu);
 
         E.getE().addComponent(selectedMapMenu);
         E.getE().addComponent(loadMapButtonS);
 
-        E.getE().addComponent(createGameButton);
-        E.getE().addComponent(joinGameButton);
-
-        E.getE().addComponent(playerDropDownM);
+        //E.getE().addComponent(createGameButton);
+        //E.getE().addComponent(joinGameButton);
+        //E.getE().addComponent(playerDropDownM);
 
         E.getE().addComponent(playButton);
 
         this.createGameButton.setEnabled(Connector.isHost());
 
-        this.scheduler.scheduleAtFixedRate(() -> {
+        /*this.scheduler.scheduleAtFixedRate(() -> {
 
-            Graph graph = Connector.getGraph();
-            if (graph != null){
-                GameOfGraphs.getGame().getGraphController().setGraph(graph, true);
-            }
-
-            if(Connector.gameReady() || Connector.gameStarted()) {
-                E.getE().show(FieldView.class);
-                Connector.setEnabledMutiplayer(true);
-
-                if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
-                    GameOfGraphs.getGame().nextTurn();
+            if(MapSelectView.this.isActive()) {
+                Graph graph = Connector.getGraph();
+                if (graph != null) {
+                    GameOfGraphs.getGame().getGraphController().setGraph(graph, true);
                 }
-                return;
-            }
 
-            this.playerDropDownM.setOptions(new LinkedList<Player>() {{
+                if (Connector.gameReady() || Connector.gameStarted()) {
+                    E.getE().show(FieldView.class);
+                    Connector.setEnabledMutiplayer(true);
 
-                List<Player> players = Connector.unusedPlayers();
-                if(!(players == null)) {
-                    int index = (playerDropDownM.getOptions().size() >= players.size() ? playerDropDownM.getSelectedIndex() : -1);
-                    this.addAll(players);
-
-                    if(!(index == -1)) {
-                        playerDropDownM.setSelectedIndex(index);
+                    if (GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
+                        GameOfGraphs.getGame().nextTurn();
                     }
+                    return;
                 }
 
-            }});
+                this.playerDropDownM.setOptions(new LinkedList<Player>() {{
 
-        }, 0, 1000, TimeUnit.MILLISECONDS);
+                    List<Player> players = Connector.unusedPlayers();
+                    if (!(players == null)) {
+                        int index = (playerDropDownM.getOptions().size() >= players.size() ? playerDropDownM.getSelectedIndex() : -1);
+                        this.addAll(players);
+
+                        if (!(index == -1)) {
+                            playerDropDownM.setSelectedIndex(index);
+                        }
+                    }
+
+                }});
+            }
+
+        }, 0, 1000, TimeUnit.MILLISECONDS);*/
 
     }
 

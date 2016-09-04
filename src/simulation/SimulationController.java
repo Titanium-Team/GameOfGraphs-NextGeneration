@@ -20,8 +20,6 @@ public class SimulationController {
         this.currentPlayer = player;
     }
 
-    //TODO: If-Verzweigung überprüfen ob nötig. (If not player vertex)
-
 
     public void run(Player currentPlayer){
 
@@ -46,19 +44,6 @@ public class SimulationController {
             }
         }
     }
-
-
-    //TODO: Klären ob die Methode benötigt wird.
-    /*
-    public void createUnit(Vertex vertex) {
-        if (currentPlayer == vertex.getField().getPlayer()){
-            vertex.getField().getUnits().add(new Unit(vertex.getField().getPlayer()));
-        }else{
-            JOptionPane.showMessageDialog(null,"Nicht dein Field!","Fehler",JOptionPane.ERROR_MESSAGE);
-            System.out.println("Not your field!");
-        }
-    }
-    */
 
     /**
      * Eine Methode um festzustellen, welche Units von welchem Feld abgezogen werden.
@@ -404,8 +389,6 @@ public class SimulationController {
      * @param attackingUnits
      * Die ArrayList der Units, die den Angriff leiten.
      */
-
-    //TODO: Verbesserung des Kampf-Systems
     public void fight(Vertex origin, Vertex vertex, ArrayList<Unit> attackingUnits){
 
         if(attackingUnits == null || attackingUnits.isEmpty()) {

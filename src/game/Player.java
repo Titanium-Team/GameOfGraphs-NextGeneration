@@ -19,7 +19,9 @@ public class Player {
 
     protected String name;
 
+    @JsonIgnore
     protected ArrayList<Player> alliances = new ArrayList<>();
+    @JsonIgnore
     private ArrayList<Notification> notifications = new ArrayList<>();
 
     @JsonIgnore
@@ -48,7 +50,7 @@ public class Player {
     @JsonIgnore
     public ArrayList<Vertex> getFields() {
 
-        return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().equals(this)).collect(Collectors.toCollection(ArrayList::new));
+        return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().getName().equals(vertex.getField().getPlayer().getName())).collect(Collectors.toCollection(ArrayList::new));
 
     }
 
@@ -56,35 +58,6 @@ public class Player {
     public boolean isActive() {
         return !(this.getFields().isEmpty());
     }
-
-
-    /*public boolean requestAlliance(Player p){
-        if(p!=null) {
-            if(p instanceof KIFraction){
-                if(((KIFraction) p).getProperties().contains(Property.DISTRUSTFUL)){
-                    return false;
-                }else{
-                    if(r.nextInt(100)<=((KIFraction) p).getTrust().get(this)){
-                        p.getAlliances().add(this);
-                        this.alliances.add(p);
-                        return true;
-                    }
-                }
-            }else {
-                JPopupMenu menu = new JPopupMenu();
-                menu.add(new JLabel(this.getName() + " wants to make an alliance with you!"));
-                JButton acceptButton=new JButton("Accept");
-                JButton denyButton =new JButton("Deny");
-                menu.add(acceptButton);
-                menu.add(denyButton);
-            }
-        }
-        return false;
-    }
-
-    public ArrayList<Player> getAlliances() {
-        return alliances;
-    }*/
 
 
     public void requestAlliance(Player p){
