@@ -102,34 +102,36 @@ public class MapSelectView extends GameScene {
 
         this.scheduler.scheduleAtFixedRate(() -> {
 
-            Graph graph = Connector.getGraph();
-            if (graph != null){
-                GameOfGraphs.getGame().getGraphController().setGraph(graph, true);
-            }
-
-            if(Connector.gameReady() || Connector.gameStarted()) {
-                E.getE().show(FieldView.class);
-                Connector.setEnabledMutiplayer(true);
-
-                if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
-                    GameOfGraphs.getGame().nextTurn();
+            if(MapSelectView.this.isActive()) {
+                Graph graph = Connector.getGraph();
+                if (graph != null) {
+                    GameOfGraphs.getGame().getGraphController().setGraph(graph, true);
                 }
-                return;
-            }
 
-            this.playerDropDownM.setOptions(new LinkedList<Player>() {{
+                if (Connector.gameReady() || Connector.gameStarted()) {
+                    E.getE().show(FieldView.class);
+                    Connector.setEnabledMutiplayer(true);
 
-                List<Player> players = Connector.unusedPlayers();
-                if(!(players == null)) {
-                    int index = (playerDropDownM.getOptions().size() >= players.size() ? playerDropDownM.getSelectedIndex() : -1);
-                    this.addAll(players);
-
-                    if(!(index == -1)) {
-                        playerDropDownM.setSelectedIndex(index);
+                    if (GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
+                        GameOfGraphs.getGame().nextTurn();
                     }
+                    return;
                 }
 
-            }});
+                this.playerDropDownM.setOptions(new LinkedList<Player>() {{
+
+                    List<Player> players = Connector.unusedPlayers();
+                    if (!(players == null)) {
+                        int index = (playerDropDownM.getOptions().size() >= players.size() ? playerDropDownM.getSelectedIndex() : -1);
+                        this.addAll(players);
+
+                        if (!(index == -1)) {
+                            playerDropDownM.setSelectedIndex(index);
+                        }
+                    }
+
+                }});
+            }
 
         }, 0, 1000, TimeUnit.MILLISECONDS);
 
