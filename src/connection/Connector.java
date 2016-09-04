@@ -233,9 +233,9 @@ public class Connector {
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE start=0");
 
                 if (resultSet.next()){
+                    gameId = resultSet.getInt("id");
                     return host = false;
                 }else {
-                    gameId = resultSet.getInt("id");
                     return host = true;
                 }
             } catch (SQLException e) {
