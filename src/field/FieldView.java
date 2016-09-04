@@ -1,5 +1,6 @@
 package field;
 
+import connection.Connector;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.ILocation;
@@ -10,6 +11,8 @@ import field.buildings.Buildings;
 import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
+import game.GameOfGraphs;
+import game.Player;
 import game.sprite.Textures;
 import game.ui.Button;
 import game.ui.DropDownMenu;
@@ -26,6 +29,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static game.GameOfGraphs.getGame;
 
@@ -33,6 +39,8 @@ import static game.GameOfGraphs.getGame;
  * Created by boeschemeier on 08.06.2016.
  */
 public class FieldView extends GameScene{
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private int maxWidthOfResourceName = -1;
     private int maxWidthOfBuildingName = -1;
@@ -189,6 +197,23 @@ public class FieldView extends GameScene{
 
 
     public FieldView(){
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                if (Connector.isEnabledMutiplayer()){
+                    String player = Connector.getCurrentPlayer();
+
+                    if (!GameOfGraphs.getGame().getCurrentPlayer().getName().equals(player)){
+                        for (Player p:GameOfGraphs.getGame().getPlayers()){
+                            if (p.getName().equals(player)){
+                                GameOfGraphs.getGame().setCurrentPlayer(p);
+                                GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph(), false);
+                            }
+                        }
+                    }
+                }
+            }
+        },0,500, TimeUnit.MILLISECONDS);
 
         E.getE().addComponent(unitDropDownMenu);
         //Build

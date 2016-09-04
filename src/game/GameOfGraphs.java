@@ -146,6 +146,20 @@ public class GameOfGraphs {
 		return this.players.get(this.currentPlayer);
 	}
 
+	public void setCurrentPlayer(Player player) {
+		this.players.set(getPlayerIndex(player), player);
+	}
+
+	public int getPlayerIndex(Player player) {
+		for(int i = 0; i < this.players.size(); i++) {
+			if(this.players.get(i) == player) {
+				return i;
+			}
+		}
+
+		throw new IllegalArgumentException("Daniel sucks balls.");
+	}
+
 	public LinkedList<Player> getPlayers() {
 		return this.players;
 	}

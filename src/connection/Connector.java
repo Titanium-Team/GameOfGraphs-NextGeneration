@@ -28,9 +28,14 @@ public class Connector {
 
     private static boolean enabledMutiplayer = false;
 
+    private static Connection connection = null;
+
     private static Statement setup(){
         try {
-            Connection connection = DriverManager.getConnection(url, user, password);
+
+            if(connection == null) {
+                connection = DriverManager.getConnection(url, user, password);
+            }
 
             Statement statement = connection.createStatement();
 
@@ -59,7 +64,7 @@ public class Connector {
 
              if (resultSet.next()) {
                  gameId = resultSet.getInt("id");
-                 GameOfGraphs.getGame().getGraphController().setGraph(getGraph());
+                 GameOfGraphs.getGame().getGraphController().setGraph(getGraph(), true);
 
                  statement.executeUpdate("UPDATE Player SET used=1 WHERE  player='" + player + "'");
 
@@ -265,6 +270,25 @@ public class Connector {
         }
         return host;
 
+    }
+
+    public static String getCurrentPlayer(){
+        Statement statement = setup();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE id=" + gameId);
+
+            resultSet.next();
+
+            return resultSet.getString("turn");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static boolean isEnabledMutiplayer() {

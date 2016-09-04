@@ -34,7 +34,7 @@ public class MapSelectView extends GameScene {
     private DropDownMenu<String> selectedMapMenu = new DropDownMenu<>(this, new ILocation(400, 400), new LinkedList<>(), (c, t) -> {
 
         if(maps.get(t).isChecked()) {
-            GameOfGraphs.getGame().getGraphController().setGraph(maps.get(t));
+            GameOfGraphs.getGame().getGraphController().setGraph(maps.get(t), true);
         }
 
     });
@@ -104,7 +104,7 @@ public class MapSelectView extends GameScene {
 
             Graph graph = Connector.getGraph();
             if (graph != null){
-                GameOfGraphs.getGame().getGraphController().setGraph(graph);
+                GameOfGraphs.getGame().getGraphController().setGraph(graph, true);
             }
 
             if(Connector.gameReady() || Connector.gameStarted()) {

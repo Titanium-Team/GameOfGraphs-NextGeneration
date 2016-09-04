@@ -62,29 +62,30 @@ public class GraphController {
         return graph;
     }
 
-    public void setGraph(Graph graph) {
+    public void setGraph(Graph graph, boolean newPlayer) {
         this.graph = graph;
 
-        LinkedList<Player> players = new LinkedList<>();
+        if (newPlayer) {
+            LinkedList<Player> players = new LinkedList<>();
 
-        boolean add = true;
+            boolean add = true;
 
-        ArrayList<Vertex> vertices = graph.getVertices();
-        for (Vertex v:vertices){
-            for (Player temp : players) {
-                if (v.getField().getPlayer().getName().equals(temp.getName())) {
-                    add = false;
-                    break;
+            ArrayList<Vertex> vertices = graph.getVertices();
+            for (Vertex v : vertices) {
+                for (Player temp : players) {
+                    if (v.getField().getPlayer().getName().equals(temp.getName())) {
+                        add = false;
+                        break;
+                    }
                 }
-            }
 
-            if (add){
-                players.add(v.getField().getPlayer());
+                if (add) {
+                    players.add(v.getField().getPlayer());
+                }
+                add = true;
             }
-            add = true;
+            GameOfGraphs.getGame().setPlayers(players);
         }
-
-        GameOfGraphs.getGame().setPlayers(players);
     }
 
     public void save(Graph graph) {
@@ -219,7 +220,7 @@ public class GraphController {
                 ObjectMapper mapper = new ObjectMapper(new SmileFactory());
                 Graph graphTemp = mapper.readValue(graphFile, Graph.class);
 
-                setGraph(graphTemp);
+                setGraph(graphTemp, true);
 
                 /*thickness.setText(String.valueOf(graph.getThickness()));
                 radius.setText(String.valueOf(graph.getRadius()));
