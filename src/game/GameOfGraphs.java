@@ -110,29 +110,50 @@ public class GameOfGraphs {
 	}
 
     /**
-     * Gibt den Graph
+     * Gibt den GraphController zurück.
      * @return
      */
 	public GraphController getGraphController() {
 		return graphController;
 	}
 
+    /**
+     * Gibt den KIController zurück.
+     * @return
+     */
 	public KIController getKiController() {
 		return kiController;
 	}
 
+    /**
+     * Gibt den SimulationController zurück.
+     * @return
+     */
 	public simulation.SimulationController getSimulationController() {
 		return simulationController;
 	}
 
+    /**
+     * Gibt den Spieler zurück der aktuell am Zug ist.
+     * @return
+     */
 	public Player getCurrentPlayer() {
 		return this.players.get(this.currentPlayer);
 	}
 
+    /**
+     * Setzt den aktuellen Spieler.
+     * @param player
+     */
 	public void setCurrentPlayer(Player player) {
 		this.players.set(getPlayerIndex(player), player);
 	}
 
+    /**
+     * Gibt den Index eines Spielers zurück.
+     * @param player
+     * @return
+     */
 	public int getPlayerIndex(Player player) {
 		for(int i = 0; i < this.players.size(); i++) {
 			if(this.players.get(i) == player) {
@@ -143,14 +164,26 @@ public class GameOfGraphs {
 		throw new IllegalArgumentException("Daniel sucks balls.");
 	}
 
+    /**
+     * Gibt alle Spieler die am Spiel teilnehmen oder teilnahmen zurück.
+     * @return
+     */
 	public LinkedList<Player> getPlayers() {
 		return this.players;
 	}
 
+    /**
+     * Setzt die Spieler.
+     * @param players
+     */
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
 	}
 
+    /**
+     * Gibt zurück ob man sich aktuell im ersten Turn befindet.
+     * @return
+     */
 	public boolean isFirstTurn() {
 		return isFirstTurn;
 	}
