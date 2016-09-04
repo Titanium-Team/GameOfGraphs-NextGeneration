@@ -9,15 +9,13 @@ import game.Player;
 import game.Queue;
 import ki.KIFraction;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+
+import game.Queue;
 
 public class GraphController {
     private Graph graph;
@@ -34,7 +32,7 @@ public class GraphController {
         Vertex c = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(1),true));
 
         Vertex b = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction1 ,true));
-        KIFraction fraction2 = new KIFraction("KIplayer 1");
+        KIFraction fraction2 = new KIFraction("KIplayer 1", Color.GREEN);
         Vertex d = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
         Vertex e = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
 
@@ -72,7 +70,7 @@ public class GraphController {
     public void setGraph(Graph graph) {
         this.graph = graph;
 
-        ArrayList<Player> players = new ArrayList<>();
+        LinkedList<Player> players = new LinkedList<>();
 
         boolean add = true;
 

@@ -6,18 +6,17 @@ import game.loading.LoadingManager;
 import game.sprite.Textures;
 import graph.GraphController;
 import ki.KIController;
+import ki.KIFraction;
 import simulation.SimulationController;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 public class GameOfGraphs {
 
 	private static GameOfGraphs game;
 
 	private int currentPlayer = 0;
-	private List<Player> players = new ArrayList<>();
+	private LinkedList<Player> players = new LinkedList<>();
 
 	private TextBuilder textBuilder = new TextBuilder();
 	private LoadingManager loadingManager = new LoadingManager();
@@ -53,13 +52,14 @@ public class GameOfGraphs {
 	}
 
 	public void nextTurn() {
-		fieldController.run(this.getCurrentPlayer());
-		this.currentPlayer++;
+		/*fieldController.run(this.getCurrentPlayer());
 
+		this.currentPlayer++;
 		if(this.currentPlayer >= this.players.size()) {
 			this.currentPlayer = 0;
 			this.isFirstTurn = false;
 		}
+
 		while(!(this.getCurrentPlayer().isActive())) {
 			this.currentPlayer++;
 			if(this.currentPlayer >= this.players.size()) {
@@ -71,19 +71,42 @@ public class GameOfGraphs {
 			this.currentPlayer = 0;
 		}
 
-		/*
-		while(this.getCurrentPlayer() instanceof KIFraction) {
+
+		/*while(this.getCurrentPlayer() instanceof KIFraction) {
 			kiController.run(this.getCurrentPlayer());
 			currentPlayer++;
 			if(this.currentPlayer >= this.players.size()) {
 				this.currentPlayer = 0;
 				this.isFirstTurn=false;
 			}
-		}
-		*/
+		}*/
 
+		/*
 		kiController.run(this.getCurrentPlayer());
-		simulationController.run(this.getCurrentPlayer());
+		simulationController.run(this.getCurrentPlayer());*/
+
+		while (true) {
+
+			this.currentPlayer++;
+
+			if(this.currentPlayer >= this.players.size()) {
+				this.currentPlayer = 0;
+			}
+
+			if(this.getCurrentPlayer().isActive()) {
+				break;
+			}
+
+		}
+
+		this.kiController.run(this.getCurrentPlayer());
+		this.fieldController.run(this.getCurrentPlayer());
+		this.simulationController.run(this.getCurrentPlayer());
+
+		if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
+			GameOfGraphs.getGame().nextTurn();
+		}
+
 	}
 
 	public TextBuilder getTextBuilder() {
@@ -114,11 +137,11 @@ public class GameOfGraphs {
 		return this.players.get(this.currentPlayer);
 	}
 
-	public List<Player> getPlayers() {
+	public LinkedList<Player> getPlayers() {
 		return this.players;
 	}
 
-	public void setPlayers(List<Player> players) {
+	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
 	}
 

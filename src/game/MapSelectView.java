@@ -26,7 +26,6 @@ public class MapSelectView extends GameScene {
     private DropDownMenu<String> dropDownMenu = new DropDownMenu<>(this, new ILocation(400,400), new LinkedList<>(), (c, t) -> {
 
         GameOfGraphs.getGame().getGraphController().setGraph(maps.get(t));
-        System.out.println(maps.get(t));
 
     });
 

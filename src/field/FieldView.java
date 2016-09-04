@@ -11,12 +11,11 @@ import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
-import game.Player;
-import graph.GraphDrawer;
 import game.sprite.Textures;
 import game.ui.Button;
 import game.ui.DropDownMenu;
 import graph.Graph;
+import graph.GraphDrawer;
 import graph.Vertex;
 import ki.KIFraction;
 import ki.TradeView;
@@ -348,6 +347,10 @@ public class FieldView extends GameScene{
 
         GraphDrawer.update(inputEntry,l);
         Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
+
+        if(GraphDrawer.getHorizontal() == null) {
+            return;
+        }
 
         //MouseListener
         inputEntry.getMouseEntries().forEach(entry -> {

@@ -3,7 +3,6 @@ package connection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import game.GameOfGraphs;
 import game.Player;
 import graph.Graph;
@@ -13,6 +12,7 @@ import ki.KIFraction;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Connector {
     private static final String url = "jdbc:mysql://dk-developer.ddns.net:3306/GameOfGraphs";
@@ -141,7 +141,7 @@ public class Connector {
     }
 
     public static boolean gameReady(){
-        ArrayList<Player> players = (ArrayList<Player>) GameOfGraphs.getGame().getPlayers();
+        LinkedList<Player> players = GameOfGraphs.getGame().getPlayers();
         int countPlayer = 0;
 
         Statement statement = setup();
