@@ -219,6 +219,8 @@ public class Connector {
                     e.printStackTrace();
                 }
             }
+
+            return players;
         } catch (SQLException e) {
             e.printStackTrace();
         }

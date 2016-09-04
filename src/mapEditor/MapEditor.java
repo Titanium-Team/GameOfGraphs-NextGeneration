@@ -11,6 +11,7 @@ import de.SweetCode.e.rendering.layers.Layers;
 import field.buildings.Buildings;
 import field.resource.Resources;
 import game.GameOfGraphs;
+import game.MenuView;
 import game.Player;
 import game.sprite.Textures;
 import game.ui.Button;
@@ -21,6 +22,7 @@ import simulation.Unit;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
@@ -510,6 +512,14 @@ public class MapEditor extends GameScene{
                     }
             }
         }
+        });
+
+        inputEntry.getKeyEntries().forEach(e -> {
+
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                E.getE().show(MenuView.class);
+            }
+
         });
     }
 

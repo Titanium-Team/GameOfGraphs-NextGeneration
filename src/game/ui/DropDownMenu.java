@@ -145,11 +145,13 @@ public class DropDownMenu<T> extends UIComponent<T> {
             g.drawRect(this.location.getX(), this.location.getY(), this.openBoxBoundings.getWidth(), this.openBoxBoundings.getHeight());
 
             int y = location.getY();
-            for(T entry : this.options) {
+            for(int i = 0; i < this.options.size(); i++) {
+
+                T entry = this.options.get(i);
 
                 Font defaultFont = g.getFont();
 
-                if(this.options.get(this.selectedIndex).equals(entry)) {
+                if(this.selectedIndex == i) {
                     g.setFont(new Font("default", Font.BOLD, defaultFont.getSize()));
                 }
 
