@@ -43,7 +43,6 @@ public class FieldView extends GameScene{
 	private boolean tradeEnabled=false;
 	private TradeView tradeView = new TradeView(this, new ILocation(200, 100));
 
-    private Graph graph;
     //Boolean zum Überprüfen, ob gerade Truppen bewegt werden
     private boolean move = false;
     //Boolean bei FreeBuild
@@ -184,8 +183,6 @@ public class FieldView extends GameScene{
     
     public FieldView(){
 
-        this.graph = GameOfGraphs.getGame().getGraphController().getGraph();
-
         E.getE().addComponent(unitDropDownMenu);
         //Build
         E.getE().addComponent(buildingDropDownMenu);
@@ -212,6 +209,7 @@ public class FieldView extends GameScene{
     @Override
     public void render(Layers layers) {
 
+        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
         Graphics2D g = layers.first().getGraphics2D();
 
         if(this.maxWidthOfResourceName == -1) {
@@ -347,12 +345,13 @@ public class FieldView extends GameScene{
     public void update(InputEntry inputEntry, long l) {
 
         GraphDrawer.update(inputEntry,l);
+        Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
         //MouseListener
         inputEntry.getMouseEntries().forEach(entry -> {
             
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
-                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
+                Vertex vertex = graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if (vertex != null && (vertex.getField().getPlayer()instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer() == vertex.getField().getPlayer())) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
@@ -376,7 +375,7 @@ public class FieldView extends GameScene{
                 }
             } else if(move == true){
 
-                Vertex vertex = this.graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
+                Vertex vertex = graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
                 if(vertex != null) {
                     if (vertex.isMarkTarget()) {
                         GameOfGraphs.getGame().getSimulationController().moveUnits(this.currentVertex, vertex, this.unitDropDownMenu.getOption());
