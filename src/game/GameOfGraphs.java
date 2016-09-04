@@ -1,5 +1,6 @@
 package game;
 
+import connection.Connector;
 import event.EventManager;
 import field.FieldController;
 import game.loading.LoadingManager;
@@ -112,6 +113,9 @@ public class GameOfGraphs {
 			GameOfGraphs.getGame().nextTurn();
 		}
 
+		if (Connector.isEnabledMutiplayer()) {
+			Connector.nextTurn(getCurrentPlayer().getName(), getGraphController().getGraph());
+		}
 	}
 
 	public TextBuilder getTextBuilder() {

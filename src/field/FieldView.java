@@ -193,7 +193,7 @@ public class FieldView extends GameScene{
         }
     });
 
-    
+
     public FieldView(){
 
         E.getE().addComponent(unitDropDownMenu);
