@@ -225,11 +225,21 @@ public class Connector {
         return null;
     }
 
-    public static void nextTurn(String name){
+    public static void nextTurn(String name, Graph g){
+        String graph = null;
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        try {
+            graph = mapper.writeValueAsString(g);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         Statement statement = setup();
 
         try {
-            statement.executeUpdate("UPDATE Games SET turn='" + name + "' WHERE id=" + gameId);
+            statement.executeUpdate("UPDATE Games SET turn='" + name + "', graph='" + graph + "' WHERE id=" + gameId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
