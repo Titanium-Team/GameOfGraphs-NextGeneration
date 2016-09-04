@@ -627,8 +627,6 @@ public class MapEditor extends GameScene{
 
         private Button<String> cancel, submit;
 
-        private CheckBox checkBox;
-
         private boolean firstStart = true;
 
         public PlayerChooser(GameScene gameScene, ILocation location, Trigger trigger) {
@@ -654,7 +652,6 @@ public class MapEditor extends GameScene{
                 name.setEnabled(false);
                 cancel.setEnabled(false);
                 submit.setEnabled(false);
-                checkBox.setEnabled(false);
             });
             submit = new Button<>(gameScene, "Submit", new ILocation(location.getX()+75, location.getY()+125), (component, value) -> {
                 if (name.getText().length() != 0) {
@@ -668,17 +665,13 @@ public class MapEditor extends GameScene{
                             name.setEnabled(false);
                             cancel.setEnabled(false);
                             submit.setEnabled(false);
-                            checkBox.setEnabled(false);
 
                             return;
                         }
                     }
 
-                    if (!checkBox.isChecked()) {
-                        getTrigger().call(this, new Player(name.getText(), colorMenu.getOption().getColor()));
-                    } else {
-                        getTrigger().call(this, new KIFraction(name.getText(), colorMenu.getOption().getColor()));
-                    }
+
+                    getTrigger().call(this, new Player(name.getText(), colorMenu.getOption().getColor()));
 
 
                     colorList.remove(colorMenu.getOption());
@@ -693,10 +686,7 @@ public class MapEditor extends GameScene{
                 name.setEnabled(false);
                 cancel.setEnabled(false);
                 submit.setEnabled(false);
-                checkBox.setEnabled(false);
             });
-
-            checkBox = new CheckBox(this, new ILocation(location.getX()+50, location.getY()+75), 15, 15, (component, value) -> {});
 
             colorMenu = new DropDownMenu(gameScene, new ILocation(location.getX()+30, location.getY()+40), new LinkedList<MyColor>(){{
                 for(MyColor c : colorList){
@@ -711,7 +701,6 @@ public class MapEditor extends GameScene{
             name.setEnabled(false);
             cancel.setEnabled(false);
             submit.setEnabled(false);
-            checkBox.setEnabled(false);
         }
 
         @Override
@@ -724,13 +713,10 @@ public class MapEditor extends GameScene{
             g.setColor(Color.BLACK);
             g.drawRect(location.getX(), location.getY(), 150, 150);
 
-            g.drawString("Is Ki:", location.getX()+15, location.getY()+90);
-
             g.setColor(colorMenu.getOption().getColor());
             g.fillRect(location.getX()+85, location.getY()+40, 20, 20);
 
             if (firstStart){
-                E.getE().addComponent(checkBox);
                 E.getE().addComponent(name);
                 E.getE().addComponent(cancel);
                 E.getE().addComponent(submit);
@@ -746,7 +732,6 @@ public class MapEditor extends GameScene{
             name.setEnabled(isEnabled());
             cancel.setEnabled(isEnabled());
             submit.setEnabled(isEnabled());
-            checkBox.setEnabled(isEnabled());
         }
 
         @Override
