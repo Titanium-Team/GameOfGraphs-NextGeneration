@@ -3,7 +3,6 @@ package connection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import game.GameOfGraphs;
 import game.Player;
 import graph.Graph;
@@ -13,13 +12,16 @@ import ki.KIFraction;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Connector {
     private static final String url = "jdbc:mysql://dk-developer.ddns.net:3306/GameOfGraphs";
     private static final String user = "GameOfGraphs";
     private static final String password = "game";
 
+
     private static int gameId=9;
+
     private static int playerId;
 
     private static boolean host;
@@ -42,6 +44,8 @@ public class Connector {
 
          String player = null;
          ObjectMapper mapper = new ObjectMapper();
+         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
          try {
              player = mapper.writeValueAsString(p);
          } catch (JsonProcessingException e) {
@@ -55,10 +59,10 @@ public class Connector {
                  gameId = resultSet.getInt("id");
                  GameOfGraphs.getGame().getGraphController().setGraph(getGraph());
 
-                 statement.executeUpdate("INSERT INTO Player (player, gameId, ki) VALUES ('"+ player +"', " + gameId + "0");
+                 statement.executeUpdate("UPDATE Player SET used=1 WHERE  player='" + player + "'");
 
                  resultSet = statement.executeQuery("SELECT * FROM Player WHERE player='" + player + "'");
-                 resultSet.next();
+                 resultSet.first();
                  playerId = resultSet.getInt("id");
 
                  host = false;
@@ -71,65 +75,48 @@ public class Connector {
          return false;
      }
 
-    public static void createGame(Graph g, Player p){
+    public static void createGame(Graph g){
         host = true;
 
         Statement statement = setup();
 
         String graph = null;
-        String player = null;
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         try {
             graph = mapper.writeValueAsString(g);
-            player = mapper.writeValueAsString(p);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
         try {
-            statement.executeUpdate("INSERT INTO Games (map, turn) VALUES ('"+ graph +"', 0");
+            statement.executeUpdate("INSERT INTO Games (map, turn, start) VALUES ('"+ graph +"', '', 0)");
 
             ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE map='" + graph + "'");
             resultSet.next();
 
             gameId = resultSet.getInt("id");
 
-            statement.executeUpdate("INSERT INTO Player (player, gameId, ki) VALUES ('"+ player +"', " + gameId + "0");
-
-            resultSet = statement.executeQuery("SELECT  * FROM Player WHERE player='" + player + "'");
-            resultSet.next();
-
-            playerId = resultSet.getInt("id");
-
-            nextTurn(p.getName());
-
             ArrayList<Player> players = new ArrayList<>();
-            players.add(p);
-
             boolean add = true;
 
             ArrayList<Vertex> vertices = g.getVertices();
             for (Vertex v:vertices){
-                if (v.getField().getPlayer() instanceof KIFraction) {
-                    for (Player temp : players) {
-                        if (v.getField().getPlayer().getName().equals(temp.getName())) {
-                            add = false;
-                            break;
-                        }
+                for (Player temp : players) {
+                    if (v.getField().getPlayer().getName().equals(temp.getName())) {
+                        add = false;
+                        break;
                     }
-
-                    if (add){
-                        players.add(v.getField().getPlayer());
-
-                        try {
-                            String tempP = mapper.writeValueAsString(v.getField().getPlayer());
-
-                            statement.executeUpdate("INSERT INTO Player (player, gameId, ki) VALUES ('"+ tempP +"', " + gameId + "1");
-                        } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                        }
+                }
+                if (add){
+                    players.add(v.getField().getPlayer());
+                    try {
+                        String tempP = mapper.writeValueAsString(v.getField().getPlayer());
+                        int ki = v.getField().getPlayer() instanceof KIFraction ? 1 : 0;
+                        statement.executeUpdate("INSERT INTO Player (player, gameId, ki, used) VALUES ('"+ tempP +"', " + gameId + ", " + ki + ", " + ki + ")");
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
                     }
                 }
                 add = true;
@@ -140,7 +127,7 @@ public class Connector {
     }
 
     public static boolean gameReady(){
-        ArrayList<Player> players = (ArrayList<Player>) GameOfGraphs.getGame().getPlayers();
+        LinkedList<Player> players = GameOfGraphs.getGame().getPlayers();
         int countPlayer = 0;
 
         Statement statement = setup();
@@ -157,6 +144,7 @@ public class Connector {
 
                 return true;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -170,8 +158,9 @@ public class Connector {
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE id=" + gameId);
 
-            resultSet.next();
-            return resultSet.getBoolean("start");
+            if (resultSet.first()) {
+                return resultSet.getBoolean("start");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -204,6 +193,30 @@ public class Connector {
         return null;
     }
 
+    public static ArrayList<Player> unusedPlayers(){
+        Statement statement = setup();
+
+        try {
+            ResultSet resultSet = statement.executeQuery("SELECT  * FROM Player WHERE used=0");
+
+            ArrayList<Player> players = new ArrayList<>();
+            while (resultSet.next()) {
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    players.add(mapper.readValue(resultSet.getString("player"), Player.class));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return players;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static void nextTurn(String name){
         Statement statement = setup();
 
@@ -212,5 +225,27 @@ public class Connector {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isHost() {
+        if (gameId == -1){
+            Statement statement = setup();
+
+            try {
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE start=0");
+
+                if (resultSet.next()){
+                    gameId = resultSet.getInt("id");
+                    return host = false;
+                }else {
+                    return host = true;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+        return host;
+
     }
 }

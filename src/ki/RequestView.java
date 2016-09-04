@@ -31,7 +31,7 @@ public class RequestView extends UIComponent {
 		g.setColor(Color.lightGray);
 		g.fillRoundRect(location.getX(),location.getY(),600,200,20,20);
 		g.setColor(Color.red);
-		g.drawRoundRect(location.getX(),location.getY(),600,300,20,20);
+		g.drawRoundRect(location.getX(),location.getY(),600,200,20,20);
 		Font font=g.getFont();
 		g.setFont(new Font("Times New Roman",Font.ROMAN_BASELINE,16));
 		g.setColor(Color.BLACK);

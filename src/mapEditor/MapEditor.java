@@ -11,6 +11,7 @@ import de.SweetCode.e.rendering.layers.Layers;
 import field.buildings.Buildings;
 import field.resource.Resources;
 import game.GameOfGraphs;
+import game.MenuView;
 import game.Player;
 import game.sprite.Textures;
 import game.ui.Button;
@@ -21,6 +22,7 @@ import simulation.Unit;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
@@ -69,14 +71,15 @@ public class MapEditor extends GameScene{
         E.getE().addComponent(randomizeButton);
 
         playerChooser = new PlayerChooser(this, new ILocation(500, 500), (component, value) -> {
-            GameOfGraphs.getGame().getPlayers().add((Player) value);
+
+
+            GameOfGraphs.getGame().getPlayers().add(value instanceof KIFraction ? (KIFraction) value : (Player) value);
 
             LinkedList<Player> list = new LinkedList(GameOfGraphs.getGame().getPlayers());
             list.add(new Player("add New Player", null));
 
             owner.setOptions(list);
-
-            currentVertex.getField().setPlayer((Player) value);
+            currentVertex.getField().setPlayer(value instanceof KIFraction ? (KIFraction) value : (Player) value);
 
         });
         E.getE().addComponent(playerChooser);
@@ -92,16 +95,12 @@ public class MapEditor extends GameScene{
         }));
         buttons.add(new game.ui.Button<>(this, "Save", new ILocation(1000, 555), (component, value) -> {
             GameOfGraphs.getGame().getGraphController().save(graph);
-
-            //Connector.createGame(graph, null);
         }));
         buttons.add(new game.ui.Button<>(this, "Load", new ILocation(1000, 580), (component, value) -> {
-            /*Object[] g = GameOfGraphs.getGame().getGraphController().load();
+            Object[] g = GameOfGraphs.getGame().getGraphController().load();
             if (g != null){
                 graph = (Graph) g[0];
-            }*/
-
-            graph = Connector.getGraph();
+            }
         }));
         buttons.add(new game.ui.Button<>(this, "Move", new ILocation(1000, 605), (component, value) -> {
             GameOfGraphs.getGame().getGraphController().checkGraph();
@@ -514,6 +513,14 @@ public class MapEditor extends GameScene{
             }
         }
         });
+
+        inputEntry.getKeyEntries().forEach(e -> {
+
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                E.getE().show(MenuView.class);
+            }
+
+        });
     }
 
     @Override
@@ -651,7 +658,7 @@ public class MapEditor extends GameScene{
             });
             submit = new Button<>(gameScene, "Submit", new ILocation(location.getX()+75, location.getY()+125), (component, value) -> {
                 if (name.getText().length() != 0) {
-                    ArrayList<Player> players = (ArrayList<Player>) GameOfGraphs.getGame().getPlayers();
+                    LinkedList<Player> players = GameOfGraphs.getGame().getPlayers();
                     for (Player p : players){
                         if (p.getName().equals(name.getText())){
                             setEnabled(false);
