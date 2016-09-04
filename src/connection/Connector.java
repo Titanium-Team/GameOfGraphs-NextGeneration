@@ -42,6 +42,8 @@ public class Connector {
 
          String player = null;
          ObjectMapper mapper = new ObjectMapper();
+         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
          try {
              player = mapper.writeValueAsString(p);
          } catch (JsonProcessingException e) {
@@ -55,10 +57,10 @@ public class Connector {
                  gameId = resultSet.getInt("id");
                  GameOfGraphs.getGame().getGraphController().setGraph(getGraph());
 
-                 statement.executeUpdate("UPDATE Player SET used=1");
+                 statement.executeUpdate("UPDATE Player SET used=1 WHERE  player=" + player);
 
                  resultSet = statement.executeQuery("SELECT * FROM Player WHERE player='" + player + "'");
-                 resultSet.next();
+                 resultSet.first();
                  playerId = resultSet.getInt("id");
 
                  host = false;
@@ -101,24 +103,20 @@ public class Connector {
 
             ArrayList<Vertex> vertices = g.getVertices();
             for (Vertex v:vertices){
-                if (v.getField().getPlayer() instanceof KIFraction) {
-                    for (Player temp : players) {
-                        if (v.getField().getPlayer().getName().equals(temp.getName())) {
-                            add = false;
-                            break;
-                        }
+                for (Player temp : players) {
+                    if (v.getField().getPlayer().getName().equals(temp.getName())) {
+                        add = false;
+                        break;
                     }
-
-                    if (add){
-                        players.add(v.getField().getPlayer());
-
-                        try {
-                            String tempP = mapper.writeValueAsString(v.getField().getPlayer());
-
-                            statement.executeUpdate("INSERT INTO Player (player, gameId, ki, used) VALUES ('"+ tempP +"', " + gameId + "1, 1)");
-                        } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                        }
+                }
+                if (add){
+                    players.add(v.getField().getPlayer());
+                    try {
+                        String tempP = mapper.writeValueAsString(v.getField().getPlayer());
+                        int ki = v.getField().getPlayer() instanceof KIFraction ? 1 : 0;
+                        statement.executeUpdate("INSERT INTO Player (player, gameId, ki, used) VALUES ('"+ tempP +"', " + gameId + ", " + ki + ", " + ki + ")");
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
                     }
                 }
                 add = true;
@@ -200,7 +198,7 @@ public class Connector {
             ResultSet resultSet = statement.executeQuery("SELECT  * FROM Player WHERE used=0");
 
             ArrayList<Player> players = new ArrayList<>();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 ObjectMapper mapper = new ObjectMapper();
                 try {
                     players.add(mapper.readValue(resultSet.getString("player"), Player.class));
@@ -234,13 +232,7 @@ public class Connector {
             try {
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE start=0");
 
-                gameId = resultSet.getInt("id");
-
-                if (resultSet.next()) {
-                    host = false;
-                }else {
-                    host = true;
-                }
+                return (host = !resultSet.next());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

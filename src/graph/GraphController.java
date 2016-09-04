@@ -15,15 +15,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import game.Queue;
-
 public class GraphController {
-    private Graph graph;
+    private Graph graph = new Graph();
 
     public GraphController() {
-        Random r = new Random();
-
-        graph = new Graph();
 
         KIFraction fraction1 = new KIFraction("Independent", new Color(232, 77, 91));
         GameOfGraphs.getGame().getPlayers().add(fraction1);

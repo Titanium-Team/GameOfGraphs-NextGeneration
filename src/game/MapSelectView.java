@@ -6,6 +6,7 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.ILocation;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
+import de.SweetCode.e.utils.StringUtils;
 import field.FieldView;
 import game.ui.Button;
 import game.ui.DropDownMenu;
@@ -23,14 +24,16 @@ public class MapSelectView extends GameScene {
     private boolean drawSinglePlayer = true;
     private int time = 0;
 
-    private DropDownMenu<String> gameModeMenu = new DropDownMenu<>(this, new ILocation(640, 300), new LinkedList<String>() {{
+    private DropDownMenu<String> gameModeMenu = new DropDownMenu<>(this, new ILocation(100, 100), new LinkedList<String>() {{
         this.add("Single-player");
         this.add("Multi-player");
     }}, (c, t) -> this.drawSinglePlayer = t.equals("Single-player"));
 
-    private DropDownMenu<String> dropDownMenuS = new DropDownMenu<>(this, new ILocation(400,400), new LinkedList<>(), (c, t) -> {
+    private DropDownMenu<String> selectedMapMenu = new DropDownMenu<>(this, new ILocation(400, 400), new LinkedList<>(), (c, t) -> {
 
-        GameOfGraphs.getGame().getGraphController().setGraph(maps.get(t));
+        if(maps.get(t).isChecked()) {
+            GameOfGraphs.getGame().getGraphController().setGraph(maps.get(t));
+        }
 
     });
 
@@ -40,41 +43,63 @@ public class MapSelectView extends GameScene {
 
         if(!(graph == null)) {
             this.maps.put(String.valueOf(graph[1]), (Graph) graph[0]);
-            this.dropDownMenuS.getOptions().add(String.valueOf(graph[1]));
+            this.selectedMapMenu.getOptions().add(String.valueOf(graph[1]));
         }
 
     });
 
-    private DropDownMenu<Player> playerDropDownM = new DropDownMenu<>(this, new ILocation(500,400), new LinkedList<>(), (c, t) -> {
+    private DropDownMenu<Player> playerDropDownM = new DropDownMenu<>(this, new ILocation(500,400), new LinkedList<Player>() {{
 
 
+        if(!(Connector.unusedPlayers() == null)) {
+            this.addAll(Connector.unusedPlayers());
+        }
+
+    }}, (c, t) -> {});
+
+    private Button<String> createGameButton = new Button<>(this, "Create Game", new ILocation(700, 400), (c, t) -> {
+        Connector.createGame(maps.get(this.selectedMapMenu.getOption()));
+
+        this.playerDropDownM.setOptions(new LinkedList<Player>() {{
+
+            if(!(Connector.unusedPlayers() == null)) {
+                this.addAll(Connector.unusedPlayers());
+            }
+
+        }});
+        this.time = 0;
+    });
+
+    private Button<String> joinGameButton = new Button<>(this, "Join Game", new ILocation(700, 420), (c, t) -> {
+        Connector.joinGame(this.playerDropDownM.getOption());
     });
 
 
-    private Button<String> playButton = new Button<>(this, "Play", new ILocation(400, 340), (c, t) -> E.getE().show(FieldView.class));
+    private Button<String> playButton = new Button<>(this, "Play", new ILocation(700, 440), (c, t) -> E.getE().show(FieldView.class));
 
     public MapSelectView() {
         E.getE().addComponent(gameModeMenu);
 
-        E.getE().addComponent(dropDownMenuS);
+        E.getE().addComponent(selectedMapMenu);
         E.getE().addComponent(loadMapButtonS);
+
+        E.getE().addComponent(createGameButton);
+        E.getE().addComponent(joinGameButton);
 
         E.getE().addComponent(playerDropDownM);
 
         E.getE().addComponent(playButton);
+
+        this.createGameButton.setEnabled(Connector.isHost());
     }
 
     @Override
     public void render(Layers layers) {}
 
     @Override
-    public void update(InputEntry inputEntry, long l) {
+    public void update(InputEntry inputEntry, long delta) {
 
-        this.time += l;
-        this.dropDownMenuS.setEnabled(this.drawSinglePlayer);
-        this.loadMapButtonS.setEnabled(this.drawSinglePlayer);
-
-        this.playerDropDownM.setEnabled(!(this.drawSinglePlayer));
+        this.time += delta;
 
         inputEntry.getKeyEntries().forEach(e -> {
 
@@ -85,8 +110,16 @@ public class MapSelectView extends GameScene {
         });
 
         if(this.time >= 5000) {
+
+            if(Connector.gameReady()) {
+                GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph());
+                E.getE().show(FieldView.class);
+                return;
+            }
+
             this.playerDropDownM.setOptions(new LinkedList<Player>() {{
 
+                System.out.println(StringUtils.join(Connector.unusedPlayers(), ", "));
                 if(!(Connector.unusedPlayers() == null)) {
                     this.addAll(Connector.unusedPlayers());
                 }
