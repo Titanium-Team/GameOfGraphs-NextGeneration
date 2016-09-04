@@ -55,7 +55,7 @@ public class Connector {
                  gameId = resultSet.getInt("id");
                  GameOfGraphs.getGame().getGraphController().setGraph(getGraph());
 
-                 statement.executeUpdate("INSERT INTO Player (player, gameId, ki) VALUES ('"+ player +"', " + gameId + "0");
+                 statement.executeUpdate("UPDATE Player SET used=1");
 
                  resultSet = statement.executeQuery("SELECT * FROM Player WHERE player='" + player + "'");
                  resultSet.next();
@@ -89,7 +89,6 @@ public class Connector {
         }
 
         try {
-            //statement.executeUpdate("INSERT INTO Games (map, turn, start) VALUES ('"+ graph +"', '" + p.getName() +"', 0");
             statement.executeUpdate("INSERT INTO Games (map, turn, start) VALUES ('"+ graph +"', '" + p.getName() +"', 0)");
 
             ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE map='" + graph + "'");
@@ -97,7 +96,7 @@ public class Connector {
 
             gameId = resultSet.getInt("id");
 
-            statement.executeUpdate("INSERT INTO Player (player, gameId, ki) VALUES ('"+ player +"', " + gameId + ", 0)");
+            statement.executeUpdate("INSERT INTO Player (player, gameId, ki, used) VALUES ('"+ player +"', " + gameId + ", 0, 0)");
 
             resultSet = statement.executeQuery("SELECT  * FROM Player WHERE player='" + player + "'");
             resultSet.next();
@@ -127,7 +126,7 @@ public class Connector {
                         try {
                             String tempP = mapper.writeValueAsString(v.getField().getPlayer());
 
-                            statement.executeUpdate("INSERT INTO Player (player, gameId, ki) VALUES ('"+ tempP +"', " + gameId + "1");
+                            statement.executeUpdate("INSERT INTO Player (player, gameId, ki, used) VALUES ('"+ tempP +"', " + gameId + "1, 1)");
                         } catch (JsonProcessingException e) {
                             e.printStackTrace();
                         }
@@ -197,6 +196,28 @@ public class Connector {
                     e.printStackTrace();
                 }
 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static ArrayList<Player> unusedPlayers(){
+        Statement statement = setup();
+
+        try {
+            ResultSet resultSet = statement.executeQuery("SELECT  * FROM Player WHERE used=0");
+
+            ArrayList<Player> players = new ArrayList<>();
+            if (resultSet.next()) {
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    players.add(mapper.readValue(resultSet.getString("player"), Player.class));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
