@@ -302,6 +302,8 @@ public class FieldView extends GameScene{
             g.setColor(Color.BLACK);
             g.drawString("OWNER: " + this.currentField.getPlayer().getName(), 20, 700);
 
+            g.drawString("ID:" + this.currentVertex.getID(), 1000, 20);
+
             g.setColor(Color.LIGHT_GRAY);
 
             //Zeichnen der UIComponents

@@ -53,19 +53,23 @@ public class KIController {
 				}
 				v1.getField().getResources().put(POPULATION, v1.getField().getResources().get(POPULATION) - rebels.size());
 				getGame().getSimulationController().fight(null, v1, rebels);
-				currentPlayer.getNotifications().add(new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1));
-				Notification toRemove=null;
-				for (Notification n : currentPlayer.getNotifications()) {
-					if (n instanceof AttackNotification) {
-						if (((AttackNotification) n).getOpponent().equals(rebelPlayer)) {
-							toRemove=n;
+				if(currentPlayer.isActive()) {
+					currentPlayer.getNotifications().add(new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1));
+					Notification toRemove = null;
+					for (Notification n : currentPlayer.getNotifications()) {
+						if (n instanceof AttackNotification) {
+							if (((AttackNotification) n).getOpponent().equals(rebelPlayer)) {
+								toRemove = n;
+							}
 						}
 					}
+					currentPlayer.getNotifications().remove(toRemove);
+				}else{
+					this.deletePlayer(currentPlayer);
 				}
-				currentPlayer.getNotifications().remove(toRemove);
 			}
 
-			if (currentPlayer instanceof KIFraction) {
+			if (currentPlayer instanceof KIFraction && getGame().getPlayers().contains(currentPlayer)) {
 				current = (KIFraction)currentPlayer;
 				getGame().getSimulationController().run(current);
 				getGame().getFieldController().run(current);
@@ -95,7 +99,7 @@ public class KIController {
 						} else if (r.nextInt(3) == 1) {
 							minUnits = 3;
 						}
-						if (v1.getField().getUnits().size() >= minUnits+2) {
+						if (minUnits<Integer.MAX_VALUE && v1.getField().getUnits().size() >= minUnits+1) {
 							Vertex goal = null;
 							int amount = minUnits;
 							ArrayList<Vertex> neighbors = getGame().getGraphController().getGraph().getNeighbours(v1);
@@ -106,32 +110,6 @@ public class KIController {
 								if (!current.equals(v.getField().getPlayer())) {
 									goal = v;
 								}
-							}
-							if (current.getProperties().contains(Property.STRATEGIC)) {
-								boolean pathFree = true;
-								int min = Integer.MAX_VALUE;
-								Player archEnemy = null;
-								Vertex tempGoal;
-								for (Player p : getGame().getPlayers()) {
-									if(current.getTrust().containsKey(p)) {
-										if (current.getTrust().get(p) < min) {
-											archEnemy = p;
-											min = current.getTrust().get(p);
-										}
-									}
-								}
-								tempGoal = this.getClosestVertex(v1, archEnemy);
-								List<Vertex> list = getGame().getSimulationController().giveListOfVerticesToFollow(v1, tempGoal);
-								list.toFirst();
-								while (list.hasAccess()) {
-									if (pathFree && archEnemy != null) {
-										if (!current.equals(list.getContent().getField().getPlayer()) && !archEnemy.equals(list.getContent().getField().getPlayer())) {
-											pathFree = false;
-										}
-									}
-									list.next();
-								}
-								if (pathFree) goal = tempGoal;
 							}
 							if (goal != null) {
 								getGame().getSimulationController().moveUnits(v1, goal, amount);
@@ -326,6 +304,7 @@ public class KIController {
 									if (!current.isFraction() && attackNotification.isFightWon()) {
 										int x = 1;
 										current.setName("KIPlayer " + x);
+										current.setColor(new Color(r.nextInt(255),r.nextInt(255),r.nextInt(255)));
 										for (Player p : getGame().getPlayers()) {
 											if (p.getName().equals(current.getName())) {
 												x++;
