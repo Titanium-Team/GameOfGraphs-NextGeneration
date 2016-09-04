@@ -19,7 +19,7 @@ public class Connector {
     private static final String user = "GameOfGraphs";
     private static final String password = "game";
 
-    private static int gameId;
+    private static int gameId = 9;
     private static int playerId;
 
     private static boolean host;
@@ -89,14 +89,15 @@ public class Connector {
         }
 
         try {
-            statement.executeUpdate("INSERT INTO Games (map, turn) VALUES ('"+ graph +"', 0");
+            //statement.executeUpdate("INSERT INTO Games (map, turn, start) VALUES ('"+ graph +"', '" + p.getName() +"', 0");
+            statement.executeUpdate("INSERT INTO Games (map, turn, start) VALUES ('"+ graph +"', '" + p.getName() +"', 0)");
 
             ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE map='" + graph + "'");
             resultSet.next();
 
             gameId = resultSet.getInt("id");
 
-            statement.executeUpdate("INSERT INTO Player (player, gameId, ki) VALUES ('"+ player +"', " + gameId + "0");
+            statement.executeUpdate("INSERT INTO Player (player, gameId, ki) VALUES ('"+ player +"', " + gameId + ", 0)");
 
             resultSet = statement.executeQuery("SELECT  * FROM Player WHERE player='" + player + "'");
             resultSet.next();
@@ -182,7 +183,7 @@ public class Connector {
         Statement statement = setup();
 
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE if=" + gameId);
+            ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE id=" + gameId);
 
             if (resultSet.next()) {
                 String graph = resultSet.getString("map");
