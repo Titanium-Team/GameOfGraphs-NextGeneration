@@ -11,11 +11,12 @@ import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
-import graph.GraphDrawer;
+import game.Player;
 import game.sprite.Textures;
 import game.ui.Button;
 import game.ui.DropDownMenu;
 import graph.Graph;
+import graph.GraphDrawer;
 import graph.Vertex;
 import ki.KIFraction;
 import ki.TradeView;
@@ -347,12 +348,17 @@ public class FieldView extends GameScene{
         GraphDrawer.update(inputEntry,l);
         Graph graph = GameOfGraphs.getGame().getGraphController().getGraph();
 
+        if(GraphDrawer.getHorizontal() == null) {
+            return;
+        }
+
         //MouseListener
         inputEntry.getMouseEntries().forEach(entry -> {
             
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
                 Vertex vertex = graph.getVertex((int) entry.getPoint().getX() + GraphDrawer.getHorizontal().getValue(), (int) entry.getPoint().getY() + GraphDrawer.getVertical().getValue());
-                if (vertex != null && (vertex.getField().getPlayer()instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer() == vertex.getField().getPlayer())) {
+                Player player = GameOfGraphs.getGame().getCurrentPlayer();
+                if (vertex != null && (vertex.getField().getPlayer() instanceof KIFraction || GameOfGraphs.getGame().getCurrentPlayer() == vertex.getField().getPlayer())) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
                     }

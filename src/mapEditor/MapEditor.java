@@ -68,13 +68,15 @@ public class MapEditor extends GameScene{
         E.getE().addComponent(randomizeButton);
 
         playerChooser = new PlayerChooser(this, new ILocation(500, 500), (component, value) -> {
-            GameOfGraphs.getGame().getPlayers().add((Player) value);
+
+
+            GameOfGraphs.getGame().getPlayers().add(value instanceof KIFraction ? (KIFraction) value : (Player) value);
 
             LinkedList<Player> list = new LinkedList(GameOfGraphs.getGame().getPlayers());
             list.add(new Player("add New Player", null));
 
             owner.setOptions(list);
-            currentVertex.getField().setPlayer((Player) value);
+            currentVertex.getField().setPlayer(value instanceof KIFraction ? (KIFraction) value : (Player) value);
         });
         E.getE().addComponent(playerChooser);
         playerChooser.setEnabled(false);
@@ -638,7 +640,7 @@ public class MapEditor extends GameScene{
             });
             submit = new Button<>(gameScene, "Submit", new ILocation(location.getX()+75, location.getY()+125), (component, value) -> {
                 if (name.getText().length() != 0) {
-                    ArrayList<Player> players = (ArrayList<Player>) GameOfGraphs.getGame().getPlayers();
+                    LinkedList<Player> players = GameOfGraphs.getGame().getPlayers();
                     for (Player p : players){
                         if (p.getName().equals(name.getText())){
                             setEnabled(false);

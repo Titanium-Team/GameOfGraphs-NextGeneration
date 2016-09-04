@@ -33,7 +33,7 @@ public class GraphController {
         Vertex c = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(1),true));
 
         Vertex b = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction1 ,true));
-        KIFraction fraction2 = new KIFraction("KIplayer 1");
+        KIFraction fraction2 = new KIFraction("KIplayer 1", Color.GREEN);
         Vertex d = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
         Vertex e = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
 

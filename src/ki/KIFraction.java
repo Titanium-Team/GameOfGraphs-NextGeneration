@@ -1,17 +1,16 @@
 package ki;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import field.resource.Resource;
 import field.resource.Resources;
+import game.GameOfGraphs;
 import game.Player;
 import graph.Vertex;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Random;
-
-import static game.GameOfGraphs.getGame;
 
 /**
  * Created by Tim on 10.06.2016.
@@ -56,7 +55,7 @@ public class KIFraction extends Player{
     public HashMap<Player, Integer> getTrust() {
 
         if(this.trust.isEmpty()) {
-            ArrayList<Player> players = (ArrayList<Player>) getGame().getPlayers();
+            LinkedList<Player> players = new LinkedList<>(GameOfGraphs.getGame().getPlayers());
             players.remove(this);
 
             for (Player p : players) {
