@@ -112,7 +112,9 @@ public class GameOfGraphs {
 			GameOfGraphs.getGame().nextTurn();
 		}
 
-		Connector.nextTurn(getCurrentPlayer().getName(), getGraphController().getGraph());
+		if (Connector.isEnabledMutiplayer()) {
+			Connector.nextTurn(getCurrentPlayer().getName(), getGraphController().getGraph());
+		}
 	}
 
 	public TextBuilder getTextBuilder() {

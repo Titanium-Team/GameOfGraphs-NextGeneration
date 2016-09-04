@@ -109,12 +109,12 @@ public class MapSelectView extends GameScene {
 
             if(Connector.gameReady() || Connector.gameStarted()) {
                 E.getE().show(FieldView.class);
+                Connector.setEnabledMutiplayer(true);
                 return;
             }
 
             this.playerDropDownM.setOptions(new LinkedList<Player>() {{
 
-                System.out.println(StringUtils.join(Connector.unusedPlayers(), ", "));
                 if(!(Connector.unusedPlayers() == null)) {
                     this.addAll(Connector.unusedPlayers());
                 }

@@ -26,7 +26,7 @@ public class Connector {
 
     private static boolean host;
 
-    private static boolean enabledMutiplayer;
+    private static boolean enabledMutiplayer = false;
 
     private static Statement setup(){
         try {
