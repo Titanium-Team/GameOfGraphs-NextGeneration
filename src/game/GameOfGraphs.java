@@ -9,11 +9,7 @@ import ki.KIController;
 import ki.KIFraction;
 import simulation.SimulationController;
 
-
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedList;
 
 
@@ -40,15 +36,8 @@ public class GameOfGraphs {
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {}
+
 		// load stuff
 		this.loadingManager.add(Textures.values());
 		this.loadingManager.load();
@@ -59,7 +48,6 @@ public class GameOfGraphs {
 		graphController = new GraphController();
 		kiController = new KIController();
 		simulationController = new SimulationController(this.getCurrentPlayer());
-
 	}
 
 	public static GameOfGraphs getGame() {
@@ -67,7 +55,7 @@ public class GameOfGraphs {
 	}
 
 	public void nextTurn() {
-		fieldController.run(this.getCurrentPlayer());
+		/*fieldController.run(this.getCurrentPlayer());
 		this.currentPlayer++;
 
 		if(this.currentPlayer >= this.players.size()) {
@@ -98,9 +86,10 @@ public class GameOfGraphs {
 
 		
 		kiController.run(this.getCurrentPlayer());
-		simulationController.run(this.getCurrentPlayer());
+		simulationController.run(this.getCurrentPlayer());*/
 
-		/*while (true) {
+        boolean breakCondition = false;
+		while (!(breakCondition)) {
 
 			this.currentPlayer++;
 
@@ -109,7 +98,7 @@ public class GameOfGraphs {
 			}
 
 			if(this.getCurrentPlayer().isActive()) {
-				break;
+                breakCondition = true;
 			}
 
 		}
@@ -120,7 +109,7 @@ public class GameOfGraphs {
 
 		if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
 			GameOfGraphs.getGame().nextTurn();
-		}*/
+		}
 
 	}
 
