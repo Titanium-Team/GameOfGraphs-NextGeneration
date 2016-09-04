@@ -397,7 +397,26 @@ public class FieldView extends GameScene{
             
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
                 Vertex vertex = graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
-                if (vertex != null && (vertex.getField().getPlayer() instanceof KIFraction || getGame().getCurrentPlayer().getName().equals(vertex.getField().getPlayer().getName()))) {
+
+                boolean visible = false;
+
+                if(!(vertex == null)) {
+                    visible = vertex.getField().getPlayer() == GameOfGraphs.getGame().getCurrentPlayer();
+
+                    if (!(visible)) {
+
+                        ArrayList<Vertex> list = graph.getNeighbours(vertex);
+                        for (Vertex e : list) {
+                            if(GameOfGraphs.getGame().getCurrentPlayer().getName().equals(e.getField().getPlayer().getName())) {
+                                visible = true;
+                                break;
+                            }
+                        }
+
+                    }
+                }
+
+                if (vertex != null && (vertex.getField().getPlayer() instanceof KIFraction || getGame().getCurrentPlayer().getName().equals(vertex.getField().getPlayer().getName())) && visible) {
                     if(currentVertex != null) {
                         this.currentVertex.setMarkTarget(false);
                     }
