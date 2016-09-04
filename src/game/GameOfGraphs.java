@@ -53,6 +53,11 @@ public class GameOfGraphs {
 		return game;
 	}
 
+    /**
+     *  Wird aufgerufen um den nächsten Zug des nächsten Spielers einzuleiten.
+     *
+     *  Wenn der nächste Spieler eine KI ist dann wird dessen Zug automatisch ausgeführt.
+     */
 	public void nextTurn() {
         boolean breakCondition = false;
 		this.fieldController.run(this.getCurrentPlayer());
@@ -82,14 +87,28 @@ public class GameOfGraphs {
 		}
 	}
 
+    /**
+     * Gibt den TextBuilder zurück.
+     * @return
+     */
 	public TextBuilder getTextBuilder() {
 		return textBuilder;
 	}
 
+
+
+    /**
+     * Gibt den FieldController zurück
+     * @return
+     */
 	public FieldController getFieldController() {
 		return fieldController;
 	}
 
+    /**
+     * Gibt den Graph
+     * @return
+     */
 	public GraphController getGraphController() {
 		return graphController;
 	}

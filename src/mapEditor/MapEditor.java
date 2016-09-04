@@ -1,6 +1,5 @@
 package mapEditor;
 
-import connection.Connector;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.math.IBoundingBox;
@@ -392,7 +391,7 @@ public class MapEditor extends GameScene{
                         currentEdge = null;
                         currentVertex = null;
 
-                        final Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
+                        final Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) ), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) ));
                         if (mouseEntry.getButton() == 1) {
                             leftMouse = true;
                             if (vertex != null) {
@@ -413,7 +412,7 @@ public class MapEditor extends GameScene{
                                         temp = vertex;
                                     } else if (currentEdge == null){
                                         ArrayList<Vertex> vertexList = graph.getVertices();
-                                        graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()), GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0), true)));
+                                        graph.addVertex(new Vertex(String.valueOf(vertexList.size() + 1), (int) ((mouseEntry.getPoint().getX() - GraphDrawer.getHorizontal().getValue()) ), (int) ((mouseEntry.getPoint().getY() - GraphDrawer.getVertical().getValue()) ), GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0), true)));
                                     }
                                     break;
                                 case 1:
@@ -450,7 +449,7 @@ public class MapEditor extends GameScene{
                         }
                         break;
                     case 1:
-                        Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
+                        Vertex vertex = graph.getVertex((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) ), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) ));
                         if (vertex != null && temp != null) {
                             graph.addEdge(new Edge(new String[]{temp.getID(), vertex.getID()}, 0));
                         }
@@ -464,17 +463,17 @@ public class MapEditor extends GameScene{
             switch (chooser) {
                 case 0:
                     if (temp != null) {
-                        double x = (mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom();
-                        double y = (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom();
+                        double x = (mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) ;
+                        double y = (mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) ;
                         if (mouseEntry.getPoint().getX() - graph.getRadius() < 0) {
-                            x = GraphDrawer.getHorizontal().getValue() / GraphDrawer.getZoom() + graph.getRadius();
+                            x = GraphDrawer.getHorizontal().getValue()  + graph.getRadius();
                         } else if (mouseEntry.getPoint().getX() + graph.getRadius() > 1280 - 25) {
-                            x = (1280 - 25 + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom() - graph.getRadius();
+                            x = (1280 - 25 + GraphDrawer.getHorizontal().getValue())  - graph.getRadius();
                         }
                         if (mouseEntry.getPoint().getY() - graph.getRadius() < 0) {
-                            y = GraphDrawer.getVertical().getValue() / GraphDrawer.getZoom() + graph.getRadius();
+                            y = GraphDrawer.getVertical().getValue()  + graph.getRadius();
                         } else if (mouseEntry.getPoint().getY() + graph.getRadius() > 500 - 25) {
-                            y = (500 - 25 + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom() - graph.getRadius();
+                            y = (500 - 25 + GraphDrawer.getVertical().getValue())  - graph.getRadius();
                         }
                         ArrayList<Vertex> vertexNear = graph.getVertexList(temp, (int) x, (int) y, graph.getRadius() * 3);
                         if (vertexNear.isEmpty()) {
@@ -497,14 +496,14 @@ public class MapEditor extends GameScene{
                             vector1.setX(vertex1.getX() - vector1.getX() + vertex1.getX());
                             vector1.setY(vertex1.getY() - vector1.getY() + vertex1.getY());
                             if (vector1.getX() - graph.getRadius() < 0) {
-                                vector1.setX(GraphDrawer.getHorizontal().getValue() / GraphDrawer.getZoom() + graph.getRadius());
+                                vector1.setX(GraphDrawer.getHorizontal().getValue()  + graph.getRadius());
                             } else if (vector1.getX() + graph.getRadius() > 1280 - 25) {
-                                vector1.setX((1280 - 25 + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom() - graph.getRadius());
+                                vector1.setX((1280 - 25 + GraphDrawer.getHorizontal().getValue())  - graph.getRadius());
                             }
                             if (vector1.getY() - graph.getRadius() < 0) {
-                                vector1.setY(GraphDrawer.getVertical().getValue() / GraphDrawer.getZoom() + graph.getRadius());
+                                vector1.setY(GraphDrawer.getVertical().getValue()  + graph.getRadius());
                             } else if (vector1.getY() + graph.getRadius() > 500 - 25) {
-                                vector1.setY((500 - 25 + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom() - graph.getRadius());
+                                vector1.setY((500 - 25 + GraphDrawer.getVertical().getValue())  - graph.getRadius());
                             }
                             temp.setPosition((int) vector1.getX(), (int) vector1.getY());
                         }
@@ -512,10 +511,9 @@ public class MapEditor extends GameScene{
                     break;
                 case 1:
                     if (dragEdge != null) {
-                        dragEdge[1].setPosition((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) / GraphDrawer.getZoom()), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) / GraphDrawer.getZoom()));
+                        dragEdge[1].setPosition((int) ((mouseEntry.getPoint().getX() + GraphDrawer.getHorizontal().getValue()) ), (int) ((mouseEntry.getPoint().getY() + GraphDrawer.getVertical().getValue()) ));
                     }
-            }
-        }
+            }}
         });
 
         inputEntry.getKeyEntries().forEach(e -> {
@@ -616,7 +614,9 @@ public class MapEditor extends GameScene{
             }
         }
 
-        owner.setOptions(GameOfGraphs.getGame().getPlayers());
+        LinkedList<Player> players = ((LinkedList<Player>) GameOfGraphs.getGame().getPlayers().clone());
+        players.add(new Player("add New Player", null));
+        owner.setOptions(players);
     }
 
     public static Vertex[] getDragEdge() {

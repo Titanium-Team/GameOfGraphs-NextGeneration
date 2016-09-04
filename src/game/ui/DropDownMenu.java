@@ -75,7 +75,9 @@ public class DropDownMenu<T> extends UIComponent<T> {
 
                             for (int i = 0; i < this.options.size(); i++) {
 
-                                if (this.boundingBoxes.get(this.options.get(i)).contains(new ILocation(entry.getPoint()))) {
+                                IBoundingBox box = this.boundingBoxes.get(this.options.get(i));
+
+                                if (!(box == null) && box.contains(new ILocation(entry.getPoint()))) {
                                     this.getTrigger().call(this, this.options.get(i));
                                     this.selectedIndex = i;
                                     this.open = false;
