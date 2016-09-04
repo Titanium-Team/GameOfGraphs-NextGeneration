@@ -235,4 +235,8 @@ public class Connector {
             e.printStackTrace();
         }
     }
+
+    public static boolean isHost() {
+        return host;
+    }
 }
