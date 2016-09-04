@@ -10,7 +10,6 @@ import field.buildings.Buildings;
 import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
-import game.GameOfGraphs;
 import game.sprite.Textures;
 import game.ui.Button;
 import game.ui.DropDownMenu;
@@ -83,7 +82,6 @@ public class FieldView extends GameScene{
 
         // Update selectedable units
         if(buildingDropDownMenu.getOption() == Buildings.UNIT) {
-            int selectedIndex = this.unitDropDownMenu.getOption() - 1;
             this.unitDropDownMenu.getOptions().clear();
             this.unitDropDownMenu.setOptions(new LinkedList<Integer>() {{
 
@@ -92,10 +90,6 @@ public class FieldView extends GameScene{
                 }
 
             }});
-
-            if(selectedIndex < this.unitDropDownMenu.getOptions().size()) {
-                this.unitDropDownMenu.setSelectedIndex(selectedIndex);
-            }
         }
 
     });

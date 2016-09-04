@@ -124,7 +124,7 @@ public class MapSelectView extends GameScene {
                     int index = (playerDropDownM.getOptions().size() >= players.size() ? playerDropDownM.getSelectedIndex() : -1);
                     this.addAll(players);
 
-                    if(index == -1) {
+                    if(!(index == -1)) {
                         playerDropDownM.setSelectedIndex(index);
                     }
                 }
