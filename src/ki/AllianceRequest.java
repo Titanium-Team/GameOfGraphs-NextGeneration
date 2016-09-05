@@ -13,7 +13,7 @@ public class AllianceRequest extends Request {
 	@Override
 	void decline() {
 		if(this.getParent() instanceof KIFraction){
-			((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())-10);
+			//((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())-10);
 		}
 	}
 

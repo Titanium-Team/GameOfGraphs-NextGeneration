@@ -229,7 +229,7 @@ public class KIController {
 						Request req = current.getRequests().front();
 						if (req instanceof AllianceRequest) {
 							if (!current.getProperties().contains(Property.DISTRUSTFUL)) {
-								int trust = current.getTrust().get(req.getParent());
+								int trust = (current.getTrust().containsKey(req.getParent()) ? current.getTrust().get(req.getParent()) : 1);
 								if (current.getProperties().contains(Property.DIPLOMATIC)) {
 									if (trust <= 90) {
 										trust += 10;
@@ -261,6 +261,7 @@ public class KIController {
 										}
 									}
 								}
+
 								if (!isGoal) {
 									for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
 										if (res.containsKey(e.getKey())) {
@@ -270,6 +271,7 @@ public class KIController {
 											}
 										}else if(e.getValue()<=0){
 											minTrust=Integer.MAX_VALUE;
+
 										}
 									}
 									if (current.getTrust().get(req.getParent()) >= r.nextInt(minTrust) + 1) {
@@ -409,9 +411,7 @@ public class KIController {
 							((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(), rRes.getAmount());
 						}
 
-					}catch(NullPointerException n){
-
-					}
+					}catch(NullPointerException n){}
 				}
 			}
 		}
@@ -430,6 +430,7 @@ public class KIController {
 				v=v2;
 			}
 		}
+
 		if(v!=null && v.getField().getUnits().size()>3) {
 			getGame().getSimulationController().moveUnits(v, place, v.getField().getUnits().size() - 3);
 		}

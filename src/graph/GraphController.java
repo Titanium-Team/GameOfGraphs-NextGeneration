@@ -10,53 +10,17 @@ import game.Queue;
 import ki.KIFraction;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 public class GraphController {
     private Graph graph = new Graph();
 
-    public GraphController() {
-
-        KIFraction fraction1 = new KIFraction("Independent", new Color(232, 77, 91));
-        GameOfGraphs.getGame().getPlayers().add(fraction1);
-
-        /*Vertex a = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(0),true));
-        Vertex c = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(1),true));
-
-        Vertex b = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction1 ,true));
-        KIFraction fraction2 = new KIFraction("KIplayer 1", Color.GREEN);
-        Vertex d = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
-        Vertex e = new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(fraction2,true));
-
-        graph.addVertex(a);
-        graph.addVertex(b);
-        graph.addVertex(c);
-        graph.addVertex(d);
-        graph.addVertex(e);
-
-        graph.addEdge(new Edge(new String[] { a.getID(), b.getID() }, 50));
-        graph.addEdge(new Edge(new String[] { b.getID(), c.getID() }, 50));
-        graph.addEdge(new Edge(new String[] { c.getID(), d.getID() }, 50));
-        graph.addEdge(new Edge(new String[] { d.getID(), a.getID() }, 50));
-        graph.addEdge(new Edge(new String[]{e.getID(),a.getID()},38));
-        graph.addEdge(new Edge(new String[]{e.getID(),c.getID()},38));
-
-
-
-        GameOfGraphs.getGame().getPlayers().add(fraction2);
-        /*for (int i = 0; i < 15; i++){
-            graph.addVertex(new Vertex(r.nextInt(10000000) + "", r.nextInt(1195)+40, r.nextInt(395)+40, GameOfGraphs.getGame().getFieldController().createField(GameOfGraphs.getGame().getPlayers().get(2),false)));
-        }
-        for (int j = 0; j < 12; j++){
-            graph.addEdge(new Edge(new String[] {graph.getVertices().get(r.nextInt(graph.getVertices().size())).getID(), graph.getVertices().get(r.nextInt(graph.getVertices().size())).getID()}, r.nextInt(50)+1));
-        }*/
-
-        graph.setWidth(1280);
-        graph.setHeight(500);
-    }
+    public GraphController() {}
 
     public Graph getGraph() {
         return graph;

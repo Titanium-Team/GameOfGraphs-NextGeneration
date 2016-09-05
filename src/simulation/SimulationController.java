@@ -16,9 +16,7 @@ public class SimulationController {
 
     private Player currentPlayer;
 
-    public SimulationController(Player player){
-        this.currentPlayer = player;
-    }
+    public SimulationController(){}
 
 
     public void run(Player currentPlayer){
@@ -406,8 +404,8 @@ public class SimulationController {
 
         while(aU != 0 && dU != 0){
 
-            int aURoll = rn.nextInt(aU) + 1;
-            int dUROLL = rn.nextInt(dU) + 1;
+            int aURoll = (rn.nextInt(9)+1) + rn.nextInt(aU) + 1;
+            int dUROLL = (rn.nextInt(9)+1) + rn.nextInt(dU) + 1;
             if (aURoll > dUROLL){
                 dU--;
             }else{
