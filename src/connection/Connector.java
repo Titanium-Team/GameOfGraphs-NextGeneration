@@ -141,9 +141,9 @@ public class Connector {
 
             if (players.size() == countPlayer){
                 statement.executeUpdate("UPDATE Games SET start=1 WHERE id=" + gameId);
-
-                return players.size()-countPlayer;
             }
+
+            return players.size()-countPlayer;
 
         } catch (SQLException e) {
             e.printStackTrace();

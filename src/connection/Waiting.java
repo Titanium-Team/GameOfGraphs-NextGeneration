@@ -15,6 +15,7 @@ import mapEditor.MapEditor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ConcurrentModificationException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -22,10 +23,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Waiting extends GameScene {
-    private int selectedOption = 0;
-    private final Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
-    private int left;
 
+    private int left;
+    private int selectedOption = 0;
+    private Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
     {
         this.options.put("Waiting for 0 players.", null);
         this.options.put("Exit", null);
@@ -38,16 +39,21 @@ public class Waiting extends GameScene {
         g.setBackground(Color.WHITE);
 
         int x = 0;
-        for(Map.Entry<String, Class<? extends GameScene>> entry : this.options.entrySet()) {
-            if(x == this.selectedOption) {
-                Image image = GameOfGraphs.getGame().getTextBuilder().toImage(entry.getKey(), 15);
-                g.drawImage(image, 640 - image.getWidth(null) / 2, 150 + x * 35, null);
-            } else {
-                Image image = GameOfGraphs.getGame().getTextBuilder().toImage(entry.getKey(), 10);
-                g.drawImage(image, 640 - image.getWidth(null) / 2, 150 + x * 35, null);
+        try {
+            for(Map.Entry<String, Class<? extends GameScene>> entry : this.options.entrySet()) {
+                if(x == this.selectedOption) {
+                    Image image = GameOfGraphs.getGame().getTextBuilder().toImage(entry.getKey(), 15);
+                    g.drawImage(image, 640 - image.getWidth(null) / 2, 150 + x * 35, null);
+                } else {
+                    Image image = GameOfGraphs.getGame().getTextBuilder().toImage(entry.getKey(), 10);
+                    g.drawImage(image, 640 - image.getWidth(null) / 2, 150 + x * 35, null);
+                }
+                x++;
             }
-            x++;
+        }catch (ConcurrentModificationException e){
+
         }
+
     }
 
     @Override
@@ -83,8 +89,15 @@ public class Waiting extends GameScene {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
             left = Connector.gameReady();
+
+            options = new LinkedHashMap<>();
+            {
+                this.options.put("Waiting for " + left + " players.", null);
+                this.options.put("Exit", null);
+            }
+
             if (Connector.gameStarted() || left == 0){
-                JOptionPane.showMessageDialog(null, "You are player: " + Connector.getMyPlayer().getName());
+                //JOptionPane.showMessageDialog(null, "You are player: " + Connector.getMyPlayer().getName());
 
                 Connector.setEnabledMutiplayer(true);
 
