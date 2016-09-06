@@ -7,8 +7,10 @@ import ki.KIFraction;
 import ki.Notification;
 import ki.Request;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static game.GameOfGraphs.getGame;
 
@@ -53,15 +55,27 @@ public class Player {
 
         //funktioniert  nicht/stackoverflow
         //return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().equals(vertex.getField().getPlayer())).collect(Collectors.toCollection(ArrayList::new));
-		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
-			for(Vertex v: getGame().getGraphController().getGraph().getVertices()){
-				if(v.getField().getPlayer().equals(this)){
-					vertices.add(v);
-				}
-			}
-	    return vertices;
-    }
+        ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+        for(Vertex v: getGame().getGraphController().getGraph().getVertices()){
+            if(v.getField().getPlayer().equals(this)){
+                vertices.add(v);
+            }
+        }
 
+        if(vertices.size()>=2 && this instanceof KIFraction && this.name.equalsIgnoreCase("Independent")){
+            int x = 1;
+            this.setName("KIPlayer " + x);
+	        Random r=new Random();
+            this.setColor(new Color(r.nextInt(255),r.nextInt(255),r.nextInt(255)));
+            for (Player p : getGame().getPlayers()) {
+                if (p.getName().equals(this.getName()) && p!=this) {
+                    x++;
+                    this.setName("KIPlayer " + x);
+                }
+            }
+        }
+        return vertices;
+    }
     @JsonIgnore
     public boolean isActive() {
         return !(this.getFields().isEmpty());
@@ -117,5 +131,13 @@ public class Player {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void setNotifications(ArrayList<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -93,14 +93,8 @@ public class KIFraction extends Player{
         properties.add(p);
     }
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public HashMap<Vertex,HashMap<Resources,Integer>> getGoals() {
         return goals;
     }
-
 
 }
