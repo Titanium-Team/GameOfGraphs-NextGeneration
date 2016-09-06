@@ -379,4 +379,8 @@ public class Connector {
     public static Player getMyPlayer() {
         return myPlayer;
     }
+
+    public static void setHost(boolean host) {
+        Connector.host = host;
+    }
 }

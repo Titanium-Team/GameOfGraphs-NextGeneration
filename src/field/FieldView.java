@@ -209,6 +209,7 @@ public class FieldView extends GameScene{
 
                 if (!Connector.isActive(Connector.getMyPlayer())){
                     E.getE().show(MenuView.class);
+                    Connector.setHost(false);
                     JOptionPane.showMessageDialog(null, "Du hast VERKACKT!!!!!!!!!!!!!!!!!");
                 }
             }
