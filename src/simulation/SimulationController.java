@@ -405,12 +405,13 @@ public class SimulationController {
 
         while(aU != 0 && dU != 0){
 
-            int aURoll = (rn.nextInt(9)+1) + rn.nextInt(aU) + 1;
-            int dUROLL = (rn.nextInt(9)+1) + rn.nextInt(dU) + 1;
+            int aURoll = (rn.nextInt(10)+1) + rn.nextInt(aU) + 1;
+            int dUROLL = (rn.nextInt(10)+1) + rn.nextInt(dU) + 1;
             if (aURoll > dUROLL){
                 dU--;
             }else{
                 aU--;
+                attackingUnits.remove(0);
             }
         }
 
@@ -429,6 +430,7 @@ public class SimulationController {
 
             vertex.getField().getUnits().clear();
             vertex.getField().setPlayer(attacker);
+            vertex.getField().getUnits().addAll(attackingUnits);
 
             attacker.getNotifications().add(new AttackNotification(defender, vertex, false, true));
             defender.getNotifications().add(new AttackNotification(attacker, vertex, true, false));
