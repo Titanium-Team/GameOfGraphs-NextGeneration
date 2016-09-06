@@ -143,7 +143,7 @@ public class Connector {
                 statement.executeUpdate("UPDATE Games SET start=1 WHERE id=" + gameId);
             }
 
-            return players.size()-countPlayer;
+            return (players.size() == 0 ? -1 : players.size())-countPlayer;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -281,7 +281,6 @@ public class Connector {
             return resultSet.getString("turn");
 
         } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         return null;

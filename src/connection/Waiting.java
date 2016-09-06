@@ -23,13 +23,37 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Waiting extends GameScene {
-
     private int left;
     private int selectedOption = 0;
     private Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
     {
         this.options.put("Waiting for 0 players.", null);
         this.options.put("Exit", null);
+    }
+
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    public Waiting() {
+        scheduler.scheduleAtFixedRate(() -> {
+            left = Connector.gameReady();
+
+            options = new LinkedHashMap<>();
+            {
+                this.options.put("Waiting for " + left + " players.", null);
+                this.options.put("Exit", null);
+            }
+
+            if (Connector.gameStarted() || left == 0){
+                //JOptionPane.showMessageDialog(null, "You are player: " + Connector.getMyPlayer().getName());
+
+                Connector.setEnabledMutiplayer(true);
+
+
+                GameOfGraphs.getGame().setCurrentPlayer(Connector.getCurrentPlayer());
+
+                E.getE().show(FieldView.class);
+            }
+        },0,500, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -85,28 +109,6 @@ public class Waiting extends GameScene {
             }
 
         });
-
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> {
-            left = Connector.gameReady();
-
-            options = new LinkedHashMap<>();
-            {
-                this.options.put("Waiting for " + left + " players.", null);
-                this.options.put("Exit", null);
-            }
-
-            if (Connector.gameStarted() || left == 0){
-                //JOptionPane.showMessageDialog(null, "You are player: " + Connector.getMyPlayer().getName());
-
-                Connector.setEnabledMutiplayer(true);
-
-
-                GameOfGraphs.getGame().setCurrentPlayer(Connector.getCurrentPlayer());
-
-                E.getE().show(FieldView.class);
-            }
-        },0,500, TimeUnit.MILLISECONDS);
     }
 
     @Override
