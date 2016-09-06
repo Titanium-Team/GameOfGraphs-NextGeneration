@@ -171,6 +171,9 @@ public class GraphDrawer {
             }else if (vertex.isMarkTarget()){
                 g.setColor(Color.GREEN);
                 g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
+            }else if (vertex.isMark()){
+                g.setColor(new Color(139, 69, 19));
+                g.drawOval(vertex.getX() - graph.getRadius(), vertex.getY() - graph.getRadius(), graph.getRadius()*2, graph.getRadius()*2);
             }
             g.setStroke(new BasicStroke(1));
         }

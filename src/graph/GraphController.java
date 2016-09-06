@@ -46,6 +46,7 @@ public class GraphController {
                 if (add) {
                     players.add(v.getField().getPlayer());
                 }
+
                 add = true;
             }
             GameOfGraphs.getGame().setPlayers(players);

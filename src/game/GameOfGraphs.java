@@ -1,5 +1,6 @@
 package game;
 
+import connection.Connector;
 import field.FieldController;
 import game.loading.LoadingManager;
 import game.sprite.Textures;
@@ -79,6 +80,10 @@ public class GameOfGraphs {
 		if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
 			GameOfGraphs.getGame().nextTurn();
 		}
+
+		if (Connector.isEnabledMutiplayer()) {
+			Connector.nextTurn(getCurrentPlayer().getName(), getGraphController().getGraph());
+		}
 	}
 
     /**
@@ -135,12 +140,17 @@ public class GameOfGraphs {
 		return this.players.get(this.currentPlayer);
 	}
 
-    /**
-     * Setzt den aktuellen Spieler.
-     * @param player
-     */
-	public void setCurrentPlayer(Player player) {
-		this.players.set(getPlayerIndex(player), player);
+	/**
+	 * Setzt den aktuellen Spieler.
+	 * @param name
+	 */
+	public void setCurrentPlayer(String name) {
+		for (Player p : players){
+			if (p.getName().equals(name)){
+				currentPlayer = getPlayerIndex(p);
+			}
+		}
+
 	}
 
     /**
