@@ -405,8 +405,8 @@ public class SimulationController {
 
         while(aU != 0 && dU != 0){
 
-            int aURoll = (rn.nextInt(9)+1) + rn.nextInt(aU) + 1;
-            int dUROLL = (rn.nextInt(9)+1) + rn.nextInt(dU) + 1;
+            int aURoll = (rn.nextInt(10)+1) + rn.nextInt(aU) + 1;
+            int dUROLL = (rn.nextInt(10)+1) + rn.nextInt(dU) + 1;
             if (aURoll > dUROLL){
                 dU--;
             }else{
