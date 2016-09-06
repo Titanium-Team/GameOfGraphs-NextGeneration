@@ -9,7 +9,8 @@ import ki.Request;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+
+import static game.GameOfGraphs.getGame;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -50,43 +51,21 @@ public class Player {
     @JsonIgnore
     public ArrayList<Vertex> getFields() {
 
-        return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().getName().equals(vertex.getField().getPlayer().getName())).collect(Collectors.toCollection(ArrayList::new));
-
+        //funktioniert  nicht/stackoverflow
+        //return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().equals(vertex.getField().getPlayer())).collect(Collectors.toCollection(ArrayList::new));
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+			for(Vertex v: getGame().getGraphController().getGraph().getVertices()){
+				if(v.getField().getPlayer().equals(this)){
+					vertices.add(v);
+				}
+			}
+	    return vertices;
     }
 
     @JsonIgnore
     public boolean isActive() {
         return !(this.getFields().isEmpty());
     }
-
-
-    /*public boolean requestAlliance(Player p){
-        if(p!=null) {
-            if(p instanceof KIFraction){
-                if(((KIFraction) p).getProperties().contains(Property.DISTRUSTFUL)){
-                    return false;
-                }else{
-                    if(r.nextInt(100)<=((KIFraction) p).getTrust().get(this)){
-                        p.getAlliances().add(this);
-                        this.alliances.add(p);
-                        return true;
-                    }
-                }
-            }else {
-                JPopupMenu menu = new JPopupMenu();
-                menu.add(new JLabel(this.getName() + " wants to make an alliance with you!"));
-                JButton acceptButton=new JButton("Accept");
-                JButton denyButton =new JButton("Deny");
-                menu.add(acceptButton);
-                menu.add(denyButton);
-            }
-        }
-        return false;
-    }
-
-    public ArrayList<Player> getAlliances() {
-        return alliances;
-    }*/
 
 
     public void requestAlliance(Player p){

@@ -5,7 +5,6 @@ import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.utils.Version;
 import field.FieldView;
 import game.GameOfGraphs;
-import game.MapSelectView;
 import game.MenuView;
 import game.Player;
 import ki.KIFraction;
@@ -100,7 +99,6 @@ public class Main {
         e.addScene(new MenuView());
         e.addScene(new FieldView());
         e.addScene(new MapEditor());
-        e.addScene(new MapSelectView());
 
         e.show(MenuView.class);
 

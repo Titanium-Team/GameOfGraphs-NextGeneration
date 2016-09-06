@@ -4,6 +4,9 @@ import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
 import de.SweetCode.e.rendering.layers.Layers;
+import field.FieldView;
+import graph.Graph;
+import ki.KIFraction;
 import mapEditor.MapEditor;
 
 import java.awt.*;
@@ -17,7 +20,7 @@ public class MenuView extends GameScene {
     private final Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
 
     {
-        this.options.put("Play", MapSelectView.class);
+        this.options.put("Play", null);
         this.options.put("Map Editor", MapEditor.class);
         this.options.put("Exit", null);
     }
@@ -71,12 +74,23 @@ public class MenuView extends GameScene {
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                 Class<?> clazz = this.options.get(this.options.keySet().toArray(new String[this.options.size()])[this.selectedOption]);
 
-                if(clazz == null) {
-                    System.exit(1);
-                    return;
-                }
+                if(this.selectedOption == 0) {
+                    Object[] graph = GameOfGraphs.getGame().getGraphController().load();
 
-                E.getE().show(clazz);
+                    if(!(graph == null)) {
+                        GameOfGraphs.getGame().getGraphController().setGraph((Graph) graph[0], true);
+
+                        E.getE().show(FieldView.class);
+                        if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
+                            GameOfGraphs.getGame().nextTurn();
+                        }
+                    }
+                } else if(this.selectedOption == 1) {
+                    GameOfGraphs.getGame().getGraphController().setGraph(new Graph(), false);
+                    E.getE().show(clazz);
+                } else if(this.selectedOption == 2) {
+                    System.exit(1);
+                }
 
             }
 

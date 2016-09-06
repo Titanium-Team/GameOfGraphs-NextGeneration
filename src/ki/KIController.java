@@ -3,23 +3,22 @@ package ki;
 import field.buildings.Buildings;
 import field.recipe.Recipe;
 import field.recipe.RecipeResource;
-import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
 import game.Player;
 import game.Queue;
-import graph.Graph;
-import graph.List;
 import graph.Vertex;
+import jdk.nashorn.internal.scripts.JO;
 import simulation.Unit;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
-import static field.resource.Resources.FOOD;
-import static field.resource.Resources.IRON;
-import static field.resource.Resources.POPULATION;
-import static game.GameOfGraphs.*;
+import static field.resource.Resources.*;
+import static game.GameOfGraphs.getGame;
+
+import game.Queue;
 
 /**
  * Created by Tim on 08.06.2016.
@@ -42,6 +41,12 @@ public class KIController {
 		KIFraction current;
 		ArrayList<Vertex> fields;
 
+		if(!currentPlayer.isActive()){
+			for(Notification n:currentPlayer.getNotifications()){
+				JOptionPane.showMessageDialog(null,n.getDisplayMessage());
+			}
+			getGame().nextTurn();
+		}
 		allFields=currentPlayer.getFields();
 		for(Vertex v1:allFields) {
 			//RebellionNotification
@@ -53,6 +58,7 @@ public class KIController {
 				}
 				v1.getField().getResources().put(POPULATION, v1.getField().getResources().get(POPULATION) - rebels.size());
 				getGame().getSimulationController().fight(null, v1, rebels);
+				if(rebelPlayer.isActive())getGame().getPlayers().add(rebelPlayer);
 				if(currentPlayer.isActive()) {
 					currentPlayer.getNotifications().add(new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1));
 					Notification toRemove = null;
@@ -65,14 +71,15 @@ public class KIController {
 					}
 					currentPlayer.getNotifications().remove(toRemove);
 				}else{
+					if(!(currentPlayer instanceof KIFraction))JOptionPane.showMessageDialog(null,new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1).getDisplayMessage());
 					getGame().nextTurn();
 				}
 			}
 
 			if (currentPlayer instanceof KIFraction && getGame().getPlayers().contains(currentPlayer)) {
+				//check goals
 				current = (KIFraction)currentPlayer;
 				getGame().getSimulationController().run(current);
-				getGame().getFieldController().run(current);
 				if (current.getGoals().containsKey(v1)) {
 					Iterator<Map.Entry<Resources, Integer>> aIterator = current.getGoals().get(v1).entrySet().iterator();
 					while (aIterator.hasNext()) {
@@ -82,12 +89,23 @@ public class KIController {
 						if (v1.getField().getResources().get(entry.getKey()) >= entry.getValue()) {
 							aIterator.remove();
 						}
-
 					}
 				} else {
-					current.getGoals().put(v1, new HashMap<Resources, Integer>());
+					current.getGoals().putIfAbsent(v1, new HashMap<Resources, Integer>());
 				}
+
+				if (v1.getField().getBuildings().get(Buildings.FARM)==0 || v1.getField().getResources().get(Resources.FOOD) < v1.getField().getResources().get(POPULATION) || current.getGoals().containsKey(v1) && current.getGoals().get(v1).containsKey(FOOD)) {
+					this.buildIfBuildable(Buildings.FARM, v1);
+				}
+				if(current.getGoals().get(v1).containsKey(IRON) && v1.getField().getLocalResource().equals(IRON) || current.getGoals().get(v1).containsKey(STONE)){
+					this.buildIfBuildable(Buildings.MINE,v1);
+				}
+
 				if (!current.isFraction()) {
+					if(!current.getName().equals("Independent")){
+						current.setName("Independent");
+						current.setColor(new Color(232, 77, 91));
+					}
 					if (!current.getProperties().contains(Property.PEACEFUL)) {
 						int minUnits = Integer.MAX_VALUE;
 						if (current.getProperties().contains(Property.AGGRESSIVE)) {
@@ -114,26 +132,30 @@ public class KIController {
 							if (goal != null) {
 								getGame().getSimulationController().moveUnits(v1, goal, amount);
 							}
-						} else {
+						} else if(minUnits<Integer.MAX_VALUE) {
 							if(v1.getField().getLocalResource().equals(IRON)) {
 								this.buildIfBuildable(Buildings.UNIT, v1);
 							}
 						}
 					}
 				} else if (current.isFraction()) {
+					if(current.getName().equalsIgnoreCase("independent")){
+						int x = 1;
+						current.setName("KIPlayer " + x);
+						current.setColor(new Color(r.nextInt(255),r.nextInt(255),r.nextInt(255)));
+						for (Player p : getGame().getPlayers()) {
+							if (p.getName().equals(current.getName())) {
+								x++;
+								current.setName("KIPlayer " + x);
+							}
+						}
+					}
 					if (r.nextInt(100) <= current.getDevelopingChance()) {
 						ArrayList<Property> options = Property.getMissingProperties(current.getProperties());
 						if (!options.isEmpty()) {
 							int chance = r.nextInt(options.size());
 							current.addProperty(Property.values()[chance]);
 							current.setDevelopingChance(r.nextInt(5*currentPlayer.getFields().size()));
-						}
-					}
-					if (v1.getField().getResources().get(Resources.FOOD) < v1.getField().getResources().get(POPULATION) || current.getGoals().containsKey(v1) && current.getGoals().get(v1).containsKey(FOOD)) {
-						if (v1.getField().getBuildings().get(Buildings.FARM) > 0) {
-							this.buildIfBuildable(Buildings.WINDMILL, v1);
-						} else {
-							this.buildIfBuildable(Buildings.FARM, v1);
 						}
 					}
 					if (current.getProperties().contains(Property.AGGRESSIVE)) {
@@ -153,7 +175,6 @@ public class KIController {
 								this.buildIfBuildable(Buildings.UNIT, v1);
 								this.buildIfBuildable(Buildings.MINE, v1);
 							}
-
 						}
 					}
 					if (current.getProperties().contains(Property.DIPLOMATIC)) {
@@ -208,7 +229,7 @@ public class KIController {
 						Request req = current.getRequests().front();
 						if (req instanceof AllianceRequest) {
 							if (!current.getProperties().contains(Property.DISTRUSTFUL)) {
-								int trust = current.getTrust().get(req.getParent());
+								int trust = (current.getTrust().containsKey(req.getParent()) ? current.getTrust().get(req.getParent()) : 1);
 								if (current.getProperties().contains(Property.DIPLOMATIC)) {
 									if (trust <= 90) {
 										trust += 10;
@@ -228,32 +249,41 @@ public class KIController {
 							HashMap<Resources, Integer> offRes = ((TradeRequest) req).getOfferedResources();
 							HashMap<Resources, Integer> reqRes = ((TradeRequest) req).getRequestedResources();
 							Vertex place = ((TradeRequest) req).getPlace();
-							HashMap<Resources, Integer> res = current.getGoals().get(place);
-							boolean isGoal = false;
-							int minTrust = 60;
-							for (Map.Entry<Resources, Integer> e : reqRes.entrySet()) {
-								if (!isGoal) {
-									if (res.containsKey(e.getKey())) {
-										isGoal = true;
-									}
-								}
-							}
-							if (!isGoal) {
-								for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
-									if (res.containsKey(e.getKey())) {
-										minTrust -= 10;
-										if (e.getValue() >= res.get(e.getKey())) {
-											minTrust -= 5;
+							Vertex root= ((TradeRequest) req).getRoot();
+							HashMap<Resources, Integer> res = current.getGoals().get(root);
+							if(res!=null) {
+								boolean isGoal = false;
+								int minTrust = 60;
+								for (Map.Entry<Resources, Integer> e : reqRes.entrySet()) {
+									if (!isGoal) {
+										if (res != null && res.containsKey(e.getKey())) {
+											isGoal = true;
 										}
 									}
 								}
-								if (current.getTrust().get(req.getParent()) >= r.nextInt(minTrust) + 1) {
-									req.accept();
+
+								if (!isGoal) {
+									for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
+										if (res.containsKey(e.getKey())) {
+											minTrust -= 10;
+											if (e.getValue() >= res.get(e.getKey())) {
+												minTrust -= 5;
+											}
+										}else if(e.getValue()<=0){
+											minTrust=Integer.MAX_VALUE;
+
+										}
+									}
+									if (current.getTrust().get(req.getParent()) >= r.nextInt(minTrust) + 1) {
+										req.accept();
+									} else {
+										req.decline();
+									}
 								} else {
 									req.decline();
 								}
-							} else {
-								req.decline();
+							}else{
+								current.getGoals().put(v1,new HashMap<>());
 							}
 						} else if (req instanceof HelpRequest) {
 							if (current.getAlliances().contains(req.getParent())) {
@@ -269,10 +299,10 @@ public class KIController {
 						current.getRequests().dequeue();
 					}
 
-					for (Notification i : current.getNotifications()) {
+					for (Notification n : current.getNotifications()) {
 						if (current != null) {
-							if (i instanceof AttackNotification) {
-								AttackNotification attackNotification = (AttackNotification) i;
+							if (n instanceof AttackNotification) {
+								AttackNotification attackNotification = (AttackNotification) n;
 								Vertex place = attackNotification.getPlace();
 								Player opponent = attackNotification.getOpponent();
 								if (attackNotification.isDefense()) {
@@ -281,7 +311,7 @@ public class KIController {
 										if (!current.getAlliances().isEmpty()) {
 											Vertex root = null;
 											for(Vertex v:getGame().getGraphController().getGraph().getNeighbours(v1)){
-												if(v.getField().getPlayer().equals(((AttackNotification) i).getOpponent())){
+												if(v.getField().getPlayer().equals(((AttackNotification) n).getOpponent())){
 													root=v;
 												}
 											}
@@ -296,11 +326,11 @@ public class KIController {
 											}
 										}
 									} else {
+										current.getGoals().remove(attackNotification.getPlace());
 										if (current.getFields().size() == 1) {
 											current.setName("independent");
 										} else if (current.getFields().isEmpty()) {
-											deletePlayer(current);
-											current = null;
+											getGame().nextTurn();
 										} else {
 											reclaim(current, place);
 										}
@@ -322,14 +352,13 @@ public class KIController {
 									this.buildIfBuildable(Buildings.UNIT, place);
 								}
 
-							} else if (i instanceof RebellionNotification) {
-								Vertex place = ((RebellionNotification) i).getPlace();
-								if (((RebellionNotification) i).isSuccessful()) {
+							} else if (n instanceof RebellionNotification) {
+								Vertex place = ((RebellionNotification) n).getPlace();
+								if (((RebellionNotification) n).isSuccessful()) {
 									if (current.getFields().size() == 1) {
 										current.setName("independent");
 									} else if (current.getFields().isEmpty()) {
-										deletePlayer(current);
-										current = null;
+										getGame().nextTurn();
 									} else {
 										this.reclaim(current, place);
 									}
@@ -377,9 +406,12 @@ public class KIController {
 			Recipe recipe=b.getRecipe();
 			for(RecipeResource rRes:recipe.getItemIngredients()){
 				if(v.getField().getResources().get(rRes.getResource())<rRes.getAmount()){
-					if(!((KIFraction) v.getField().getPlayer()).getGoals().get(v).containsKey(rRes) || ((KIFraction) v.getField().getPlayer()).getGoals().get(v).get(rRes)<rRes.getAmount()) {
-						((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(),rRes.getAmount());
-					}
+					try {
+						if (!((KIFraction) v.getField().getPlayer()).getGoals().get(v).containsKey(rRes) || ((KIFraction) v.getField().getPlayer()).getGoals().get(v).get(rRes) < rRes.getAmount()) {
+							((KIFraction) v.getField().getPlayer()).getGoals().get(v).put(rRes.getResource(), rRes.getAmount());
+						}
+
+					}catch(NullPointerException n){}
 				}
 			}
 		}
@@ -398,7 +430,8 @@ public class KIController {
 				v=v2;
 			}
 		}
-		if(v.getField().getUnits().size()>3) {
+
+		if(v!=null && v.getField().getUnits().size()>3) {
 			getGame().getSimulationController().moveUnits(v, place, v.getField().getUnits().size() - 3);
 		}
 	}

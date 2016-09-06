@@ -1,6 +1,5 @@
 package ki;
 
-import field.resource.Resource;
 import field.resource.Resources;
 import game.Player;
 import graph.Vertex;
@@ -19,6 +18,7 @@ public class TradeRequest extends Request {
 
 	private HashMap<Resources,Integer> offeredResources, requestedResources;
 	private Vertex place;
+	private Vertex root;
 
 	public TradeRequest(Player parent, HashMap<Resources, Integer> offeredResources, HashMap<Resources, Integer> requestedResources, Vertex place, Player recipient) {
 		super(parent,recipient);
@@ -42,13 +42,13 @@ public class TradeRequest extends Request {
 	@Override
 	void decline() {
 		if(this.getParent() instanceof KIFraction){
-			((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())-5);
+			//((KIFraction) this.getParent()).getTrust().put(this.getRecipient(),((KIFraction) this.getParent()).getTrust().get(this.getRecipient())-5);
 		}
 	}
 
 	@Override
 	void accept() {
-		Vertex root = null;
+		root = null;
 		for (Vertex v : getGame().getGraphController().getGraph().getNeighbours(place)) {
 			if (root==null && v.getField().getPlayer().equals(getRecipient())) {
 				root=v;
@@ -136,5 +136,9 @@ public class TradeRequest extends Request {
 		}
 		result+="in return.";
 		return result;
+	}
+
+	public Vertex getRoot() {
+		return root;
 	}
 }
