@@ -72,7 +72,7 @@ public class Main {
 
             @Override
             public boolean isDecorated() {
-                return false;
+                return true;
             }
 
             @Override

@@ -8,6 +8,7 @@ import game.GameOfGraphs;
 import game.Player;
 import game.Queue;
 import graph.Vertex;
+import jdk.nashorn.internal.scripts.JO;
 import simulation.Unit;
 
 import javax.swing.*;
@@ -40,6 +41,12 @@ public class KIController {
 		KIFraction current;
 		ArrayList<Vertex> fields;
 
+		if(!currentPlayer.isActive()){
+			for(Notification n:currentPlayer.getNotifications()){
+				JOptionPane.showMessageDialog(null,n.getDisplayMessage());
+			}
+			getGame().nextTurn();
+		}
 		allFields=currentPlayer.getFields();
 		for(Vertex v1:allFields) {
 			//RebellionNotification
@@ -65,14 +72,14 @@ public class KIController {
 					currentPlayer.getNotifications().remove(toRemove);
 				}else{
 					if(!(currentPlayer instanceof KIFraction))JOptionPane.showMessageDialog(null,new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1).getDisplayMessage());
-					//getGame().nextTurn();
+					getGame().nextTurn();
 				}
 			}
 
 			if (currentPlayer instanceof KIFraction && getGame().getPlayers().contains(currentPlayer)) {
+				//check goals
 				current = (KIFraction)currentPlayer;
 				getGame().getSimulationController().run(current);
-				getGame().getFieldController().run(current);
 				if (current.getGoals().containsKey(v1)) {
 					Iterator<Map.Entry<Resources, Integer>> aIterator = current.getGoals().get(v1).entrySet().iterator();
 					while (aIterator.hasNext()) {
@@ -82,23 +89,23 @@ public class KIController {
 						if (v1.getField().getResources().get(entry.getKey()) >= entry.getValue()) {
 							aIterator.remove();
 						}
-
 					}
 				} else {
-					current.getGoals().put(v1, new HashMap<Resources, Integer>());
+					current.getGoals().putIfAbsent(v1, new HashMap<Resources, Integer>());
 				}
-				if (v1.getField().getResources().get(Resources.FOOD) < v1.getField().getResources().get(POPULATION) || current.getGoals().containsKey(v1) && current.getGoals().get(v1).containsKey(FOOD)) {
-					if (v1.getField().getBuildings().get(Buildings.FARM) > 0) {
-						this.buildIfBuildable(Buildings.WINDMILL, v1);
-					} else {
-						this.buildIfBuildable(Buildings.FARM, v1);
-					}
+
+				if (v1.getField().getBuildings().get(Buildings.FARM)==0 || v1.getField().getResources().get(Resources.FOOD) < v1.getField().getResources().get(POPULATION) || current.getGoals().containsKey(v1) && current.getGoals().get(v1).containsKey(FOOD)) {
+					this.buildIfBuildable(Buildings.FARM, v1);
 				}
-				if(current.getGoals().get(v1).containsKey(IRON) && v1.getField().getLocalResource().equals(IRON)){
+				if(current.getGoals().get(v1).containsKey(IRON) && v1.getField().getLocalResource().equals(IRON) || current.getGoals().get(v1).containsKey(STONE)){
 					this.buildIfBuildable(Buildings.MINE,v1);
 				}
 
 				if (!current.isFraction()) {
+					if(!current.getName().equals("Independent")){
+						current.setName("Independent");
+						current.setColor(new Color(232, 77, 91));
+					}
 					if (!current.getProperties().contains(Property.PEACEFUL)) {
 						int minUnits = Integer.MAX_VALUE;
 						if (current.getProperties().contains(Property.AGGRESSIVE)) {
@@ -244,31 +251,39 @@ public class KIController {
 							Vertex place = ((TradeRequest) req).getPlace();
 							Vertex root= ((TradeRequest) req).getRoot();
 							HashMap<Resources, Integer> res = current.getGoals().get(root);
-							boolean isGoal = false;
-							int minTrust = 60;
-							for (Map.Entry<Resources, Integer> e : reqRes.entrySet()) {
-								if (!isGoal) {
-									if (res!=null && res.containsKey(e.getKey())) {
-										isGoal = true;
-									}
-								}
-							}
-							if (!isGoal && res != null) {
-								for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
-									if (res.containsKey(e.getKey())) {
-										minTrust -= 10;
-										if (e.getValue() >= res.get(e.getKey())) {
-											minTrust -= 5;
+							if(res!=null) {
+								boolean isGoal = false;
+								int minTrust = 60;
+								for (Map.Entry<Resources, Integer> e : reqRes.entrySet()) {
+									if (!isGoal) {
+										if (res != null && res.containsKey(e.getKey())) {
+											isGoal = true;
 										}
 									}
 								}
-								if (current.getTrust().get(req.getParent()) >= r.nextInt(minTrust) + 1) {
-									req.accept();
+
+								if (!isGoal) {
+									for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
+										if (res.containsKey(e.getKey())) {
+											minTrust -= 10;
+											if (e.getValue() >= res.get(e.getKey())) {
+												minTrust -= 5;
+											}
+										}else if(e.getValue()<=0){
+											minTrust=Integer.MAX_VALUE;
+
+										}
+									}
+									if (current.getTrust().get(req.getParent()) >= r.nextInt(minTrust) + 1) {
+										req.accept();
+									} else {
+										req.decline();
+									}
 								} else {
 									req.decline();
 								}
-							} else {
-								req.decline();
+							}else{
+								current.getGoals().put(v1,new HashMap<>());
 							}
 						} else if (req instanceof HelpRequest) {
 							if (current.getAlliances().contains(req.getParent())) {
@@ -284,10 +299,10 @@ public class KIController {
 						current.getRequests().dequeue();
 					}
 
-					for (Notification i : current.getNotifications()) {
+					for (Notification n : current.getNotifications()) {
 						if (current != null) {
-							if (i instanceof AttackNotification) {
-								AttackNotification attackNotification = (AttackNotification) i;
+							if (n instanceof AttackNotification) {
+								AttackNotification attackNotification = (AttackNotification) n;
 								Vertex place = attackNotification.getPlace();
 								Player opponent = attackNotification.getOpponent();
 								if (attackNotification.isDefense()) {
@@ -296,7 +311,7 @@ public class KIController {
 										if (!current.getAlliances().isEmpty()) {
 											Vertex root = null;
 											for(Vertex v:getGame().getGraphController().getGraph().getNeighbours(v1)){
-												if(v.getField().getPlayer().equals(((AttackNotification) i).getOpponent())){
+												if(v.getField().getPlayer().equals(((AttackNotification) n).getOpponent())){
 													root=v;
 												}
 											}
@@ -311,11 +326,11 @@ public class KIController {
 											}
 										}
 									} else {
+										current.getGoals().remove(attackNotification.getPlace());
 										if (current.getFields().size() == 1) {
 											current.setName("independent");
 										} else if (current.getFields().isEmpty()) {
-											deletePlayer(current);
-											current = null;
+											getGame().nextTurn();
 										} else {
 											reclaim(current, place);
 										}
@@ -337,14 +352,13 @@ public class KIController {
 									this.buildIfBuildable(Buildings.UNIT, place);
 								}
 
-							} else if (i instanceof RebellionNotification) {
-								Vertex place = ((RebellionNotification) i).getPlace();
-								if (((RebellionNotification) i).isSuccessful()) {
+							} else if (n instanceof RebellionNotification) {
+								Vertex place = ((RebellionNotification) n).getPlace();
+								if (((RebellionNotification) n).isSuccessful()) {
 									if (current.getFields().size() == 1) {
 										current.setName("independent");
 									} else if (current.getFields().isEmpty()) {
-										deletePlayer(current);
-										current = null;
+										getGame().nextTurn();
 									} else {
 										this.reclaim(current, place);
 									}
@@ -416,10 +430,9 @@ public class KIController {
 				v=v2;
 			}
 		}
-		if(!(v == null)) {
-			if (v.getField().getUnits().size() > 3) {
-				getGame().getSimulationController().moveUnits(v, place, v.getField().getUnits().size() - 3);
-			}
+
+		if(v!=null && v.getField().getUnits().size()>3) {
+			getGame().getSimulationController().moveUnits(v, place, v.getField().getUnits().size() - 3);
 		}
 	}
 

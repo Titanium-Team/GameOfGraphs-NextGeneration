@@ -73,11 +73,8 @@ public class GameOfGraphs {
 			}
         }
 
-        LinkedList<Player> tmp = new LinkedList<>(this.players);
         this.simulationController.run(this.getCurrentPlayer());
         this.kiController.run(this.getCurrentPlayer());
-        this.players = tmp;
-
 
 		if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
 			GameOfGraphs.getGame().nextTurn();

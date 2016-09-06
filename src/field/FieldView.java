@@ -298,7 +298,7 @@ public class FieldView extends GameScene{
             g.setColor(Color.BLACK);
             g.drawString("OWNER: " + this.currentField.getPlayer().getName(), 20, 700);
 
-            g.drawString("ID:" + this.currentVertex.getID(), 120, 700);
+            g.drawString("ID:" + this.currentVertex.getID(), 320, 560);
 
             g.setColor(Color.LIGHT_GRAY);
 

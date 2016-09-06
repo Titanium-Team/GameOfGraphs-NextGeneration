@@ -10,6 +10,8 @@ import ki.Request;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static game.GameOfGraphs.getGame;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
@@ -49,18 +51,15 @@ public class Player {
     @JsonIgnore
     public ArrayList<Vertex> getFields() {
 
-        ArrayList<Vertex> vertices = new ArrayList<>();
-
-        GameOfGraphs.getGame().getGraphController().getGraph().getVertices().forEach(e -> {
-
-            if(e.getField().getPlayer().getName().equals(this.getName())) {
-                vertices.add(e);
+        //funktioniert  nicht/stackoverflow
+        //return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().equals(vertex.getField().getPlayer())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+        for(Vertex v: getGame().getGraphController().getGraph().getVertices()){
+            if(v.getField().getPlayer().equals(this)){
+                vertices.add(v);
             }
-
-        });
-
+        }
         return vertices;
-
     }
 
     @JsonIgnore
