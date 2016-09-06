@@ -219,8 +219,11 @@ public class MapEditor extends GameScene{
 
         owner = new DropDownMenu<Player>(this, new ILocation(375, 555), new LinkedList<Player>(){{
             for (Player player:GameOfGraphs.getGame().getPlayers()){
-                add(player);
+                if (!(player instanceof KIFraction)) {
+                    add(player);
+                }
             }
+            add(new Player("Independent", null));
             add(new Player("add New Player", null));
         }}, (component, value) -> {
             if (value.getName().equals("add New Player")){
