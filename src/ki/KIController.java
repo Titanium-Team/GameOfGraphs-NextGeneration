@@ -37,7 +37,11 @@ public class KIController {
 	 * Dabei werden die Abl?ufe auf diesen Feldern anhand diverser Eigenschaften gesteuert und sowohl Benachrichtigungen als auch Anfragen bearbeitet;
 	 */
 	public void run(Player currentPlayer){
-
+		for (Vertex vertex :getGame().getGraphController().getGraph().getVertices()) {
+			if(!getGame().getPlayers().contains(vertex.getField().getPlayer())){
+				getGame().getPlayers().add(vertex.getField().getPlayer());
+			}
+		}
 		KIFraction current;
 		ArrayList<Vertex> fields;
 
@@ -58,7 +62,9 @@ public class KIController {
 				}
 				v1.getField().getResources().put(POPULATION, v1.getField().getResources().get(POPULATION) - rebels.size());
 				getGame().getSimulationController().fight(null, v1, rebels);
-				if(rebelPlayer.isActive())getGame().getPlayers().add(rebelPlayer);
+				if(rebelPlayer.isActive()){
+					getGame().getPlayers().add(rebelPlayer);
+				}
 				if(currentPlayer.isActive()) {
 					currentPlayer.getNotifications().add(new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1));
 					Notification toRemove = null;
@@ -76,9 +82,12 @@ public class KIController {
 				}
 			}
 
-			if (currentPlayer instanceof KIFraction && getGame().getPlayers().contains(currentPlayer)) {
+			if (currentPlayer instanceof KIFraction) {
 				//check goals
 				current = (KIFraction)currentPlayer;
+				if(!getGame().getPlayers().contains(current) && !current.getFields().isEmpty()){
+					getGame().getPlayers().add(current);
+				}
 				getGame().getSimulationController().run(current);
 				if (current.getGoals().containsKey(v1)) {
 					Iterator<Map.Entry<Resources, Integer>> aIterator = current.getGoals().get(v1).entrySet().iterator();
@@ -114,14 +123,14 @@ public class KIController {
 							} else {
 								minUnits = 2;
 							}
-						} else if (r.nextInt(3) == 1) {
+						} else if (r.nextInt(2) == 1) {
 							minUnits = 3;
 						}
 						if (minUnits<Integer.MAX_VALUE && v1.getField().getUnits().size() >= minUnits+1) {
 							Vertex goal = null;
 							int amount = minUnits;
 							ArrayList<Vertex> neighbors = getGame().getGraphController().getGraph().getNeighbours(v1);
-							if (current.getProperties().contains(Property.AGGRESSIVE)) {
+							if (current.getProperties().contains(Property.AGGRESSIVE) && v1.getField().getUnits().size()-2>amount) {
 								amount = v1.getField().getUnits().size()-2;
 							}
 							for (Vertex v : neighbors) {
@@ -133,13 +142,11 @@ public class KIController {
 								getGame().getSimulationController().moveUnits(v1, goal, amount);
 							}
 						} else if(minUnits<Integer.MAX_VALUE) {
-							if(v1.getField().getLocalResource().equals(IRON)) {
-								this.buildIfBuildable(Buildings.UNIT, v1);
-							}
+							this.buildIfBuildable(Buildings.UNIT, v1);
 						}
 					}
 				} else if (current.isFraction()) {
-					if(current.getName().equalsIgnoreCase("independent")){
+					if(current.getName().equalsIgnoreCase("Independent")){
 						int x = 1;
 						current.setName("KIPlayer " + x);
 						current.setColor(new Color(r.nextInt(255),r.nextInt(255),r.nextInt(255)));
@@ -154,7 +161,7 @@ public class KIController {
 						ArrayList<Property> options = Property.getMissingProperties(current.getProperties());
 						if (!options.isEmpty()) {
 							int chance = r.nextInt(options.size());
-							current.addProperty(Property.values()[chance]);
+							current.addProperty(options.get(chance));
 							current.setDevelopingChance(r.nextInt(5*currentPlayer.getFields().size()));
 						}
 					}
@@ -181,7 +188,7 @@ public class KIController {
 						int max = 0;
 						Player partner = null;
 						for (Player p : GameOfGraphs.getGame().getPlayers()) {
-							if (!(partner instanceof KIFraction) || ((KIFraction) partner).isFraction()) {
+							if (!(p instanceof KIFraction) || ((KIFraction) p).isFraction() && p!=current) {
 								if (p.getFields().size() > max) {
 									partner = p;
 									max = partner.getFields().size();
@@ -195,13 +202,15 @@ public class KIController {
 					}
 					current.getProperties().add(Property.ECONOMIC);
 					if (current.getProperties().contains(Property.ECONOMIC)) {
-						Player partner = GameOfGraphs.getGame().getPlayers().get(0);
+						Player partner = null;
 						int maxTrust = -1;
 						for (Vertex vertex : getGame().getGraphController().getGraph().getNeighbours(v1)) {
-							if (!vertex.getField().getPlayer().equals(current) && current.getTrust().containsKey(vertex.getField().getPlayer()) && current.getTrust().get(vertex.getField().getPlayer()) > maxTrust) {
-								if (!(partner instanceof KIFraction) || ((KIFraction) partner).isFraction()) {
-									partner = vertex.getField().getPlayer();
-									maxTrust = current.getTrust().get(vertex.getField().getPlayer());
+							if (vertex.getField().getPlayer()!=current && current.getTrust().containsKey(vertex.getField().getPlayer()) && current.getTrust().get(vertex.getField().getPlayer()) > maxTrust || partner==null) {
+								if (!(vertex.getField().getPlayer() instanceof KIFraction) || ((KIFraction) vertex.getField().getPlayer()).isFraction()) {
+									if(current!=null &&current.getTrust()!=null && partner!=current&& partner !=null) {
+										partner = vertex.getField().getPlayer();
+										maxTrust = current.getTrust().get(partner);
+									}
 								}
 							}
 						}
@@ -215,11 +224,19 @@ public class KIController {
 									greed--;
 								}
 							}
+							if(wanted.isEmpty()){
+								if(r.nextBoolean()){
+									wanted.put(POPULATION,r.nextInt(2)+1);
+								}else{
+									wanted.put(IRON,r.nextInt(2)+1);
+								}
+							}
 							res = ((HashMap<Resources, Integer>) v1.getField().getResources());
 							int generosity = r.nextInt(res.entrySet().size() - goals.entrySet().size()) + 1;
 							for (Map.Entry<Resources, Integer> e : res.entrySet()) {
 								if (generosity > 0 && (!goals.containsKey(e.getKey()) || goals.get(e.getKey()) > 0) && e.getValue() > 1) {
-									offered.put(e.getKey(), r.nextInt(e.getValue() / 2));
+									int amount=r.nextInt(e.getValue() / 2);
+									if(amount>0)offered.put(e.getKey(), amount);
 								}
 							}
 							partner.getRequests().enqueue(new TradeRequest(current, offered, wanted, v1, partner));
@@ -249,41 +266,44 @@ public class KIController {
 							HashMap<Resources, Integer> offRes = ((TradeRequest) req).getOfferedResources();
 							HashMap<Resources, Integer> reqRes = ((TradeRequest) req).getRequestedResources();
 							Vertex place = ((TradeRequest) req).getPlace();
-							Vertex root= ((TradeRequest) req).getRoot();
-							HashMap<Resources, Integer> res = current.getGoals().get(root);
-							if(res!=null) {
-								boolean isGoal = false;
-								int minTrust = 60;
-								for (Map.Entry<Resources, Integer> e : reqRes.entrySet()) {
-									if (!isGoal) {
-										if (res != null && res.containsKey(e.getKey())) {
-											isGoal = true;
-										}
-									}
-								}
-
-								if (!isGoal) {
-									for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
-										if (res.containsKey(e.getKey())) {
-											minTrust -= 10;
-											if (e.getValue() >= res.get(e.getKey())) {
-												minTrust -= 5;
+							HashMap<Resources, Integer> res = current.getGoals().get(v1);
+							if(getGame().getGraphController().getGraph().getNeighbours(v1).contains(place)) {
+								if (res != null) {
+									boolean isGoal = false;
+									int minTrust = 60;
+									for (Map.Entry<Resources, Integer> e : reqRes.entrySet()) {
+										if (!isGoal) {
+											if (res != null && res.containsKey(e.getKey())) {
+												isGoal = true;
 											}
-										}else if(e.getValue()<=0){
-											minTrust=Integer.MAX_VALUE;
-
 										}
 									}
-									if (current.getTrust().get(req.getParent()) >= r.nextInt(minTrust) + 1) {
-										req.accept();
+
+									if (!isGoal) {
+										for (Map.Entry<Resources, Integer> e : offRes.entrySet()) {
+											if (res.containsKey(e.getKey())) {
+												minTrust -= 10;
+												if (e.getValue() >= res.get(e.getKey())) {
+													minTrust -= 5;
+												}
+											} else if (e.getValue() <= 0) {
+												minTrust = Integer.MAX_VALUE;
+
+											}
+										}
+										if (current.getTrust().get(req.getParent()) >= r.nextInt(minTrust) + 1) {
+											req.accept();
+										} else {
+											req.decline();
+										}
 									} else {
 										req.decline();
 									}
 								} else {
-									req.decline();
+									current.getGoals().put(v1, new HashMap<>());
 								}
 							}else{
-								current.getGoals().put(v1,new HashMap<>());
+								current.getRequests().enqueue(req);
 							}
 						} else if (req instanceof HelpRequest) {
 							if (current.getAlliances().contains(req.getParent())) {
@@ -368,6 +388,7 @@ public class KIController {
 							}
 						}
 					}
+					current.setNotifications(new ArrayList<Notification>());
 				}
 			}
 		}

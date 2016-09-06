@@ -1,4 +1,4 @@
-package game;
+﻿package game;
 
 import connection.Connector;
 import field.FieldController;
@@ -60,7 +60,8 @@ public class GameOfGraphs {
 	public void nextTurn() {
 		this.fieldController.run(this.getCurrentPlayer());
 
-		while (true) {
+		boolean breakCondition=false;
+		while (!(breakCondition)) {
 
 			this.currentPlayer++;
 
@@ -70,13 +71,14 @@ public class GameOfGraphs {
 			}
 
 			if(this.getCurrentPlayer().isActive()) {
-                break;
+                breakCondition=true;
+			}else{
+				this.getPlayers().remove(this.getCurrentPlayer());
 			}
         }
 
         this.simulationController.run(this.getCurrentPlayer());
         this.kiController.run(this.getCurrentPlayer());
-
 		if(GameOfGraphs.getGame().getCurrentPlayer() instanceof KIFraction) {
 			GameOfGraphs.getGame().nextTurn();
 		}

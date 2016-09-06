@@ -24,14 +24,6 @@ public enum Property {
                 }
             }
         }
-        /*if(!missing.isEmpty()){
-            for (Property p : missing) {
-                if ((p.equals(AGGRESSIVE) && list.contains(PEACEFUL))|| (p.equals(PEACEFUL) && list.contains(AGGRESSIVE)) ||
-                        (p.equals(DIPLOMATIC) && list.contains(DISTRUSTFUL)) || (p.equals(DISTRUSTFUL) && list.contains(DIPLOMATIC))) {
-                    missing.remove(p);
-                }
-            }
-        }*/
         return missing;
 
     }
