@@ -322,6 +322,50 @@ public class Connector {
         }
     }
 
+    public static void setActive(Player p, boolean active){
+        Statement statement = setup();
+
+        String player = null;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
+        try {
+            player = mapper.writeValueAsString(p);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            statement.executeUpdate("UPDATE Player SET active=" + active + " WHERE  player='" + player + "'");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isActive(Player p){
+        Statement statement = setup();
+
+        String player = null;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+
+        try {
+            player = mapper.writeValueAsString(p);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Player WHERE player='" + player + "'");
+
+            return resultSet.getBoolean("active");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static boolean isEnabledMutiplayer() {
         return enabledMutiplayer;
     }

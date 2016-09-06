@@ -72,6 +72,7 @@ public class GameOfGraphs {
 
 			if(this.getCurrentPlayer().isActive()) {
                 breakCondition=true;
+				Connector.setActive(getCurrentPlayer(), false);
 			}else{
 				this.getPlayers().remove(this.getCurrentPlayer());
 			}

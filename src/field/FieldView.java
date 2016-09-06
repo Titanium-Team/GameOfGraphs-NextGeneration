@@ -205,6 +205,11 @@ public class FieldView extends GameScene{
                     GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph(), true);
                     Connector.setNewCurrentPlayer(false);
                 }
+
+                if (Connector.isActive(Connector.getMyPlayer())){
+                    E.getE().show(MenuElement.class);
+                    JOptionPane.showMessageDialog(null, "Du hast VERKACKT!!!!!!!!!!!!!!!!!");
+                }
             }
         },0,500, TimeUnit.MILLISECONDS);
 
