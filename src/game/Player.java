@@ -61,19 +61,23 @@ public class Player {
                 vertices.add(v);
             }
         }
-
-        if(vertices.size()>=2 && this instanceof KIFraction && this.name.equalsIgnoreCase("Independent")){
-            int x = 1;
-            this.setName("KIPlayer " + x);
-	        Random r=new Random();
-            this.setColor(new Color(r.nextInt(255),r.nextInt(255),r.nextInt(255)));
-            for (Player p : getGame().getPlayers()) {
-                if (p.getName().equals(this.getName()) && p!=this) {
-                    x++;
-                    this.setName("KIPlayer " + x);
-                }
-            }
-        }
+if(this instanceof KIFraction) {
+	if (vertices.size() >= 2  && this.name.equalsIgnoreCase("Independent")) {
+		int x = 1;
+		this.setName("KIPlayer " + x);
+		Random r = new Random();
+		this.setColor(new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
+		for (Player p : getGame().getPlayers()) {
+			if (p.getName().equals(this.getName()) && p != this) {
+				x++;
+				this.setName("KIPlayer " + x);
+			}
+		}
+	} else if(vertices.size()==1 && !this.getName().equalsIgnoreCase("Independent")){
+		this.setName("Independent");
+		this.setColor(new Color(232,77,91));
+	}
+}
         return vertices;
     }
     @JsonIgnore

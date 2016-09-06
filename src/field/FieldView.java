@@ -49,9 +49,9 @@ public class FieldView extends GameScene{
     private Vertex currentVertex = null;
     private Field currentField = null;
 
-	//boolean für Handel
-	private boolean tradeEnabled=false;
-	private TradeView tradeView = new TradeView(this, new ILocation(200, 100));
+    //boolean für Handel
+    private boolean tradeEnabled=false;
+    private TradeView tradeView = new TradeView(this, new ILocation(200, 100));
 
     //Boolean zum Überprüfen, ob gerade Truppen bewegt werden
     private boolean move = false;
@@ -143,19 +143,19 @@ public class FieldView extends GameScene{
         getGame().getCurrentPlayer().requestAlliance(currentField.getPlayer());
     });
 
-	private Button<String> tradeButton = new Button<String>(this,"Trade with Player",new ILocation(1000, 700),(t, value)->{
-		tradeEnabled=true;
-		tradeView.setCurrentVertex(currentVertex);
+    private Button<String> tradeButton = new Button<String>(this,"Trade with Player",new ILocation(1000, 700),(t, value)->{
+        tradeEnabled=true;
+        tradeView.setCurrentVertex(currentVertex);
         tradeView.enableAll();
-	});
+    });
 
-	private boolean requestShown;
-	private RequestView requestView = new RequestView(this,new ILocation(400,200));
+    private boolean requestShown;
+    private RequestView requestView = new RequestView(this,new ILocation(400,200));
 
-	private Button<String> requestButton = new Button<String>(this,"Show Requests",new ILocation(830,660),(t, value)->{
-		requestShown=true;
-		requestView.setRequest(currentField.getPlayer().getRequests().front());
-	});
+    private Button<String> requestButton = new Button<String>(this,"Show Requests",new ILocation(830,660),(t, value)->{
+        requestShown=true;
+        requestView.setRequest(currentField.getPlayer().getRequests().front());
+    });
 
     private Button<String> bazaarButton1 = new Button<String>(this, "Trade", new ILocation(830, 570),(t, value) -> {
 
@@ -219,19 +219,19 @@ public class FieldView extends GameScene{
         E.getE().addComponent(resourceDropDownMenu);
         E.getE().addComponent(bazaarButton1);
         E.getE().addComponent(bazaarButton2);
-	    //Alliance
-	    E.getE().addComponent(allianceButton);
+        //Alliance
+        E.getE().addComponent(allianceButton);
 
 
         E.getE().addComponent(nextTurnButton);
 
         E.getE().addComponent(this.questionButton);
 
-	    E.getE().addComponent(tradeButton);
-	    E.getE().addComponent(tradeView);
+        E.getE().addComponent(tradeButton);
+        E.getE().addComponent(tradeView);
 
-	    E.getE().addComponent(requestButton);
-	    E.getE().addComponent(requestView);
+        E.getE().addComponent(requestButton);
+        E.getE().addComponent(requestView);
 
     }
 
@@ -248,8 +248,9 @@ public class FieldView extends GameScene{
 
         //Zeichnen des Graphen
         GraphDrawer.drawer(g,graph,"Field");
-
-        g.drawString("Player: " + getGame().getCurrentPlayer().getName(), 50, 50);
+        if(getGame().getCurrentPlayer()!=null) {
+            g.drawString("Player: " + getGame().getCurrentPlayer().getName(), 50, 50);
+        }
 
         g.setColor(Color.DARK_GRAY);
         g.fillRect(0,500,1280,220);
@@ -259,8 +260,8 @@ public class FieldView extends GameScene{
         g.drawLine(700, 500, 700, 720);
         g.setBackground(Color.WHITE);
 
-	    tradeView.setEnabled(tradeEnabled);
-	    requestView.setEnabled(requestShown);
+        tradeView.setEnabled(tradeEnabled);
+        requestView.setEnabled(requestShown);
 
         if(currentField == null) {
 
@@ -276,9 +277,9 @@ public class FieldView extends GameScene{
             this.freeBuildButton.setEnabled(false);
             this.bazaarButton1.setEnabled(false);
             this.bazaarButton2.setEnabled(false);
-	        this.allianceButton.setEnabled(false);
-	        this.tradeButton.setEnabled(false);
-	        this.requestButton.setEnabled(false);
+            this.allianceButton.setEnabled(false);
+            this.tradeButton.setEnabled(false);
+            this.requestButton.setEnabled(false);
 
         }else{
             //Zeichnen der Statistiken
@@ -311,9 +312,9 @@ public class FieldView extends GameScene{
             this.bazaarButton1.setEnabled(false);
             this.bazaarButton2.setEnabled(false);
             this.freeBuildButton.setEnabled(active && getGame().isFirstTurn() && this.free);
-	        this.allianceButton.setEnabled(!active);
-	        this.tradeButton.setEnabled(active);
-	        this.requestButton.setEnabled(active && !currentField.getPlayer().getRequests().isEmpty());
+            this.allianceButton.setEnabled(!active);
+            this.tradeButton.setEnabled(active);
+            this.requestButton.setEnabled(active && !currentField.getPlayer().getRequests().isEmpty());
 
             //Zeichnen der Trade-Button
             if(this.currentField.getBuildings().get(Buildings.SLAVE_MARKET) > 0) {
@@ -402,7 +403,7 @@ public class FieldView extends GameScene{
 
         //MouseListener
         inputEntry.getMouseEntries().forEach(entry -> {
-            
+
             if (entry.getPoint().getY() <= 475 && entry.getPoint().getX() <= 1255 && entry.getButton() == 1 && move != true) {
                 Vertex vertex = graph.getVertex((int) entry.getPoint().getX(), (int) entry.getPoint().getY());
 
@@ -486,11 +487,11 @@ public class FieldView extends GameScene{
         return (E.getE().getScreen().getCurrent() == this);
     }
 
-	public void setTradeEnabled(boolean tradeEnabled) {
-		this.tradeEnabled = tradeEnabled;
-	}
+    public void setTradeEnabled(boolean tradeEnabled) {
+        this.tradeEnabled = tradeEnabled;
+    }
 
-	public void setRequestShown(boolean requestShown) {
-		this.requestShown = requestShown;
-	}
+    public void setRequestShown(boolean requestShown) {
+        this.requestShown = requestShown;
+    }
 }
