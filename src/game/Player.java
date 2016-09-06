@@ -53,13 +53,13 @@ public class Player {
 
         //funktioniert  nicht/stackoverflow
         //return GameOfGraphs.getGame().getGraphController().getGraph().getVertices().stream().filter(vertex -> vertex.getField().getPlayer().equals(vertex.getField().getPlayer())).collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<Vertex> vertices = new ArrayList<Vertex>();
-        for(Vertex v: getGame().getGraphController().getGraph().getVertices()){
-            if(v.getField().getPlayer().equals(this)){
-                vertices.add(v);
-            }
-        }
-        return vertices;
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+			for(Vertex v: getGame().getGraphController().getGraph().getVertices()){
+				if(v.getField().getPlayer().equals(this)){
+					vertices.add(v);
+				}
+			}
+	    return vertices;
     }
 
     @JsonIgnore
