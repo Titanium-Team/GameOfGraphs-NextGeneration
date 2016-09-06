@@ -1,4 +1,4 @@
-﻿package game;
+package game;
 
 import connection.Connector;
 import field.FieldController;
