@@ -127,6 +127,11 @@ public class Main {
             }
         });
 
-        e.run();
+        try {
+            e.run();
+        }catch (NullPointerException e1){
+
+        }
+
     }
 }
