@@ -395,6 +395,7 @@ public class SimulationController {
         }
 
         ArrayList<Unit> defendingUnits = vertex.getField().getUnits();
+        Player attacker = attackingUnits.get(0).getPlayer();
 
         boolean attackWin = false;
         int aU, dU;
@@ -424,7 +425,7 @@ public class SimulationController {
         }*/
 
         Player defender = vertex.getField().getPlayer();
-        Player attacker = attackingUnits.get(0).getPlayer();
+
 
         if (attackWin){
 
