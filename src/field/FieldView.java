@@ -12,6 +12,7 @@ import field.recipe.RecipeResource;
 import field.resource.Resource;
 import field.resource.Resources;
 import game.GameOfGraphs;
+import game.MenuView;
 import game.Player;
 import game.sprite.Textures;
 import game.ui.Button;
@@ -207,7 +208,7 @@ public class FieldView extends GameScene{
                 }
 
                 if (Connector.isActive(Connector.getMyPlayer())){
-                    E.getE().show(MenuElement.class);
+                    E.getE().show(MenuView.class);
                     JOptionPane.showMessageDialog(null, "Du hast VERKACKT!!!!!!!!!!!!!!!!!");
                 }
             }
