@@ -1,6 +1,7 @@
 package game;
 
 import connection.Connector;
+import connection.Waiting;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
@@ -112,6 +113,8 @@ public class MenuView extends GameScene {
                     Player player = Connector.unusedPlayers().get(0);
                     Connector.joinGame(player);
                     Connector.nextTurn(player.getName());
+
+                    E.getE().show(Waiting.class);
                 }
 
             }
