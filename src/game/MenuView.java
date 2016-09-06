@@ -1,5 +1,7 @@
 package game;
 
+import connection.Connector;
+import connection.Waiting;
 import de.SweetCode.e.E;
 import de.SweetCode.e.input.InputEntry;
 import de.SweetCode.e.rendering.GameScene;
@@ -9,10 +11,14 @@ import graph.Graph;
 import ki.KIFraction;
 import mapEditor.MapEditor;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MenuView extends GameScene {
 
@@ -23,6 +29,7 @@ public class MenuView extends GameScene {
         this.options.put("Play", null);
         this.options.put("Map Editor", MapEditor.class);
         this.options.put("Exit", null);
+        this.options.put("Multiplayer", null);
     }
 
     public MenuView() {}
@@ -90,6 +97,24 @@ public class MenuView extends GameScene {
                     E.getE().show(clazz);
                 } else if(this.selectedOption == 2) {
                     System.exit(1);
+                }else if(this.selectedOption == 3){
+                    if (Connector.isHost()){
+                        Object[] g = GameOfGraphs.getGame().getGraphController().load();
+                        if (g != null){
+                            GameOfGraphs.getGame().getGraphController().setGraph((Graph) g[0], true);
+                        }
+
+                        Connector.createGame(GameOfGraphs.getGame().getGraphController().getGraph());
+                    }else {
+                        GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph(), true);
+                    }
+
+
+                    Player player = Connector.unusedPlayers().get(0);
+                    Connector.joinGame(player);
+                    Connector.nextTurn(player.getName());
+
+                    E.getE().show(Waiting.class);
                 }
 
             }

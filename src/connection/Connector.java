@@ -23,6 +23,7 @@ public class Connector {
     private static int gameId=-1;
 
     private static int playerId;
+    private static Player myPlayer;
 
     private static boolean host;
 
@@ -47,6 +48,7 @@ public class Connector {
     }
 
      public static boolean joinGame(Player p){
+         myPlayer = p;
          Statement statement = setup();
 
          String player = null;
@@ -103,42 +105,28 @@ public class Connector {
         }
 
         try {
-            statement.executeUpdate("INSERT INTO Games (map, turn, start) VALUES ('"+ graph +"', '', 0)");
+            statement.executeUpdate("INSERT INTO Games (map, start) VALUES ('"+ graph +"', 0)");
 
             ResultSet resultSet = statement.executeQuery("SELECT  * FROM Games WHERE map='" + graph + "'");
             resultSet.next();
 
             gameId = resultSet.getInt("id");
 
-            ArrayList<Player> players = new ArrayList<>();
-            boolean add = true;
-
-            ArrayList<Vertex> vertices = g.getVertices();
-            for (Vertex v:vertices){
-                for (Player temp : players) {
-                    if (v.getField().getPlayer().getName().equals(temp.getName())) {
-                        add = false;
-                        break;
-                    }
-                }
-                if (add){
-                    players.add(v.getField().getPlayer());
-                    try {
-                        String tempP = mapper.writeValueAsString(v.getField().getPlayer());
-                        int ki = v.getField().getPlayer() instanceof KIFraction ? 1 : 0;
-                        statement.executeUpdate("INSERT INTO Player (player, gameId, ki, used) VALUES ('"+ tempP +"', " + gameId + ", " + ki + ", " + ki + ")");
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                }
-                add = true;
+            LinkedList<Player> players = GameOfGraphs.getGame().getPlayers();
+            for (Player p:players){
+                String tempP = mapper.writeValueAsString(p);
+                int ki = p instanceof KIFraction ? 1 : 0;
+                statement.executeUpdate("INSERT INTO Player (player, gameId, ki, used) VALUES ('"+ tempP +"', " + gameId + ", " + ki + ", " + ki + ")");
             }
+
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
 
-    public static boolean gameReady(){
+    public static int gameReady(){
         LinkedList<Player> players = GameOfGraphs.getGame().getPlayers();
         int countPlayer = 0;
 
@@ -153,15 +141,15 @@ public class Connector {
 
             if (players.size() == countPlayer){
                 statement.executeUpdate("UPDATE Games SET start=1 WHERE id=" + gameId);
-
-                return true;
             }
+
+            return players.size()-countPlayer;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return -1;
     }
 
     public static boolean gameStarted(){
@@ -250,6 +238,16 @@ public class Connector {
         }
     }
 
+    public static void nextTurn(String name){
+        Statement statement = setup();
+
+        try {
+            statement.executeUpdate("UPDATE Games SET turn='" + name +"' WHERE id=" + gameId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static boolean isHost() {
         if (gameId == -1){
             Statement statement = setup();
@@ -289,11 +287,25 @@ public class Connector {
         return null;
     }
 
+    public static void deleteGame(){
+        Statement statement = setup();
+
+        try {
+            statement.executeUpdate("DELETE FROM Games WHERE id=" + gameId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static boolean isEnabledMutiplayer() {
         return enabledMutiplayer;
     }
 
     public static void setEnabledMutiplayer(boolean enabledMutiplayer) {
         Connector.enabledMutiplayer = enabledMutiplayer;
+    }
+
+    public static Player getMyPlayer() {
+        return myPlayer;
     }
 }
