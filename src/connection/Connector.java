@@ -242,7 +242,7 @@ public class Connector {
         Statement statement = setup();
 
         try {
-            statement.executeUpdate("UPDATE Games SET turn='" + name +"' WHERE id=" + gameId);
+            statement.executeUpdate("UPDATE Games SET turn='" + name +"' , newTurn=1 WHERE id=" + gameId);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -284,6 +284,32 @@ public class Connector {
         }
 
         return null;
+    }
+
+    public static boolean getNewCurrentPlayer(){
+        Statement statement = setup();
+
+        try {
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Games WHERE id=" + gameId);
+
+            resultSet.next();
+
+            return resultSet.getBoolean("newTurn");
+
+        } catch (SQLException e) {
+        }
+
+        return false;
+    }
+
+    public static void setNewCurrentPlayer(boolean newCurrentPlayer){
+        Statement statement = setup();
+
+        try {
+            statement.executeUpdate("UPDATE Games SET newTurn=" + newCurrentPlayer +" WHERE id=" + gameId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void deleteGame(){

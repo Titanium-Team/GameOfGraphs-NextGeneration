@@ -27,7 +27,7 @@ public class Waiting extends GameScene {
     private int selectedOption = 0;
     private Map<String, Class<? extends GameScene>> options = new LinkedHashMap<>();
     {
-        this.options.put("Waiting for 0 players.", null);
+        this.options.put("Waiting for 0 player.", null);
         this.options.put("Exit", null);
     }
 
@@ -39,7 +39,7 @@ public class Waiting extends GameScene {
 
             options = new LinkedHashMap<>();
             {
-                this.options.put("Waiting for " + left + " players.", null);
+                this.options.put("Waiting for " + left + " player.", null);
                 this.options.put("Exit", null);
             }
 
@@ -105,6 +105,7 @@ public class Waiting extends GameScene {
 
                 } else if(this.selectedOption == 1) {
                     E.getE().show(MenuView.class);
+                    Connector.deleteGame();
                 }
             }
 
