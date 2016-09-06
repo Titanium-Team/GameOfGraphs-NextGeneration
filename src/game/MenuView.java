@@ -28,8 +28,8 @@ public class MenuView extends GameScene {
     {
         this.options.put("Play", null);
         this.options.put("Map Editor", MapEditor.class);
-        this.options.put("Exit", null);
         this.options.put("Multiplayer", null);
+        this.options.put("Exit", null);
     }
 
     public MenuView() {}
@@ -95,9 +95,9 @@ public class MenuView extends GameScene {
                 } else if(this.selectedOption == 1) {
                     GameOfGraphs.getGame().getGraphController().setGraph(new Graph(), false);
                     E.getE().show(clazz);
-                } else if(this.selectedOption == 2) {
+                } else if(this.selectedOption == 3) {
                     System.exit(1);
-                }else if(this.selectedOption == 3){
+                }else if(this.selectedOption == 2){
                     if (Connector.isHost()){
                         Object[] g = GameOfGraphs.getGame().getGraphController().load();
                         if (g != null){
