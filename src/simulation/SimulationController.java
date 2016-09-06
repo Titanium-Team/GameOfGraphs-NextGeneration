@@ -410,6 +410,7 @@ public class SimulationController {
                 dU--;
             }else{
                 aU--;
+                attackingUnits.remove(0);
             }
         }
 
@@ -428,6 +429,7 @@ public class SimulationController {
 
             vertex.getField().getUnits().clear();
             vertex.getField().setPlayer(attacker);
+            vertex.getField().getUnits().addAll(attackingUnits);
 
             attacker.getNotifications().add(new AttackNotification(defender, vertex, false, true));
             defender.getNotifications().add(new AttackNotification(attacker, vertex, true, false));
