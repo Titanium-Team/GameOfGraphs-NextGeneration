@@ -359,7 +359,9 @@ public class Connector {
         try {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Player WHERE player='" + player + "'");
 
-            return resultSet.getBoolean("active");
+            if (resultSet.next()) {
+                return resultSet.getBoolean("active");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
