@@ -200,9 +200,10 @@ public class FieldView extends GameScene{
             if (Connector.isEnabledMutiplayer()){
                 String player = Connector.getCurrentPlayer();
 
-                if (!GameOfGraphs.getGame().getCurrentPlayer().getName().equals(player)){
+                if (!GameOfGraphs.getGame().getCurrentPlayer().getName().equals(player) && Connector.getNewCurrentPlayer()){
                     GameOfGraphs.getGame().setCurrentPlayer(player);
                     GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph(), true);
+                    Connector.setNewCurrentPlayer(false);
                 }
             }
         },0,500, TimeUnit.MILLISECONDS);

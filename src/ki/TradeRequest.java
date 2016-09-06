@@ -124,6 +124,8 @@ public class TradeRequest extends Request {
 		}
 		if(result.lastIndexOf(',')==result.length()-1){
 			result=result.substring(0,result.length()-1) +" ";
+		}else if(set.isEmpty()){
+			result+="nothing ";
 		}
 		result+="and wants ";
 		set=requestedResources.entrySet();
@@ -133,6 +135,8 @@ public class TradeRequest extends Request {
 		}
 		if(result.lastIndexOf(',')==result.length()-1){
 			result=result.substring(0,result.length()-1) +" ";
+		}else if(set.isEmpty()){
+			result+="nothing ";
 		}
 		result+="in return.";
 		return result;

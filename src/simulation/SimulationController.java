@@ -99,6 +99,7 @@ public class SimulationController {
 
 
     public void moveUnits(Vertex start, Vertex end, int amountUnits) {
+        currentPlayer = GameOfGraphs.getGame().getCurrentPlayer();
         if (currentPlayer == start.getField().getPlayer()) {
             Path path = this.findPath(start, end);
             LinkedList<Vertex> list = path.getPath();
