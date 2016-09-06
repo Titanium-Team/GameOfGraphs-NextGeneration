@@ -65,8 +65,8 @@ public class KIController {
 				if(rebelPlayer.isActive()){
 					getGame().getPlayers().add(rebelPlayer);
 				}
+				currentPlayer.getNotifications().add(new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1));
 				if(currentPlayer.isActive()) {
-					currentPlayer.getNotifications().add(new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1));
 					Notification toRemove = null;
 					for (Notification n : currentPlayer.getNotifications()) {
 						if (n instanceof AttackNotification) {
@@ -77,7 +77,11 @@ public class KIController {
 					}
 					currentPlayer.getNotifications().remove(toRemove);
 				}else{
-					if(!(currentPlayer instanceof KIFraction))JOptionPane.showMessageDialog(null,new RebellionNotification(!currentPlayer.equals(v1.getField().getPlayer()), v1).getDisplayMessage());
+					if(!(currentPlayer instanceof KIFraction)){
+						for (Notification n : currentPlayer.getNotifications()) {
+							JOptionPane.showMessageDialog(null,n.getDisplayMessage());
+						}
+					}
 					getGame().nextTurn();
 				}
 			}

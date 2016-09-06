@@ -83,13 +83,13 @@ public class GameOfGraphs {
 			GameOfGraphs.getGame().nextTurn();
 		}else {
 			if (Connector.isEnabledMutiplayer()) {
-				//for (Player p : getPlayers()) {
-				//	if (!(p instanceof KIFraction) && !p.getName().equals(Connector.getMyPlayer().getName())) {
-						//currentPlayer = getPlayerIndex(p);
+				for (Player p : getPlayers()) {
+					if (!(p instanceof KIFraction) && !p.getName().equals(Connector.getMyPlayer().getName())) {
+						currentPlayer = getPlayerIndex(p);
 						Connector.nextTurn(getCurrentPlayer().getName(), getGraphController().getGraph());
-				//		break;
-					//}
-				//}
+						break;
+					}
+				}
 			}
 		}
 	}
