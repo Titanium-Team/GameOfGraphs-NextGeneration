@@ -37,10 +37,15 @@ public class RequestView extends UIComponent {
 		g.setColor(Color.BLACK);
 		g.drawString(String.valueOf(request),location.getX()+10,location.getY()+20);
 
-		accept.setEnabled(this.isEnabled());
-		decline.setEnabled(this.isEnabled());
-		g.setFont(font);
+		try {
+			accept.setEnabled(this.isEnabled());
+			decline.setEnabled(this.isEnabled());
 
+		}catch (NullPointerException e){
+
+		}
+
+		g.setFont(font);
 	}
 
 	@Override
