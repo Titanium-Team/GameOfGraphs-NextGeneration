@@ -201,12 +201,8 @@ public class FieldView extends GameScene{
                 String player = Connector.getCurrentPlayer();
 
                 if (!GameOfGraphs.getGame().getCurrentPlayer().getName().equals(player)){
-                    for (Player p:GameOfGraphs.getGame().getPlayers()){
-                        if (p.getName().equals(player)){
-                            GameOfGraphs.getGame().setCurrentPlayer(p);
-                            GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph(), false);
-                        }
-                    }
+                    GameOfGraphs.getGame().setCurrentPlayer(player);
+                    GameOfGraphs.getGame().getGraphController().setGraph(Connector.getGraph(), true);
                 }
             }
         },0,500, TimeUnit.MILLISECONDS);
@@ -381,6 +377,21 @@ public class FieldView extends GameScene{
     @Override
     public void update(InputEntry inputEntry, long l) {
 
+        if (Connector.isEnabledMutiplayer()){
+            for (Vertex v:getGame().getGraphController().getGraph().getVertices()){
+                if(v.getField().getPlayer().getName().equals(Connector.getMyPlayer().getName())){
+                    v.setMark(true);
+                }
+            }
+        }else {
+            getGame().getGraphController().getGraph().setAllVertexMark(false);
+            for (Vertex v:getGame().getGraphController().getGraph().getVertices()){
+                if(v.getField().getPlayer().getName().equals(GameOfGraphs.getGame().getCurrentPlayer().getName())){
+                    v.setMark(true);
+                }
+            }
+        }
+
         GraphDrawer.update(inputEntry,l);
         Graph graph = getGame().getGraphController().getGraph();
 
@@ -397,7 +408,12 @@ public class FieldView extends GameScene{
                 boolean visible = false;
 
                 if(!(vertex == null)) {
-                    visible = vertex.getField().getPlayer() == GameOfGraphs.getGame().getCurrentPlayer();
+                    if (Connector.isEnabledMutiplayer()){
+                        visible = Connector.getMyPlayer().getName().equals(GameOfGraphs.getGame().getCurrentPlayer().getName());
+                        visible = Connector.getMyPlayer().getName().equals(vertex.getField().getPlayer().getName());
+                    }else {
+                        visible = vertex.getField().getPlayer() == GameOfGraphs.getGame().getCurrentPlayer();
+                    }
 
                     if (!(visible)) {
 

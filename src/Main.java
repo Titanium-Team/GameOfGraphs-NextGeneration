@@ -1,3 +1,4 @@
+import connection.Waiting;
 import de.SweetCode.e.E;
 import de.SweetCode.e.GameComponent;
 import de.SweetCode.e.Settings;
@@ -72,7 +73,7 @@ public class Main {
 
             @Override
             public boolean isDecorated() {
-                return false;
+                return true;
             }
 
             @Override
@@ -99,6 +100,7 @@ public class Main {
         e.addScene(new MenuView());
         e.addScene(new FieldView());
         e.addScene(new MapEditor());
+        e.addScene(new Waiting());
 
         e.show(MenuView.class);
 
